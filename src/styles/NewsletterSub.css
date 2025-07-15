@@ -1,0 +1,202 @@
+.News {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    font-family: sans-serif;
+    padding: 4rem 2rem;
+    background-color: rgba(26, 26, 26, 0.65); /* Dark neutral base with transparency */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin: 2rem auto;
+    max-width: 800px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.2),
+      inset 0 0 0 1px rgba(196, 18, 48, 0.1); /* Subtle crimson red inner border */
+  
+    section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    h1 {
+      font-size: 33px;
+      font-weight: 400;
+      text-align: center;
+      margin: 40px 0 10px 0;
+      color: rgba(230, 181, 76, 0.9); /* Gold for headings */
+    }
+  
+    p {
+      width: 400px;
+      font-size: 16px;
+      line-height: 24px;
+      color: rgba(255, 255, 255, 0.9); /* White text for better readability */
+      margin-bottom: 40px;
+  
+      em {
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.7); /* Slightly dimmed emphasis text */
+      }
+    }
+  
+    input {
+      display: inline-block;
+      width: 300px;
+      height: 44px;
+      margin: 5px 10px 15px 0;
+      padding: 10px 11px;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.5;
+      color: #869ab8;
+      background-color: rgba(255, 255, 255, 0.05); /* Very subtle input background */
+      background-clip: padding-box;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      outline: none;
+      box-sizing: border-box;
+      color: rgba(255, 255, 255, 0.9); /* Ensure text is visible */
+      
+      &.error {
+        border: 1px solid #c41230; /* Using Haitian red for error state */
+      }
+    }
+  
+    button {
+      position: relative;
+      display: inline-block;
+      height: 44px;
+      padding: 4px 10px;
+      letter-spacing: 0.025em;
+      font-size: 16px;
+      font-weight: 400;
+      border-radius: 2px;
+      border: none;
+      color: #fff;
+      background-color: #0f3c78; /* Haitian blue for buttons */
+      box-sizing: border-box;
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(15, 60, 120, 0.3); /* Subtle shadow for depth */
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: #0a2e5a; /* Darker blue on hover */
+        transform: translateY(-2px);
+      }
+      
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+  
+  .newsletter-container {
+    padding: 4rem 2rem;
+    background-color: rgba(26, 26, 26, 0.65); /* Dark neutral base with transparency */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin: 2rem auto;
+    max-width: 800px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.2),
+      inset 0 0 0 1px rgba(196, 18, 48, 0.1); /* Subtle crimson red inner border */
+  }
+
+  .newsletter-content {
+    text-align: center;
+    color: #fff;
+  }
+
+  .newsletter-content h2 {
+    color: rgba(230, 181, 76, 0.9); /* Gold for headings */
+    margin-bottom: 1rem;
+  }
+  
+  .newsletter-content p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+  }
+
+  .newsletter-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .input-group input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  .input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .input-group input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .input-group button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    background: #007bff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .input-group button:hover {
+    background: #0056b3;
+  }
+
+  .status-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .newsletter-container {
+      padding: 2rem 1rem;
+    }
+
+    .input-group {
+      flex-direction: column;
+    }
+
+    .input-group button {
+      width: 100%;
+    }
+  }

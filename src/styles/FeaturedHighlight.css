@@ -1,0 +1,214 @@
+
+
+/* Transition container with gradient background */
+.featured-highlight-container {
+  position: relative;
+  width: 100%;
+  height: 120px; /* Medium height for visual transition */
+  background: linear-gradient(to bottom, 
+    rgba(26, 26, 26, 0.2) 0%,
+    rgba(26, 26, 26, 0.6) 100%);
+  margin-top: 0px; /* Positive margin for spacing from the Hero */
+  z-index: 10;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 0; /* Consistent with your other components */
+}
+
+/* Create decorative elements that visually connect with the Hero */
+.featured-highlight-container::before,
+.featured-highlight-container::after {
+  content: '';
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(230, 181, 76, 0) 0%,
+    rgba(230, 181, 76, 0.7) 50%,
+    rgba(230, 181, 76, 0) 100%
+  );
+  width: 100%;
+  left: 0;
+}
+
+.featured-highlight-container::before {
+  top: 0;
+}
+
+.featured-highlight-container::after {
+  bottom: 0;
+}
+
+/* Content container for layout */
+.featured-highlight-content {
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4%;
+}
+
+/* Text styling */
+/* .featured-text {
+  margin-right: 10px;
+} */
+
+.featured-text h3 {
+  color: var(--haiti-gold);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  transition: transform 0.3s ease;
+}
+
+/* Social icons container */
+.social-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+}
+
+/* Individual social icon styling */
+.social-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.social-icon {
+  width: 26px;
+  height: 26px;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Position-based scaling for social icons */
+.social-icon-link:nth-child(1) .social-icon {
+  width: 26px; /* Base size */
+  height: 26px;
+}
+
+.social-icon-link:nth-child(2) .social-icon {
+  width: calc(26px * 1.15); /* 15% larger than base */
+  height: calc(26px * 1.15);
+}
+
+.social-icon-link:nth-child(3) .social-icon {
+  width: calc(26px * 1.15 * 1.15); /* 15% larger than previous */
+  height: calc(26px * 1.15 * 1.15);
+}
+
+.social-icon-link:nth-child(4) .social-icon {
+  width: calc(26px * 1.15 * 1.15 * 1.15);
+  height: calc(26px * 1.15 * 1.15 * 1.15);
+}
+
+.social-icon-link:nth-child(5) .social-icon {
+  width: calc(26px * 1.15 * 1.15 * 1.15 * 1.15);
+  height: calc(26px * 1.15 * 1.15 * 1.15 * 1.15);
+}
+
+.social-icon-link:nth-child(6) .social-icon {
+  width: calc(26px * 1.15 * 1.15 * 1.15 * 1.15 * 1.15);
+  height: calc(26px * 1.15 * 1.15 * 1.15 * 1.15 * 1.15);
+}
+
+.social-icon-link:nth-child(7) .social-icon {
+  width: calc(26px * 1.15 * 1.15 * 1.15 * 1.15 * 1.15 * 1.15);
+  height: calc(26px * 1.15 * 1.15 * 1.15 * 1.15 * 1.15 * 1.15);
+}
+
+.social-icon-link:nth-child(8) .social-icon {
+  width: calc(26px * 1.15 * 1.15 * 1.15 * 1.15 * 1.15 * 1.15 * 1.15);
+  height: calc(26px * 1.15 * 1.15 * 1.15 * 1.15 * 1.15 * 1.15 * 1.15);
+}
+
+/* Hover effects for social icons */
+.social-icon-link:hover .social-icon {
+  transform: translateY(-3px);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+/* Responsive behavior: revert to original size on smaller screens */
+@media (max-width: 768px) {
+  .social-icon-link .social-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+}
+
+.social-icon-link:hover::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: var(--haiti-red);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translateX(-50%) scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(0.8);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .featured-highlight-content {
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .featured-text h3 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  
+  .social-icons {
+    gap: 15px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .featured-highlight-container {
+    height: 140px;
+  }
+  
+  .featured-text h3 {
+    font-size: 1rem;
+  }
+  
+  .social-icons {
+    gap: 12px;
+  }
+  
+  .social-icon {
+    width: 22px;
+    height: 22px;
+  }
+}

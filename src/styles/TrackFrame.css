@@ -1,0 +1,372 @@
+/* Elegant track frame to match the AudioControls styling */
+
+/* Track frame wrapper - container for the entire track section */
+.track-frame-wrapper {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box; /* Ensure proper box model to account for padding */
+    /* transform-origin: left top; */
+    /* transform: scale(var(--track-base-size)); */
+    /* transition: transform 0.3s ease; */
+    /* Better vertical space utilization */
+    overflow: hidden;
+    /* max-width: calc(100% - 16px); */
+}
+
+/* Consolidate all track-related styles in one section */
+
+/* Track Item Container */
+.track-item {
+    transition: all 0.3s ease;
+}
+
+.track-item:hover {
+    transform: translateY(-4px);
+    opacity: 0.9;
+}
+
+/* Track Thumbnail */
+.track-thumb {
+    width: var(--track-thumb-size);
+    height: var(--track-thumb-size);
+    border-radius: 50%;
+    margin-bottom: calc(0.4rem * var(--track-base-size));
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+    display: none;
+}
+
+.track-item:hover .track-thumb {
+    border-color: var(--haiti-blue);
+}
+
+.track-thumb.active {
+    border-color: var(--haiti-gold);
+}
+
+/* Track Text Elements */
+.track-title {
+    font-size: var(--track-title-font-size);
+    margin: calc(0.4rem * var(--track-base-size)) 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--haiti-gold);
+}
+
+.track-artist {
+    font-size: var(--track-artist-font-size);
+    margin: 0;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* Main track frame container */
+.track-frame {
+    width: 100%;
+    height: 100%;
+    /* max-height: 500px; */
+    padding: 0; /* Removed vertical padding, kept horizontal padding */
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding-right: 46px;
+    /* Better space utilization based on reference proportions */
+    /* min-height: 300px; */
+}
+
+/* Track list - styled as a playlist with maximum vertical space */
+/* Remove the first .track-list definition (lines 49-65) and keep only this consolidated version */
+.track-list {
+    width: 100%;
+    max-height: 100%;
+    box-sizing: border-box;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* gap: 10px; */
+    margin: auto;
+    overflow-y: auto;  /* Vertical scrolling for track list */
+    scrollbar-width: 10px;
+    /* transform-origin: top left; */
+    /* scrollbar-width: thin; */
+}
+
+/* Custom scrollbar styling for WebKit browsers */
+.track-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.track-list::-webkit-scrollbar-track {
+    background: rgba(17, 16, 17, 0.7);
+}
+
+.track-list::-webkit-scrollbar-thumb {
+    background: rgba(196, 18, 48, 0.5);
+    border-radius: 10px;
+}
+
+.track-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(196, 18, 48, 0.7);
+}
+
+/* Tab content styling */
+.tab-content {
+    width: 100%;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+}
+
+/* Tab pane styling - maximized to fill vertical space */
+.tab-pane {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px; /* Maintain the specified gap between track items */
+    padding: 0; /* Minimal top padding only */
+    height: auto; /* Allow natural height instead of filling */
+    align-items: flex-start; /* Align children to the top */
+    justify-content: flex-start; /* Start from the top */
+}
+
+/* Modern tabs styling - minimized vertical footprint */
+.modern-tabs {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 0;
+    border: none !important;
+    padding: 0.4rem 1.5rem 0; /* Reduced top padding */
+    position: relative;
+    z-index: 2;
+    box-sizing: border-box;
+    background: transparent;
+    overflow: hidden;
+    min-height: 40px; /* Ensure minimum height */
+}
+
+/* Subtle indicator line below tabs */
+.modern-tabs::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: auto;
+    right: auto;
+    height: 1px;
+    background: rgba(230, 181, 76, 0.15);
+    z-index: 1;
+}
+
+/* Add a playlist title above the tabs */
+.track-frame::after {
+    /* content: 'Track Library'; */
+    display: block;
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    /* color: var(--haiti-gold); */
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    text-align: right;
+}
+
+/* Target Bootstrap Nav.Link elements - default state */
+.modern-tabs .nav-item .nav-link,
+.modern-tabs .modern-tab-item .modern-tab-link {
+    padding: 0.5rem 1rem 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    font-size: 0.85rem;
+    border: none !important;
+    border-radius: 0;
+    position: relative;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.02em;
+    margin: 0 0.8rem 5px 0;
+    opacity: 0.85;
+    text-transform: uppercase;
+    z-index: 2;
+}
+
+/* Bottom indicator for tabs */
+.modern-tabs .nav-item .nav-link::after,
+.modern-tabs .modern-tab-item .modern-tab-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--haiti-gold);
+    /* transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease; */
+    opacity: 0;
+    z-index: 1;
+}
+
+/* Hover state - non-active tabs */
+.modern-tabs .nav-item .nav-link:hover:not(.active),
+.modern-tabs .modern-tab-item .modern-tab-link:hover:not(.active) {
+    color: var(--haiti-gold);
+    opacity: 1;
+}
+
+/* Indicator animation on hover */
+.modern-tabs .nav-item .nav-link:hover::after,
+.modern-tabs .modern-tab-item .modern-tab-link:hover::after {
+    opacity: 0.5;
+    transform: scaleX(0.4);
+}
+
+/* Active tab - specific styling for active state only */
+.modern-tabs .nav-item .nav-link.active,
+.modern-tabs .modern-tab-item .modern-tab-link.active {
+    color: var(--haiti-gold);
+    font-weight: 600;
+    background-color: transparent !important;
+    opacity: 1;
+    border: none !important;
+}
+
+/* Active tab indicator line */
+.modern-tabs .nav-item .nav-link.active::after,
+.modern-tabs .modern-tab-item .modern-tab-link.active::after {
+    transform: scaleX(1);
+    opacity: 1;
+}
+
+.modern-tabs .nav-item .nav-link:active,
+.modern-tabs .modern-tab-item .modern-tab-link:active {
+    opacity: 0.9;
+    transition: all 0.1s ease;
+}
+
+/* Style the modern tab classes properly */
+.modern-tab-item {
+    display: inline-flex;
+}
+
+.modern-tab-link {
+    display: block;
+    text-decoration: none;
+}
+
+/* Override Bootstrap tab borders completely */
+.nav-tabs {
+    border-bottom: none !important;
+}
+
+.nav-tabs .nav-link {
+    border: none !important;
+    border-bottom: none !important;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 40px !important;
+}
+
+.nav-tabs .nav-item.show .nav-link, 
+.nav-tabs .nav-link.active {
+    border: none !important;
+    border-bottom: none !important;
+}
+
+ 
+@media (max-width: 768px) {
+    /* Track frame wrapper adjustments */
+    .track-frame-wrapper {
+        transform: scale(1); /* Remove any scaling effect at mobile */
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        padding: 0;
+        height: auto;
+        transform-origin: center top;
+    }
+/*     
+    .track-frame {
+        padding: 0 0.5rem;
+        min-height: 200px; 
+        max-height: 300px;
+        overflow: hidden;
+    } */
+    
+    /* Track list adjustments */
+    .track-list {
+        padding: 0;
+        height: calc(100% - 30px); /* Reduce space for tabs */
+        max-height: 270px;
+        overflow-y: auto;
+    }
+    
+    /* Tab navigation adjustments */
+    .modern-tabs {
+        padding: 0.25rem 0.5rem 0;
+        min-height: 25px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        /* scrollbar-width: none; Hide scrollbar Firefox */
+        /* -ms-overflow-style: none; Hide scrollbar IE and Edge */
+    }
+    
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .modern-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .modern-tabs .nav-item,
+    .modern-tabs .modern-tab-item {
+        margin: 0 0.2rem;
+        flex-shrink: 0;
+    }
+    
+    .modern-tabs .nav-item .nav-link,
+    .modern-tabs .modern-tab-item .modern-tab-link {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+        border-radius: 40px;
+        margin: 0 0.2rem;
+    }
+    
+    /* Tab content adjustments */
+    .tab-content {
+        margin-top: auto;
+    }
+    
+    .tab-pane {
+        gap: 6px; /* Reduce spacing between tracks */
+        padding: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .track-frame-wrapper {
+        margin: auto;
+    }
+    .track-frame {
+        margin: auto;
+    }
+}

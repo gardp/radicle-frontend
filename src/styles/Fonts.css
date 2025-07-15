@@ -1,0 +1,85 @@
+/* 
+ * Fonts.css - Central location for font styling across the music production website
+ * This file defines font-related CSS variables and common text styling
+ */
+
+:root {
+  /* Font Colors */
+  --primary-text-color: #f0f0f0; /* Bright white text for primary content */
+  --secondary-text-color: #e0e0e0; /* Slightly dimmer white for secondary content */
+  --accent-text-color: #00d4ff; /* Bright cyan blue for accents and highlights */
+  --primary-heading-color: #ffffff; /* Pure white for headings */
+  --body-text-color: #d8d8d8; /* Light gray for body text */
+  
+  /* Font Families */
+  --heading-font: 'Audiowide', 'Montserrat', sans-serif; /* Futuristic font for headings */
+  --subheading-font: 'Montserrat', sans-serif; /* Clean sans-serif for subheadings */
+  --body-font: 'Roboto', 'Montserrat', sans-serif; /* Highly readable font for body text */
+}
+
+/* Common text elements styling */
+h1, h2, h3 {
+  font-family: var(--heading-font);
+  color: var(--primary-heading-color);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h4, h5, h6 {
+  font-family: var(--subheading-font);
+  color: var(--secondary-text-color);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+p, span, div {
+  font-family: var(--body-font);
+  color: var(--body-text-color);
+}
+
+a {
+  color: var(--accent-text-color);
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #80e9ff; /* Lighter version of accent color */
+}
+
+.highlight-text {
+  color: var(--accent-text-color);
+  font-weight: 500;
+}
+
+/* Music-specific text classes */
+.track-title {
+  font-family: var(--subheading-font);
+  font-weight: 600;
+  color: var(--primary-text-color);
+  letter-spacing: 0.03em;
+}
+
+.artist-name {
+  font-family: var(--body-font);
+  font-weight: 400;
+  color: var(--secondary-text-color);
+  font-style: italic;
+}
+
+.genre-label {
+  font-family: var(--subheading-font);
+  font-weight: 500;
+  color: var(--accent-text-color);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85em;
+}
+
+/* Button text */
+.btn, button {
+  font-family: var(--subheading-font);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}

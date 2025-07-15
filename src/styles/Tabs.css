@@ -1,0 +1,48 @@
+.nav-tabs {
+    position: relative;
+    z-index: 2;
+    margin: 0 !important;
+    border-bottom: none;
+}
+
+.nav-tabs.mb-3 {
+    margin-bottom: 0 !important;
+}
+
+.nav-tabs li a {
+    color: #777; /* Default tab link color */
+}
+
+.nav-tabs li a:hover {
+    color: #fff; /* Hover color for tab links */
+}
+
+.nav-tabs .active a {
+    color: #fff !important; /* Active tab link color */
+    background-color: #29292c !important; /* Background for active tab */
+}
+
+.tab-content {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.tab-pane {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+/* Add styles for the TabGroup container */
+.tab-group {
+    position: relative;
+    background-color: rgba(248, 249, 250, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 0;
+    padding-top: 0;
+}

@@ -1,0 +1,27 @@
+.search-bar-container {
+  margin-bottom: 10px; /* Adjust as needed */
+  width: 80%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-input {
+  width: 80%; /* Adjust as needed */
+  padding: 8px 12px;
+  border-radius: 20px; /* Rounded corners */
+  border: 1px solid var(--haiti-blue); /* Using existing color variable */
+  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  color: var(--white);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-input:focus {
+  border-color: var(--haiti-gold);
+  box-shadow: 0 0 8px rgba(var(--haiti-gold-rgb, 230, 181, 76), 0.5); /* Using gold for focus, ensure --haiti-gold-rgb is defined or use a fallback */
+}

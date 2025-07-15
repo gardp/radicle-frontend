@@ -1,0 +1,32 @@
+/* Tracks.css - Styling for track listings */
+
+.tracks-container {
+  padding: 2rem 1rem;
+}
+
+.track-item {
+  font-family: var(--body-font);
+  color: var(--body-text-color);
+}
+
+.track-item-title {
+  font-family: var(--subheading-font);
+  color: var(--primary-text-color);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.track-item-artist {
+  font-family: var(--body-font);
+  color: var(--secondary-text-color);
+  font-style: italic;
+  margin-bottom: 0.25rem;
+}
+
+.track-item-description {
+  font-family: var(--body-font);
+  color: var(--body-text-color);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}

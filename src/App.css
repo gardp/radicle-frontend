@@ -1,0 +1,233 @@
+/* Element selectors */
+/* :root {
+    height: 100%;
+    --primary-text-color: #f0f0f0;
+    --secondary-text-color: #e0e0e0;
+    --accent-text-color: #00d4ff;
+    --primary-heading-color: #ffffff;
+    --body-text-color: #d8d8d8;
+} */
+
+:root {
+    height: 100%;
+    --primary-text-color: #f2eeda;
+    --secondary-text-color: #e0e0e0;
+    --accent-text-color: #00d4ff;
+    --primary-heading-color: #f2eeda;
+    --body-text-color: #d8d8d8;
+}
+
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0px;
+    min-height: 100vh;
+    width: 100%;
+    background: url('./assets/images/original-background-black-patches.png') center center fixed;
+    /* background: url('/assets/images/original background-white.png') center center fixed; */
+    /* background: url('/assets/images/website-background.png') center center fixed; */
+    /* background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('/assets/images/website-background.png') center center fixed; */
+    background-size: cover;
+    font-family: 'Montserrat', 'Roboto', sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--body-text-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    letter-spacing: 0.02em;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+/* Class selectors */
+.App {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: var(--accent-text-color);
+}
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.content {
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    position: relative;
+    width: 100%;
+    flex: 1;
+    padding-top: 56px; /* Height of fixed navbar */
+}
+
+.section-background {
+    min-height: 100vh;
+    padding-top: 56px; /* Height of fixed navbar */
+}
+
+/* Hero Section */
+.hero-section {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.page-wrapper {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* App Container Styling */
+.app-content-container {
+    max-width: 1440px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .app-content-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+.content-section {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0;
+    /* padding: 0 2rem; */
+}
+
+/* Make sure the navbar appears above the content */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.75) !important; /* Semi-transparent dark */
+}
+
+/* Global styles */
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* Animations */
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Add some basic styling to make sure elements are visible */
+h1, h2, h3 {
+    color: var(--primary-heading-color);
+    font-family: 'Audiowide', 'Montserrat', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h4, h5, h6 {
+    color: var(--secondary-text-color);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+}
+
+p {
+    color: var(--body-text-color);
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--accent-text-color);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #80e9ff;
+    text-decoration: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+/* Content Section Title Styling */
+.content-section-title-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem auto 0; /* Space below the title frame */
+  padding: 0; /* Padding above and below the title text within the frame */ /* Subtle bottom border using accent color */
+  width: 100%; /* Frame takes full width of content-section */
+}
+
+.content-section-title {
+  font-family: 'Montserrat', 'Roboto', sans-serif; /* Consistent with body font */
+  font-size: 2em; /* Larger for emphasis, adjust as needed */
+  font-weight: 600; /* Semi-bold for standout */
+  color: var(--primary-heading-color); /* Use primary heading color from your theme */
+  text-align: center;
+  text-transform: capitalize; /* For Title Case, use 'uppercase' for UPPERCASE if preferred */
+  letter-spacing: 0.05em; /* Slightly increased letter spacing for elegance */
+  margin: 0; /* Remove default h2 margins */
+  padding: auto; /* Padding on the sides of the title text */
+}
+
+.content-section-body {
+  margin: 0 /* Space above the body text */
+  /* Add any specific styling for the body of the content section if needed */
+  /* For example, if you want to ensure it doesn't have extra top margin: */
+  /* margin-top: 0; */
+}

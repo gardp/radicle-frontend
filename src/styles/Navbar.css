@@ -1,0 +1,141 @@
+
+.navbar {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0 auto;
+  max-width: calc(100% - 300px); /* Match carousel image width */
+  background-color: rgba(26, 26, 26, 0.4); /* More transparent background */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(196, 18, 48, 0.15); /* Subtle crimson red border */
+  z-index: 1030; /* Ensure it's above carousel */
+}
+
+.navbar.scrolled {
+  background-color: rgba(26, 26, 26, 0.9); /* Less transparent when scrolled */
+}
+
+.navbar-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-brand {
+  color: var(--haiti-gold) !important;
+  padding: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand:hover {
+  transform: translateY(-1px);
+  color: #ffffff !important;
+}
+
+.navbar-logo {
+  height: 60px;
+  width: auto;
+  vertical-align: middle;
+  filter: brightness(0) saturate(100%) invert(97%) sepia(19%) saturate(184%) hue-rotate(9deg) brightness(106%) contrast(96%);
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  padding: 10px;
+  position: relative;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--haiti-red);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.nav-link:hover {
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.nav-link:hover::after {
+  width: 60%;
+  opacity: 1;
+}
+
+.nav-link.active {
+  color: var(--haiti-gold) !important;
+  font-weight: 600;
+}
+
+.nav-link.active::after {
+  width: 70%;
+  opacity: 1;
+  background-color: var(--haiti-gold);
+}
+
+/* Navbar toggle button (mobile) */
+.navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 5px 8px;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  border-color: var(--haiti-gold) !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 2px rgba(230, 181, 76, 0.3) !important;
+  outline: none !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(230, 181, 76, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Styling for dropdown menus if you have them */
+.dropdown-menu {
+  background-color: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(196, 18, 48, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  padding: 8px 0;
+  margin-top: 10px;
+}
+
+.dropdown-item {
+  color: rgba(255, 255, 255, 0.85);
+  transition: all 0.2s ease;
+  font-weight: 500;
+  padding: 8px 16px;
+  position: relative;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(15, 60, 120, 0.25);
+  color: var(--haiti-gold);
+  transform: translateX(5px);
+}
+
+.dropdown-item.active, 
+.dropdown-item:active {
+  background-color: rgba(196, 18, 48, 0.35);
+  color: #ffffff;
+}

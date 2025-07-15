@@ -1,0 +1,39 @@
+/* Example CSS file showing how to use different track sizes in different contexts */
+
+/* Small tracks for sidebar or compact views */
+.small-tracks-container .track-item {
+  --track-base-size: 0.8;
+}
+
+/* Medium tracks for normal views */
+.medium-tracks-container .track-item {
+  --track-base-size: 1;
+}
+
+/* Large tracks for featured or highlighted views */
+.large-tracks-container .track-item {
+  --track-base-size: 1.5;
+}
+
+/* Extra large tracks for detailed views */
+.xl-tracks-container .track-item {
+  --track-base-size: 2;
+}
+
+/* You can also target specific tracks with classes or IDs */
+.featured-track {
+  --track-base-size: 1.8;
+}
+
+/* Responsive track sizes */
+@media (max-width: 768px) {
+  .responsive-tracks-container .track-item {
+    --track-base-size: 0.9;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-tracks-container .track-item {
+    --track-base-size: 0.7;
+  }
+}

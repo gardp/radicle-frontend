@@ -1,0 +1,283 @@
+/**
+ * Media Component Styling
+ * 
+ * Implements an elegant, responsive grid layout with Haitian art-inspired design elements
+ * featuring an elevated frame concept with rich colors and sophisticated interactions.
+ * 
+ * Color Palette:
+ * - Rich Crimson Red (#c41230): Accents and interactive elements
+ * - Vivid Blue (#0f3c78): Depth, interactive elements, and highlights
+ * - Gold/Yellow (#e6b54c): Headings, borders, and decorative elements
+ * - Neutral Dark Base (#1a1a1a): Backgrounds with transparency
+ */
+
+/* ===== SECTION CONTAINER ===== */
+.media-section {
+    padding: 0.25rem 0 3rem;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Main container for media content */
+.media-container {
+    max-width: 1600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ===== RESPONSIVE GRID LAYOUT ===== */
+/* 3-column grid on large screens */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns by default */
+    gap: 2rem; /* Space between cards */
+    width: 100%;
+}
+
+/* ===== MEDIA CARD STYLING ===== */
+/* Main card container with uniform height */
+.media-card {
+    height: 380px; /* Uniform height for all cards */
+    background: rgba(26, 26, 26, 0.75); /* Dark neutral base with transparency */
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Smooth, slightly bouncy animation */
+    display: flex;
+    flex-direction: column;
+    /* Subtle shadow effect */
+    box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(230, 181, 76, 0.1); /* Gold accent */
+}
+
+/* Card hover effect - slight elevation and enhanced glow */
+.media-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(230, 181, 76, 0.2), /* Subtle gold border */
+        0 0 15px rgba(196, 18, 48, 0.1); /* Crimson glow effect */
+}
+
+/* ===== DECORATIVE FRAME ===== */
+/* Elevated frame with multi-color gradient border inspired by Haitian art frames */
+.media-frame {
+    flex: 1;
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+/* Creates decorative corner accents */
+.media-frame::before,
+.media-frame::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Top-left corner accent */
+.media-frame::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid rgba(196, 18, 48, 0.8); /* Crimson */
+    border-left: 2px solid rgba(196, 18, 48, 0.8);
+    border-top-left-radius: 8px;
+}
+
+/* Bottom-right corner accent */
+.media-frame::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid rgba(15, 60, 120, 0.8); /* Blue */
+    border-right: 2px solid rgba(15, 60, 120, 0.8);
+    border-bottom-right-radius: 8px;
+}
+
+/* ===== MEDIA CONTENT CONTAINER ===== */
+/* Container for the actual media (videos, images) */
+.media-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    /* Gold accent border */
+    box-shadow: inset 0 0 0 1px rgba(230, 181, 76, 0.15);
+}
+
+/* Media element styling (iframe, video, img) */
+.media-iframe,
+.media-video,
+.media-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures media fills the container */
+    transition: transform 0.5s ease;
+}
+
+/* Subtle zoom effect on hover */
+.media-card:hover .media-iframe,
+.media-card:hover .media-video,
+.media-card:hover .media-image {
+    transform: scale(1.03);
+}
+
+/* ===== OVERLAY AND PLAY INDICATOR ===== */
+/* Semi-transparent overlay for hover effects */
+.media-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 60%,
+        rgba(0, 0, 0, 0.6)
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+/* Show overlay on hover */
+.media-card:hover .media-overlay {
+    opacity: 1;
+}
+
+/* Play button indicator for video content */
+.media-play-indicator {
+    width: 60px;
+    height: 60px;
+    background: rgba(26, 26, 26, 0.75);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(230, 181, 76, 0.8); /* Gold border */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Enlarge play indicator on hover */
+.media-card:hover .media-play-indicator {
+    transform: scale(1);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+}
+
+/* Triangle play icon inside the play button */
+.play-icon {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 18px;
+    border-color: transparent transparent transparent rgba(230, 181, 76, 0.9); /* Gold */
+    margin-left: 4px; /* Slight adjustment for visual centering */
+}
+
+/* ===== CAPTION STYLING ===== */
+/* Container for title and description */
+.media-caption {
+    padding: 15px 18px;
+    background: linear-gradient(
+        to bottom,
+        rgba(26, 26, 26, 0.9),
+        rgba(26, 26, 26, 0.95)
+    );
+    border-radius: 0 0 12px 12px;
+    /* Gold accent top border */
+    border-top: 1px solid rgba(230, 181, 76, 0.15);
+}
+
+/* Title styling with decorative underline */
+.media-caption h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    /* Gold text color from theme */
+    color: rgba(230, 181, 76, 0.9);
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* Decorative accent underline for titles */
+.media-caption h3::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    /* Crimson accent from theme */
+    background-color: rgba(196, 18, 48, 0.8);
+    transition: width 0.3s ease;
+}
+
+/* Extend underline on hover */
+.media-card:hover .media-caption h3::after {
+    width: 50px;
+}
+
+/* Description text styling */
+.media-caption p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85); /* Slightly transparent white */
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+/* Tablet view - 2 columns */
+@media (max-width: 1200px) {
+    .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem;
+    }
+    
+    .media-card {
+        height: 360px; /* Slightly reduced height */
+    }
+}
+
+/* Mobile view - 1 column */
+@media (max-width: 768px) {
+    .media-section {
+        padding: 2rem 0;
+    }
+    
+    .media-container {
+        padding: 0 1rem;
+    }
+    
+    .media-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .media-card {
+        height: 340px; /* Further reduced height for mobile */
+    }
+    
+    /* Simplify some effects for better mobile performance */
+    .media-card:hover {
+        transform: translateY(-3px); /* Reduced animation */
+    }
+    
+    .media-play-indicator {
+        width: 50px;
+        height: 50px;
+    }
+}

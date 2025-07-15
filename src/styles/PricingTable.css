@@ -1,0 +1,333 @@
+/* PricingTable.css */
+:root {
+  --pricing-primary: #0d42f0;
+  --pricing-accent: #ff5500;
+  --pricing-text: #ffffff;
+  --pricing-background: rgba(13, 26, 95, 0.95);
+  --pricing-card-bg: rgba(255, 255, 255, 0.08);
+  --pricing-card-hover: rgba(255, 255, 255, 0.12);
+  --pricing-card-selected: rgba(13, 66, 240, 0.3);
+  --pricing-border: rgba(255, 255, 255, 0.1);
+  --pricing-shadow: rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Backdrop */
+.pricing-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  padding-top: 60px; /* Add padding to avoid navbar overlap */
+}
+
+/* Modal Content */
+.pricing-modal-content {
+  width: 80%;
+  max-width: 900px; /* Reduced from 1200px */
+  max-height: 80vh; /* Reduced from 90vh */
+  overflow-y: auto;
+  background: var(--pricing-background);
+  border-radius: 16px;
+  box-shadow: 0 22px 40px var(--pricing-shadow);
+  color: var(--pricing-text);
+  padding: 24px; /* Reduced from 32px */
+  position: relative;
+  animation: modalFadeIn 0.3s ease-out;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--pricing-border);
+  margin: auto; /* Ensure centering */
+}
+
+/* Hide scrollbar but keep functionality */
+.pricing-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.pricing-modal-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.pricing-modal-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--pricing-border);
+  color: var(--pricing-text);
+  font-size: 20px; /* Reduced from 24px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+/* Header */
+.pricing-header {
+  text-align: center;
+  margin-bottom: 24px; /* Reduced from 32px */
+  padding-bottom: 12px; /* Reduced from 16px */
+  border-bottom: 1px solid var(--pricing-border);
+}
+
+.pricing-header h2 {
+  font-size: 1.6rem; /* Reduced from 1.8rem */
+  margin-bottom: 8px;
+  color: var(--pricing-text);
+}
+
+.pricing-header p {
+  font-size: 0.9rem; /* Reduced from 1rem */
+  opacity: 0.8;
+}
+
+/* Options Container */
+.pricing-options-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px; /* Reduced from 24px */
+  margin-bottom: 24px; /* Reduced from 32px */
+}
+
+/* Pricing Option Card */
+.pricing-option {
+  background: var(--pricing-card-bg);
+  border-radius: 12px;
+  padding: 16px; /* Reduced from 24px */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--pricing-border);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pricing-option:hover {
+  transform: translateY(-5px);
+  background: var(--pricing-card-hover);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.pricing-option:hover::before {
+  opacity: 1;
+}
+
+.pricing-option.selected {
+  background: var(--pricing-card-selected);
+  border-color: var(--pricing-primary);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(13, 66, 240, 0.2);
+}
+
+.pricing-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px; /* Reduced from 16px */
+  position: relative;
+  z-index: 1;
+}
+
+.pricing-option-header h3 {
+  font-size: 1.2rem; /* Reduced from 1.4rem */
+  margin: 0;
+}
+
+.price {
+  font-size: 1.4rem; /* Reduced from 1.6rem */
+  font-weight: bold;
+  color: var(--pricing-primary);
+}
+
+.license-type {
+  font-size: 0.9rem; /* Reduced from 1rem */
+  margin-bottom: 12px; /* Reduced from 16px */
+  padding-bottom: 12px; /* Reduced from 16px */
+  border-bottom: 1px solid var(--pricing-border);
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.usage-terms {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 12px 0; /* Reduced from 16px */
+  flex-grow: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.usage-terms li {
+  padding: 6px 0; /* Reduced from 8px */
+  position: relative;
+  padding-left: 24px;
+  font-size: 0.85rem; /* Reduced from 0.9rem */
+  line-height: 1.4;
+}
+
+.usage-terms li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--pricing-primary);
+  font-weight: bold;
+}
+
+/* Contact Button */
+.contact-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--pricing-text);
+  border: 1px solid var(--pricing-border);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 0.85rem; /* Reduced from 0.9rem */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 12px; /* Reduced from 16px */
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.contact-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Footer */
+.pricing-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* Add to Cart Button */
+.add-to-cart-button {
+  background: var(--pricing-primary);
+  color: white;
+  border: none;
+  border-radius: 24px; /* Reduced from 28px */
+  padding: 10px 24px; /* Reduced from 12px 32px */
+  font-size: 0.95rem; /* Reduced from 1rem */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(13, 66, 240, 0.3);
+}
+
+.add-to-cart-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(13, 66, 240, 0.4);
+  background: #1050ff;
+}
+
+.add-to-cart-button.active {
+  animation: pulse 1.5s infinite;
+}
+
+.add-to-cart-button.disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(13, 66, 240, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(13, 66, 240, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(13, 66, 240, 0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .pricing-options-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .pricing-modal-content {
+    width: 85%;
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-modal-content {
+    width: 90%;
+    max-width: 90%;
+    padding: 20px;
+    max-height: 85vh;
+  }
+  
+  .pricing-options-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .pricing-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .pricing-option-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .price {
+    font-size: 1.3rem;
+  }
+}

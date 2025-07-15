@@ -1,0 +1,288 @@
+.info-slider {
+    width: 100%;
+    height: 100%;
+    position: relative;  
+    overflow: hidden; 
+    /* Changed from flexbox to allow for full-width background positioning */
+    display: block;
+}
+
+/* Container for slides to ensure proper positioning */
+.slides-container {
+    position: absolute;
+    width: 100%; /* Full viewport width */
+    height: 100%;
+    overflow: hidden; /* Hide overflow for sliding effect */
+    z-index: 1; /* Lower than controls */
+}
+
+/* Base styling for all slides */
+.info-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-position: center;
+    background-size: cover;
+    transition: filter 0.8s ease, opacity 0.8s ease; /* Transition for both blur and opacity */
+    filter: blur(0px); /* Default state is clear/sharp */
+    will-change: filter, opacity; /* Optimize for animations */
+    opacity: 1;
+}
+
+/* Current slide - always clear and fully visible */
+.info-slide.current-slide {
+    z-index: 2;
+    opacity: 1 !important; /* Force full opacity */
+    filter: blur(0px) !important; /* Force no blur - override any transitioning state */
+}
+
+/* Animation for current slide blurring out */
+.info-slide.current-slide.slide-left,
+.info-slide.current-slide.slide-right {
+    z-index: 1; /* Move behind the incoming slide */
+    filter: blur(25px); /* High blur value for outgoing slide */
+    opacity: 0.7; /* Keep partially visible as it blurs out */
+}
+
+/* Next slide coming into focus */
+.info-slide.next-slide {
+    z-index: 3; /* Position above the current slide */
+    filter: blur(25px); /* Start blurry */
+    opacity: 0.7; /* Start partially visible */
+    animation: blurToClarity 0.8s ease forwards;
+    /* Ensure the animation end state persists */
+    animation-fill-mode: forwards;
+}
+
+/* Keyframe animations for blur-to-clarity effect */
+@keyframes blurToClarity {
+    0% {
+        filter: blur(25px);
+        opacity: 0.7;
+    }
+    100% {
+        filter: blur(0px);
+        opacity: 1;
+    }
+}
+
+/* Keyframe animations for clarity-to-blur effect */
+@keyframes clarityToBlur {
+    0% {
+        filter: blur(0px);
+        opacity: 1;
+    }
+    100% {
+        filter: blur(25px);
+        opacity: 0.7;
+    }
+}
+
+/* Slide content container */
+.slide-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    z-index: 2;
+    /* Add overlay gradient for better text visibility */
+    background: linear-gradient(to bottom, 
+        rgba(26, 26, 26, 0.1) 0%, 
+        rgba(26, 26, 26, 0.5) 100%);
+}
+
+/* Slide title styling */
+.slide-title {
+    color: rgba(243, 240, 224, 1); /* Gold color from Haitian palette */
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin:0 10rem 1rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    /* Add animation for title */
+    animation: slideInDown 0.5s ease 0.3s both;
+}
+
+/* Slide sub-headline styling */
+.slide-subheadline {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-style: italic;
+    letter-spacing: 0.02em;
+    animation: fadeIn 0.5s ease 0.4s both;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Navigation button styling */
+.slide-nav-button {
+    position: absolute;
+    bottom: 3rem;
+    left: 20rem;
+    padding: 1.2rem 2.25rem; /* Increased by 50% from 0.8rem 1.5rem */
+    background-color: rgba(15, 60, 120, 0.8); /* Vivid blue from Haitian palette */
+    color: white;
+    text-decoration: none;
+    border-radius: 6px; /* Increased by 50% from 4px */
+    font-weight: 600;
+    font-size: 1.35rem; /* Increased by 50% from 0.9rem */
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Add animation for button */
+    animation: slideInUp 0.5s ease 0.5s both;
+}
+
+.slide-nav-button:hover {
+    background-color: rgba(196, 18, 48, 0.8); /* Crimson red from Haitian palette */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Shared styles for both controls */
+.slider-control {
+    width: 150px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    background-color: rgba(15, 60, 120, 0.15); /* Vivid blue with low opacity */
+    cursor: pointer;
+    z-index: 10;
+    padding: 20px 0;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Base pseudo-element for hover preview backgrounds */
+.slider-control::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1; /* Place behind the text */
+    transition: opacity 0.3s ease;
+    filter: blur(8px); /* Apply blur directly to the background image */
+}
+
+/* Hover effect to show the image preview */
+.slider-control:hover::before {
+    opacity: 0.6; /* Semi-transparent to work with the blur effect */
+}
+
+/* Next control shows left edge of next slide */
+.slider-control.next-control::before {
+    background-image: var(--preview-image);
+    background-position: left center; /* Show left edge of the image */
+    right: 0;
+}
+
+/* Position the next control at the right edge */
+.slider-control.next-control {
+    right: 0;
+}
+
+/* Prev control shows right edge of previous slide */
+.slider-control.prev-control::before {
+    background-image: var(--preview-image);
+    background-position: right center; /* Show right edge of the image */
+    left: 0;
+}
+
+/* Position the prev control at the left edge */
+.slider-control.prev-control {
+    left: 0;
+}
+
+/* Add hover effect to make controls more interactive */
+.slider-control:hover {
+    background-color: rgba(15, 60, 120, 0.25); /* Slightly more opaque on hover */
+}
+
+.slider-control:hover .control-text {
+    color: white;
+    transform: rotate(-90deg) scale(1.1); /* Slightly larger on hover */
+}
+
+/* Specific styling for next control */
+.next-control .control-text {
+    transform: rotate(90deg); /* Rotate clockwise to mirror the prev control */
+}
+
+.slider-control.next-control:hover .control-text {
+    transform: rotate(90deg) scale(1.1); /* Maintain clockwise rotation on hover */
+}
+
+/* Style for the text in controls */
+.control-text {
+    color: rgba(174, 8, 8, 0.9); /* Using the gold color from your Haitian art palette */
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    font-family: 'Montserrat', sans-serif;
+    transform: rotate(-90deg); /* Rotate text counterclockwise */
+    transform-origin: center center;
+    display: block;
+    white-space: nowrap; /* Prevent text from wrapping */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Keyframe animations for slide content */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .slide-title {
+        font-size: 2rem;
+    }
+    
+    .slider-control {
+        width: 80px;
+    }
+}

@@ -1,0 +1,128 @@
+/* Cart.css */
+button.cart-button.primary.size-lg {
+  width: 50px !important;
+  height: 50px !important;
+  margin-left: 15px;
+  border: none !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  position: relative;
+  /* Existing styling is now handled by the skeuomorphic-btn classes */
+}
+
+/* Additional selector to increase specificity */
+.cart-button-container button.cart-button {
+  border-radius: 50% !important;
+}
+
+.cart-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0) 100%);
+  border-radius: 50% 50% 100% 100% / 50% 50% 35% 35%;
+}
+
+.cart-button::before {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 4px;
+  right: 4px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+button.cart-button.primary.size-lg:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0 2px 5px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 50% !important;
+}
+
+button.cart-button.primary.size-lg:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 50% !important;
+}
+
+.cart-icon {
+  width: 24px;
+  height: 24px;
+  background-image: url('../assets/images/icons8-cart-black.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  filter: brightness(1.2); /* Make the icon slightly brighter */
+}
+
+.cart-counter {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  color: white;
+  font-size: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  z-index: 3;
+  /* The skeuomorphic styling for the counter will be applied via class */
+}
+
+.cart-button-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Item count badge with Haitian color theme */
+.rounded-circle.bg-danger {
+  background-color: #c41230 !important; /* Haitian red */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  color: white !important;
+  transition: all 0.3s ease;
+}
+
+/* Cart preview animation */
+.cart-preview {
+  border-color: rgba(196, 18, 48, 0.2) !important; /* Subtle crimson red border */
+}
+
+.cart-preview-header {
+  background: linear-gradient(145deg, rgba(15, 60, 120, 0.9), rgba(26, 26, 26, 0.95)) !important;
+  border-bottom: 1px solid rgba(230, 181, 76, 0.2) !important; /* Subtle gold border */
+}
+
+.cart-preview-header h5 {
+  color: rgba(230, 181, 76, 0.9) !important; /* Gold for headings */
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.cart-preview-body {
+  background-color: rgba(26, 26, 26, 0.85) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}

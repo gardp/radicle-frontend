@@ -1,0 +1,44 @@
+.music-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 255px;
+  height: 255px;
+  margin: 0 auto;
+}
+
+.album-art {
+  width: 255px;
+  height: 255px;
+  border-radius: 50%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+
+.play-pause-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 700px;
+  height: 700px;
+}
+
+.play-pause-icon {
+  width: 700px;
+  height: 700px;
+  object-fit: contain;
+}
+
+.track-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
