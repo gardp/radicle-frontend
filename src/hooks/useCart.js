@@ -56,14 +56,15 @@ const useCart = () => {
    * @param {Object} track - Track object
    * @param {Object} licenseOption - Selected license option with price
    */
-  const addTrackToCart = (track, licenseOption) => {
+  const addTrackToCart = (track, selectedLicenseId) => {
+    const trackSelectedLicenseType = track.license_types.find(option => option.license_type_id === selectedLicenseId);
     cart.addToCart({ //this comes from the cart context
-      id: track.id,
+      id: track.track_id,
       name: track.title,
-      description: `${track.title} by ${track.artist} - ${licenseOption.name} License`,
-      image: track.image,
-      price: licenseOption.price,
-      license: licenseOption.id,
+      description: `${track.title} by ${track.artists} - ${trackSelectedLicenseType.license_type_name} License`,
+      image: track.thumbnail,
+      price: trackSelectedLicenseType.license_fee,
+      license: trackSelectedLicenseType.license_type_name,
       quantity: 1,
       type: 'track'
     });

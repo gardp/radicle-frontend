@@ -7,6 +7,7 @@ import '../styles/Cart.css';
 import '../styles/SkeuomorphicButtons.css';
 import CartPreview from './cart/CartPreview';
 import useCart from '../hooks/useCart';
+import cartIconBeige from '../assets/images/icons8-cart-beige.png'; 
 
 const CustomNavbar = () => {
   const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
@@ -77,7 +78,9 @@ const CustomNavbar = () => {
             onClick={toggleCartPreview}
             aria-label="Open cart"
           >
-            <div className="cart-icon" href="https://icons8.com"></div>
+            <div className="cart-icon" href="https://icons8.com">
+            <img src={cartIconBeige} alt="Cart" />
+            </div>
           </button>
         </div>
       </Container>

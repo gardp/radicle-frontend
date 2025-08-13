@@ -25,10 +25,11 @@ const AudioControls = ({
   onPrevClick,
   onNextClick,
   // Track info props
-  vinylThumbnail,
-  title,  
-  artist,
-  audio_file,
+  track,
+  // vinyl_thumbnail,
+  // title,  
+  // artist,
+  // audio_file,
   // Audio control props
   trackProgress,
   audioRef,
@@ -60,8 +61,8 @@ const AudioControls = ({
         <div className={`vinyl-artwork-container ${isPlaying ? 'is-playing' : ''}`}>
           <img
             className="vinyl-artwork"
-            src={vinylThumbnail}
-            alt={`track artwork for ${title}`}
+            src={track.vinyl_thumbnail}
+            alt={`track artwork for ${track.title}`}
           />
         </div>
       )}
@@ -81,16 +82,16 @@ const AudioControls = ({
           <div className={`vinyl-artwork-container ${isPlaying ? 'is-playing' : ''}`}>
             <img
               className="vinyl-artwork"
-              src={vinylThumbnail}
-              alt={`track artwork for ${title}`}
+              src={track.vinyl_thumbnail}
+              alt={`track artwork for ${track.title}`}
             />
           </div>
         )}
         
         <div className="track-info-frame">
           <div className="track-info">
-            <h2 className="title">{title}</h2>
-            <h3 className="artist">{artist}</h3>
+            <h2 className="title">{track.title}</h2>
+            <h3 className="artist">{track.artists}</h3>
           </div>
         </div>
         

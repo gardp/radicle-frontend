@@ -80,9 +80,9 @@ export const CartProvider = ({ children }) => {
   /**
    * Check if an item with specific trackId and license is in cart
    */
-  const isInCart = useCallback((trackId, license) => {
-    const uniqueId = `${trackId}-${license}`;
-    return state.items.some(item => item.id === uniqueId);
+  const isInCart = useCallback((trackId, license_id) => {
+    // const uniqueId = `${trackId}-${license_id}`;
+    return state.items.some(item => item.track_id === trackId && item.license_types.license_type_id === license_id);
   }, [state.items]);
   
   /**

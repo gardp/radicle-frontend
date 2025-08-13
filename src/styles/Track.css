@@ -210,7 +210,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px; /* Vertical spacing between icon groups */
+  gap: 5px; /* Vertical spacing between icon groups */
   margin-left: auto; /* Push to right side */
   margin-right: 5px; /* Right margin for balance */
   /* flex-shrink: 1; Prevent shrinking */
@@ -231,7 +231,7 @@
 }
 
 /* Buy and download icons container */
-.track-icons-left {
+.track-icons-up {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -239,7 +239,7 @@
 }
 
 /* Stream icon container */
-.track-icons-right {
+.track-icons-down {
   display: flex;
   align-items: center;
   gap: 16px; /* Spacing between icons */

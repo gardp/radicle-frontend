@@ -196,10 +196,7 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
           onScrubEnd={onScrubEnd}
           trackStyling={trackStyling}
           audioRef={audioRef}
-          vinylThumbnail={vinyl_thumbnail}
-          title={title}
-          artist={artist}
-          audio_file={audio_file}
+          track={currentTrack}
           // controlsSize prop removed
         />
       </div>

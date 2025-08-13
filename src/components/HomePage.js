@@ -8,9 +8,12 @@ import PricingTable from './PricingTable';
 import CustomNavbar from './CustomNavbar';
 import Section from './Section';
 import { useTracks } from '../hooks/useTracks';
+import { LicensingOptions } from './priceLicensing/priceLicensing';
+import { useDispatch } from 'react-redux';
 
 const HomePage = () => {
   const { data: tracks, isLoading, isError } = useTracks();
+  console.log('here are the tracks', tracks);
 
   return (
     <div className="page-wrapper">
@@ -23,9 +26,9 @@ const HomePage = () => {
       <FeaturedHighlight />
       {/* Main Content Sections */}
       <div className="main-content">
-        {/* <div className="content-section">
+        <div className="content-section">
           <PricingTable/>
-        </div> */}
+        </div>
         <Section title="Latest Music Releases">
           {isLoading && <p>Loading music...</p>}
           {isError && <p>Error fetching music. Please try again later.</p>}

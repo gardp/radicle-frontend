@@ -4,7 +4,7 @@ import '../styles/Track.css';
 import '../styles/SkeuomorphicButtons.css';
 import PricingTable from './PricingTable';
 import { useSelector, useDispatch } from 'react-redux';
-import { openPricingModal, closePricingModal } from '../features/priceLicensing/priceLicensing.js';
+import { openPricingModal, closePricingModal } from './priceLicensing/priceLicensing.js';
 import cartIconRed from '../assets/images/icons8-cart-crimson-red.png';
 import downloadIcon from '../assets/images/icons8-listening-to-music-on-headphones-100.png';
 import streamIcon from '../assets/images/icons8-music-stream-red.png';
@@ -13,7 +13,7 @@ import avatar from '../assets/images/radicleavatar.jpg';
 const Track = ({ track, isActive, onClick }) => {
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const dispatch = useDispatch();
-  const { currentTrack } = useSelector((state) => state.priceLicensing); // read nad destructure currentTrack from state
+  // const { currentTrack } = useSelector((state) => state.priceLicensing); // read nad destructure currentTrack from state
   
   // Function to handle track image click
   const handleTrackImageClick = (e) => {
@@ -57,12 +57,12 @@ const Track = ({ track, isActive, onClick }) => {
           <div className="track-info-line">
             <span className="track-title">{track.title}</span>
             <span className="track-separator"> - </span>
-            <span className="track-artist">{track.artist}</span>
-            <span className="track-bpm">{track.tempo_bpm}bpm</span>
+            <span className="track-artist">{track.artists}</span>
+            <span className="track-bpm">{track.bpm}bpm</span>
           </div>  
           <img
             className="track-label-thumbnail"
-            src={babyRadicle}
+            src={track.thumbnail}
             alt="Decorative thumbnail"
           />
         </div>
@@ -70,8 +70,8 @@ const Track = ({ track, isActive, onClick }) => {
         {/* Icons container - stacked vertically */}
         <div className="track-icons">
           {/* Buy and Download icons */}
-          <div className="track-icons-left">
-            {track.links?.buyLink && (
+          <div className="track-icons-up">
+            {track.buy_link && (
               <a href="#" onClick={(e) => { e.stopPropagation(); handleCartClick(e); }}>
                 <img
                   // className="track-icon buy-icon skeuomorphic-btn primary with-glare" justink
@@ -82,8 +82,8 @@ const Track = ({ track, isActive, onClick }) => {
                 <span className="tooltip">Buy</span>
               </a>
             )}
-            {track.links?.downloadLink && (
-              <a href={track.links.downloadLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+            {track.download_link && (
+              <a href={track.download_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                 <img
                   className="track-icon download-icon skeuomorphic-btn accent with-glare"
                   src={downloadIcon}
@@ -94,9 +94,9 @@ const Track = ({ track, isActive, onClick }) => {
             )}
           </div>
           {/* Stream icon */}
-          <div className="track-icons-right">
-            {track.links?.streamLink && (
-              <a href={track.links.streamLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+          <div className="track-icons-down">
+            {track.stream_link && (
+              <a href={track.stream_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                 <img
                   className="track-icon stream-icon skeuomorphic-btn"
                   src={streamIcon}

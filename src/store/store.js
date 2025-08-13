@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import priceLicensingSlice from '../src/features/priceLicensing/priceLicensing.js'; // Import your reducers
+import priceLicensingSlice from './components/priceLicensing/priceLicensing.js'; // Import your reducers
 
 export const store = configureStore({
   reducer: {

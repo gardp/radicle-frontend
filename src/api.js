@@ -15,7 +15,8 @@ import axios from 'axios';
 // };
 
 // Get base URL from environment variables
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+console.log('API_BASE_URL', API_BASE_URL);
 
 if (!API_BASE_URL) {
     throw new Error('REACT_APP_API_BASE_URL is not defined in the environment variables');
@@ -97,12 +98,16 @@ api.interceptors.request.use(
     // createTrack: (trackData) => api.post('/tracks/', trackData),
     // ... more music related calls
   };
+
   
-  // // Licensing API
-  // export const licenseApi = {
-  //   getLicenseTypes: () => api.get('/licenses/types/'),
-  //   purchaseLicense: (purchaseData) => api.post('/licenses/purchase/', purchaseData),
-  // };
+  
+  // Licensing API: getting the license types to choose from
+  export const licenseApi = {
+    // getting a specific license
+    getLicense: (id) => api.get(`/licenses/${id}/`),
+    // getting all the license types to match to the current track
+    getLicenseTypes: () => api.get('/license_types/'),
+  };
   
   // You can add more API groups as needed (e.g., cartApi, orderApi)
 

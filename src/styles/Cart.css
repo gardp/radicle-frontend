@@ -60,15 +60,20 @@ button.cart-button.primary.size-lg:active {
 .cart-icon {
   width: 24px;
   height: 24px;
-  background-image: url('../assets/images/icons8-cart-black.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   filter: brightness(1.2); /* Make the icon slightly brighter */
 }
 
