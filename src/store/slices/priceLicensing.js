@@ -5,8 +5,8 @@ const initialState = {
   currentTrack: null,
 };
 
-export const LicensingOptions = createSlice({
-  name: 'LicensingOptions',
+export const priceLicensingSlice = createSlice({
+  name: 'priceLicensing',
   initialState,
   reducers: {
     openPricingModal: (state, action) => {
@@ -20,6 +20,6 @@ export const LicensingOptions = createSlice({
   },
 });
 
-export const { openPricingModal, closePricingModal } = LicensingOptions.actions;
+export const { openPricingModal, closePricingModal } = priceLicensingSlice.actions;
 
-export default LicensingOptions.reducer;
+export default priceLicensingSlice.reducer;

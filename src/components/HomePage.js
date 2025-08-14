@@ -8,7 +8,7 @@ import PricingTable from './PricingTable';
 import CustomNavbar from './CustomNavbar';
 import Section from './Section';
 import { useTracks } from '../hooks/useTracks';
-import { LicensingOptions } from './priceLicensing/priceLicensing';
+import { LicensingOptions } from '../store/slices/priceLicensing';
 import { useDispatch } from 'react-redux';
 
 const HomePage = () => {

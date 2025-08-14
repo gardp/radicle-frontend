@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/PricingTable.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { closePricingModal } from './priceLicensing/priceLicensing.js';
+import { closePricingModal } from '../store/slices/priceLicensing.js';
 import useCart from '../hooks/useCart';
 import { tracksData, licenseOptions } from './Tracks';
 import { useLicenseTypes } from '../hooks/useLicense';
