@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import '../styles/AudioPlayer.css';
 import '../styles/Track.css';
 import '../styles/SkeuomorphicButtons.css';
-import PricingTable from './PricingTable';
 import { useSelector, useDispatch } from 'react-redux';
-import { openPricingModal, closePricingModal } from './priceLicensing/priceLicensing.js';
+import { openPricingModal, closePricingModal } from '../store/slices/priceLicensing.js';
 import cartIconRed from '../assets/images/icons8-cart-crimson-red.png';
 import downloadIcon from '../assets/images/icons8-listening-to-music-on-headphones-100.png';
 import streamIcon from '../assets/images/icons8-music-stream-red.png';
 import babyRadicle from '../assets/images/baby-radicle.png';
 import avatar from '../assets/images/radicleavatar.jpg';
 const Track = ({ track, isActive, onClick }) => {
-  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  // const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const dispatch = useDispatch();
   // const { currentTrack } = useSelector((state) => state.priceLicensing); // read nad destructure currentTrack from state
   
@@ -72,7 +71,9 @@ const Track = ({ track, isActive, onClick }) => {
           {/* Buy and Download icons */}
           <div className="track-icons-up">
             {track.buy_link && (
-              <a href="#" onClick={(e) => { e.stopPropagation(); handleCartClick(e); }}>
+              <a href="#" onClick={(e) => { e.stopPropagation(); handleCartClick(e); 
+                console.log("Buy clicked");
+              }}>
                 <img
                   // className="track-icon buy-icon skeuomorphic-btn primary with-glare" justink
                   className="track-icon buy-icon primary with-glare"
@@ -83,7 +84,7 @@ const Track = ({ track, isActive, onClick }) => {
               </a>
             )}
             {track.download_link && (
-              <a href={track.download_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+              <a href={track.download_link} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.stopPropagation(); console.log("Download clicked"); }}>
                 <img
                   className="track-icon download-icon skeuomorphic-btn accent with-glare"
                   src={downloadIcon}

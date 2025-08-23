@@ -7,14 +7,12 @@ import AboutUs from './components/AboutUs';
 import './App.css';
 import CustomNavbar from './components/CustomNavbar';
 import Catalog from './components/Catalog';
-import PricingTable from './components/PricingTable';
-import { CartProvider } from './context/cart/CartProvider';
 import Checkout from './components/checkout/Checkout';
+import TrackPricingTable from './components/TrackPricingTable';
+import LicenseAgreement from './components/LicenseAgreement';
 
 function App() {
   return (
-<>
-    <CartProvider>
       <Router>
         <div className="app-container">
         <CustomNavbar />
@@ -25,7 +23,6 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/catalog" element={<Catalog />} />
-              <Route path="/pricing" element={<PricingTable />} />
               <Route path="/checkout" element={<Checkout />} />
                 {/* ADD this <Route path="*" element={<NotFound />} /> */}
                 {/* Always start with the most specific routes first then move to the more general ones... */}
@@ -33,11 +30,10 @@ function App() {
               </Routes>
             </main>
           {/* </Container> */}
-          {/* <PricingTable/> */}
+          <TrackPricingTable/>
+          <LicenseAgreement/>
         </div>
       </Router>
-    </CartProvider>
-    </>
   );
 }
 

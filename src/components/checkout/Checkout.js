@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import useCart from '../../hooks/useCart';
+import { selectAllLicenseAgreementsAcknowledged } from '../../store/slices/cartSlice';
 import CheckoutForm from './CheckoutForm';
 import OrderSummary from './OrderSummary';
 import OrderConfirmation from './OrderConfirmation';
@@ -39,6 +41,9 @@ const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   
+  // Check if all license agreements are acknowledged
+  const allLicenseAgreementsAcknowledged = useSelector(selectAllLicenseAgreementsAcknowledged);
+  
   // Redirect if cart is empty
   useEffect(() => {
     if (items.length === 0 && !orderComplete) {
@@ -67,6 +72,12 @@ const Checkout = () => {
   // Validate form data
   const validateForm = () => {
     const newErrors = {};
+    
+    // Check if all license agreements are acknowledged
+    if (!allLicenseAgreementsAcknowledged) {
+      newErrors.licenseAgreement = 'You must acknowledge all license agreements before checkout';
+      return false;
+    }
     
     // Email validation
     if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -203,6 +214,13 @@ const Checkout = () => {
         <p>Complete your purchase by providing your details below</p>
       </div>
       
+      {!allLicenseAgreementsAcknowledged && (
+        <div className="license-agreement-warning">
+          <p>⚠️ You must acknowledge all license agreements before completing checkout.</p>
+          <p>Please click "Review License Agreement" for each item in your order.</p>
+        </div>
+      )}
+      
       <div className="checkout-layout">
         <CheckoutForm 
           formData={formData}
@@ -210,6 +228,7 @@ const Checkout = () => {
           errors={errors}
           onSubmit={handleSubmit}
           isProcessing={isProcessing}
+          isSubmitDisabled={!allLicenseAgreementsAcknowledged}
         />
         
         <OrderSummary 

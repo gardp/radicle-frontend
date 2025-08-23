@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/PricingTable.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { closePricingModal } from '../store/slices/priceLicensing.js';
-import useCart from '../hooks/useCart';
-import { tracksData, licenseOptions } from './Tracks';
-import { useLicenseTypes } from '../hooks/useLicense';
+import { closePricingModal, openPricingModal } from '../store/slices/priceLicensing.js';
+import useCart from '../hooks/useCart.js';
+import { tracksData, licenseOptions } from './Tracks.js';
+import { useLicenseTypes } from '../hooks/useLicense.js';
+import { loadCartFromStorage } from '../store/cartStorage';
 
 // const PricingTable = ({ isOpen, onClose, track }) => {
-const PricingTable = () => {
-  const [selectedLicenseOption, setSelectedLicenseOption] = useState(null);
+const TrackPricingTable = () => {
+  const [selectedLicenseOption, setSelectedLicenseOption] = useState(null); //save the entire license option object, not just the id
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isOpen, track: currentTrack } = useSelector((state) => state.priceLicensing); //destructuring the state
-  const track_id = currentTrack.track_id; //getting the track id from the currentTrack
-  const { addTrackToCart, isTrackInCart } = useCart(); //importing the useCart hook and destructuring the addToCartfunction
+  const { isOpen, currentTrack } = useSelector((state) => state.priceLicensing); //destructuring the state
+  // console.log("license types", currentTrack.license_types);
+  // const track_id = currentTrack.track_id; //getting the track id from the currentTrack
+  const { addTrackToCart, isTrackLicenseInCart, items } = useCart(); //importing the useCart hook and destructuring the addToCartfunction
   const { data: license_types } = useLicenseTypes();
+  console.log("pricing table current track", currentTrack);
+
   
+  // // printing the cart state
+  // const { items = [] } = useSelector((state) => state.cart.items || []);
+  // console.log("Cart items:", items || "No items in cart");
   
   // Close modal when ESC key is pressed
   useEffect(() => {
@@ -64,30 +71,51 @@ const PricingTable = () => {
   };
   
   // Handle option select from the licenses types in the pricing table
-  const handleOptionSelect = (trackLicenseType_id) => {
-    setSelectedLicenseOption(trackLicenseType_id); //this will set the selectedLicenseOption to the trackLicenseType_id
+  const handleOptionSelect = (trackLicenseType) => {
+    setSelectedLicenseOption(trackLicenseType); //this will set the selectedLicenseOption to the trackLicenseType_id
   };
   
   // Get the selected license option details
   const getSelectedOption = () => {
-    trackLicenseType = license_types.find(option => option.license_type_id === selectedLicenseOption);
+    const trackLicenseType = license_types.find(option => option.license_type_id === selectedLicenseOption);
     // return licenseOptions.find(option => option.id === selectedOption);
     return trackLicenseType; //this will return the full license type object that was selected
   };
   
-  const handleAddToCart = () => { 
+  const handleAddTrackToCart = () => { 
     if (selectedLicenseOption && currentTrack) { //so assuming that an option is selected and the state of track in priceLicensing is not null
+      //await the promise returned by the thunk
       addTrackToCart(currentTrack, selectedLicenseOption); //adds the track to cart with the license option id that was selected- This is from useCart...passed from cartContext
-      console.log("here is the track:", currentTrack);
+      const storedCart = loadCartFromStorage();
+      console.log("cart content:", storedCart);
+      // console.log("Verification: Cart from storage:", storedCart);
       dispatch(closePricingModal());
-      console.log("currentTrack after close:", currentTrack)
     }
   };
 
-    // Check if the selected license is already in cart
+  // const handleAddTrackToCart = async () => { // 1. Make the function async
+  //   if (selectedLicenseOption && currentTrack) {
+  //     try {
+  //       // 2. Await the promise returned by the thunk
+  //       await addTrackToCart(currentTrack, selectedLicenseOption); 
+  //       const storedCart = loadCartFromStorage();
+  //       console.log("cart content:", storedCart.items);
+  //       // console.log("Track added successfully:", currentTrack);
+  //       // 3. This now runs only after the await is complete
+  //       // dispatch(closePricingModal()); 
+  //     } catch (error) {
+  //       console.error("Failed to add track to cart:", error);
+  //       // Optionally, show an error message to the user here
+  //     }
+  //     dispatch(closePricingModal()); 
+  //   }
+  // };
+
+    // Check if the selected license is already in cart. And remember the cart is using the cartSlice format and is already stored in thunk cartStorage
+    // So the isTrackLicenseInCart will check the "track_id" against the "id" in the cart.items array
     const isSelectedLicenseInCart = () => {
       if (!selectedLicenseOption || !currentTrack) return false;
-      return isTrackInCart(currentTrack.track_id, selectedLicenseOption);
+      return isTrackLicenseInCart(currentTrack.track_id, selectedLicenseOption.license_type_id);
     };
     
   const handleContactClick = () => {
@@ -108,21 +136,23 @@ const PricingTable = () => {
         </div>
         
         <div className="pricing-options-container">
-          {currentTrack.license_types.map(option => (
+          {currentTrack.license_types.map(licenseOption => (
             <div 
-              key={option.license_type_id}
-              className={`pricing-option ${selectedLicenseOption === option.license_type_id ? 'selected' : ''}`} //${option.recommended ? 'recommended' : ''}` 
-              onClick={() => handleOptionSelect(option.license_type_id)}
+              key={licenseOption.license_type_id}
+              className={`pricing-option ${selectedLicenseOption === licenseOption? 'selected' : ''}`} //${option.recommended ? 'recommended' : ''}` 
+              onClick={() => handleOptionSelect(licenseOption)}
             >
               {/* {option.recommended && <div className="recommended-badge">Recommended</div>} */}
-              <h3>{option.license_type_name} License</h3>
-              <div className="price">${option.license_fee.toFixed(2)}</div>
+              <h3>{licenseOption.license_type_name} License</h3>
+              {console.log(typeof("license type fee", licenseOption.license_fee))};
+              {console.log(typeof("id type", currentTrack.track_id))};
+              <div className="price">${licenseOption.license_fee}</div>
               <ul className="features">
-                <li>{option.license_type_name}</li>
-                <li>{option.license_term}</li>
-                <li>{option.file_format}</li>
-                <li>{option.download_limit}</li>
-                <li>{option.streaming_limit}</li>
+                <li>{licenseOption.license_type_name}</li>
+                <li>{licenseOption.license_term}</li>
+                <li>{licenseOption.file_format}</li>
+                <li>{licenseOption.download_limit}</li>
+                <li>{licenseOption.streaming_limit}</li>
                 <li>No Refunds</li>
                   {/* <li key={index}>{option.license_type_name}</li>
                   <li key={index}>{option.license_term}</li>
@@ -132,13 +162,13 @@ const PricingTable = () => {
                   <li key={index}>No Refunds</li> */}
               </ul>
               <button 
-                className={`select-button ${selectedLicenseOption === option.license_type_id ? 'selected' : ''}`}
+                className={`select-button ${selectedLicenseOption === licenseOption.license_type_id ? 'selected' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleOptionSelect(option.license_type_id);
+                  handleOptionSelect(licenseOption.license_type_id);
                 }}
               >
-                {selectedLicenseOption === option.license_type_id ? 'Selected' : 'Select'}
+                {selectedLicenseOption === licenseOption.license_type_id ? 'Selected' : 'Select'}
               </button>
             </div>
           ))}
@@ -153,11 +183,11 @@ const PricingTable = () => {
           <button 
             className={`add-to-cart-button ${!selectedLicenseOption ? 'disabled' : ''} ${isSelectedLicenseInCart() ? 'in-cart' : ''}`}
             disabled={!selectedLicenseOption || isSelectedLicenseInCart()}
-            onClick={handleAddToCart}
+            onClick={handleAddTrackToCart}
           >
             {isSelectedLicenseInCart() 
               ? 'Already In Cart' 
-              : `Add to Cart ${selectedLicenseOption ? `- $${getSelectedOption()?.price.toFixed(2)}` : ''}`}
+              : `Add to Cart ${selectedLicenseOption && currentTrack.license_types.some(license => license === selectedLicenseOption) ? `- $${selectedLicenseOption.license_fee} selected` : ''}`}
           </button>
         </div>
       </div>
@@ -165,4 +195,4 @@ const PricingTable = () => {
   );
 };
 
-export default PricingTable;
+export default TrackPricingTable;

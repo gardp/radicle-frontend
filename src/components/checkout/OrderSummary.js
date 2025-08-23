@@ -1,10 +1,14 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { openLicenseModal } from '../../store/slices/licenseAgreementSlice';
 import '../../styles/Checkout.css';
 
 /**
  * OrderSummary component displays the items in the cart and total calculations
  */
 const OrderSummary = ({ items, totalPrice }) => {
+  const dispatch = useDispatch();
+  
   // Calculate subtotal (before tax/shipping)
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   
@@ -17,6 +21,11 @@ const OrderSummary = ({ items, totalPrice }) => {
   
   // Calculate final total
   const total = subtotal + tax + shipping;
+  
+  // Handle opening the license agreement modal
+  const handleOpenLicenseAgreement = (item) => {
+    dispatch(openLicenseModal(item));
+  };
   
   return (
     <div className="order-summary">
@@ -32,7 +41,15 @@ const OrderSummary = ({ items, totalPrice }) => {
               <div className="order-item-name">{item.name}</div>
               <div className="order-item-license">{item.license} License</div>
               <div className="order-item-price">
-                ${item.price.toFixed(2)} × {item.quantity}
+                ${item.price} × {item.quantity}
+              </div>
+              <div
+                className={`license-agreement-link ${item.licenseAgreementAcknowledged ? 'acknowledged' : 'pending alert-pulse'}`}
+                onClick={() => handleOpenLicenseAgreement(item)}
+              >
+                {item.licenseAgreementAcknowledged 
+                  ? 'Agreement Acknowledged' 
+                  : '⚠️ REVIEW LICENSE AGREEMENT'}
               </div>
             </div>
           </div>

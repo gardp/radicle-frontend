@@ -9,7 +9,7 @@ import '../../styles/CartPreview.css';
  * This appears as a popover from the cart button in the navbar
  */
 const CartPreview = ({ isOpen, onClose, position }) => {
-  const { items, totalItems, formattedTotalPrice, clearCart } = useCart(); //item note items!!!!!
+  const { items, totalItems, totalPrice, clearCart } = useCart(); //item note items!!!!!
   console.log("item from cartItem", items)
   const navigate = useNavigate();
   const cartRef = useRef(null);
@@ -109,7 +109,7 @@ const CartPreview = ({ isOpen, onClose, position }) => {
             <div className="cart-summary">
               <div className="cart-totals">
                 <span>Total:</span>
-                <span className="cart-total-price">{formattedTotalPrice}</span>
+                <span className="cart-total-price">${totalPrice}</span>
               </div>
               
               <div className="cart-actions">

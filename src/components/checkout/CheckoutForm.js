@@ -4,7 +4,7 @@ import '../../styles/Checkout.css';
 /**
  * CheckoutForm component handles collecting customer information and payment details
  */
-const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing }) => {
+const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSubmitDisabled }) => {
   // Payment method icons
   const paymentIcons = {
     creditCard: `${process.env.PUBLIC_URL}/assets/images/credit-card-icon.png`,
@@ -248,10 +248,17 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing }) =>
           )}
         </div>
         
+        {/* Display license agreement error message if present */}
+        {errors.licenseAgreement && (
+          <div className="checkout-error-message">
+            {errors.licenseAgreement}
+          </div>
+        )}
+        
         <button 
           type="submit" 
-          className="checkout-button"
-          disabled={isProcessing}
+          className={`checkout-button ${isSubmitDisabled ? 'disabled' : ''}`}
+          disabled={isProcessing || isSubmitDisabled}
         >
           {isProcessing ? (
             <>
@@ -259,7 +266,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing }) =>
               Processing...
             </>
           ) : (
-            'Complete Purchase'
+            isSubmitDisabled ? 'Acknowledge License Agreements to Continue' : 'Complete Purchase'
           )}
         </button>
       </form>

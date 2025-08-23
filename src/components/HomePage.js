@@ -4,11 +4,8 @@ import FeaturedHighlight from './FeaturedHighlight';
 import MusicContainer from './MusicContainer';
 import Media from './Media';
 import NewsletterSub from './NewsletterSub';
-import PricingTable from './PricingTable';
-import CustomNavbar from './CustomNavbar';
 import Section from './Section';
 import { useTracks } from '../hooks/useTracks';
-import { LicensingOptions } from '../store/slices/priceLicensing';
 import { useDispatch } from 'react-redux';
 
 const HomePage = () => {
@@ -27,7 +24,7 @@ const HomePage = () => {
       {/* Main Content Sections */}
       <div className="main-content">
         <div className="content-section">
-          <PricingTable/>
+
         </div>
         <Section title="Latest Music Releases">
           {isLoading && <p>Loading music...</p>}

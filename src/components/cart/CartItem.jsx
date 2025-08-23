@@ -7,7 +7,7 @@ import '../../styles/CartPreview.css';
  */
 const CartItem = ({ item }) => {
   const { 
-    formatPrice, 
+    // formatPrice, 
     incrementQuantity, 
     decrementQuantity, 
     removeFromCart 
@@ -34,7 +34,7 @@ const CartItem = ({ item }) => {
       </div>
       
       <div className="cart-item-price">
-        {formatPrice(item.price)}
+        '${item.price}'
       </div>
       
       <div className="cart-item-quantity">
@@ -58,7 +58,7 @@ const CartItem = ({ item }) => {
       </div>
       
       <div className="cart-item-total">
-        {formatPrice(item.price * item.quantity)}
+        '${item.price * item.quantity}'
       </div>
       
       <button 
