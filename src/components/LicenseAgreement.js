@@ -63,20 +63,16 @@ const LicenseAgreement = () => {
   const handleSubmit = () => {
     if (currentItem) {
       // Update the license agreement state in Redux
+
       dispatch(toggleLicenseAgreementAndSaveThunk({
         itemId: currentItem.id,
         acknowledged: agreed
-      }));
-      
+      }
+    ));
+      console.log("agreeeed", agreed)
       // Set submitted state to true to show the success message
       setSubmitted(true);
-      
-      // Optional: Close the modal after a delay
-      setTimeout(() => {
-        dispatch(closeLicenseModal());
-        // Reset the submitted state when modal closes
-        setSubmitted(false);
-      }, 2000);
+      dispatch(closeLicenseModal());
     }
   };
   
@@ -136,7 +132,7 @@ const LicenseAgreement = () => {
         </div>
         
         <div className="license-footer">
-          {submitted ? (
+          {currentItem.licenseAgreementAcknowledged ? (
             <div className="license-submit-success">
               Agreement Acknowledged & Signed
             </div>
@@ -146,7 +142,7 @@ const LicenseAgreement = () => {
               onClick={handleSubmit}
               disabled={!agreed}
             >
-              {currentItem.licenseAgreementAcknowledged ? 'Update Agreement Acknowledged' : 'Acknowledge Agreement'}
+              Submit
             </button>
           )}
         </div>

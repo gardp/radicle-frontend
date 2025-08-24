@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { loadCartFromStorageThunk } from './store/slices/cartSlice';
 import HomePage from './components/HomePage';
 import Contact from './components/Contact';
 import AboutUs from './components/AboutUs';
@@ -12,6 +14,13 @@ import TrackPricingTable from './components/TrackPricingTable';
 import LicenseAgreement from './components/LicenseAgreement';
 
 function App() {
+  const dispatch = useDispatch();
+  
+  // Load cart data from localStorage when app initializes
+  useEffect(() => {
+    dispatch(loadCartFromStorageThunk());
+  }, [dispatch]);
+  
   return (
       <Router>
         <div className="app-container">

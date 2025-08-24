@@ -46,10 +46,10 @@ const Checkout = () => {
   
   // Redirect if cart is empty
   useEffect(() => {
-    if (items.length === 0 && !orderComplete) {
+    if (items.length === 0 && !orderComplete && !isProcessing) {
       navigate('/');
     }
-  }, [items, navigate, orderComplete]);
+  }, [items, navigate, orderComplete, isProcessing]);
   
   // Handle form input changes
   const handleInputChange = (e) => {
