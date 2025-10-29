@@ -8,6 +8,7 @@ import '../styles/SkeuomorphicButtons.css';
 import CartPreview from './cart/CartPreview';
 import useCart from '../hooks/useCart';
 import cartIconBeige from '../assets/images/icons8-cart-beige.png'; 
+import radicleLogo from '../assets/images/Radicle-Sound_white.svg';
 
 const CustomNavbar = () => {
   const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
@@ -48,7 +49,7 @@ const CustomNavbar = () => {
   return (
     <Navbar fixed="top" expand="lg" className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <Container>
-        <Navbar.Brand as={Link} to="/"><img src="/assets/images/Radicle-Sound_white.svg" alt="Radicle Sound" className="navbar-logo" /></Navbar.Brand>
+        <Navbar.Brand as={Link} to="/"><img src={radicleLogo} alt="Radicle Sound" className="navbar-logo" /></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="navbar-nav ms-auto">

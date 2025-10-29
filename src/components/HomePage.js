@@ -5,11 +5,11 @@ import MusicContainer from './MusicContainer';
 import Media from './Media';
 import NewsletterSub from './NewsletterSub';
 import Section from './Section';
-import { useTracks } from '../hooks/useTracks';
-import { useDispatch } from 'react-redux';
+import { useTrackLibrary } from '../hooks/useTracks';
 
 const HomePage = () => {
-  const { data: tracks, isLoading, isError } = useTracks();
+  const { tracks, isLoading, error } = useTrackLibrary();
+  
   console.log('here are the tracks', tracks);
 
   return (

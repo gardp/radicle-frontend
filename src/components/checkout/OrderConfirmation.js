@@ -5,13 +5,14 @@ import '../../styles/Checkout.css';
 /**
  * OrderConfirmation component displays the confirmation page after successful checkout
  */
-const OrderConfirmation = ({ order, purchasedItems }) => {
+const OrderConfirmation = ({ order, purchasedItems, payment, email}) => {
+  console.log("OrderConfirmation", order, purchasedItems, payment, email);
   return (
     <div className="order-confirmation">
       <div className="confirmation-icon">✓</div>
       <h1 className="confirmation-title">Order Confirmed!</h1>
       <p className="confirmation-message">
-        Thank you for your purchase. We've sent a confirmation email to {order.email} with your order details.
+        Thank you for your purchase. We've sent a confirmation to {email} with your order details.
       </p>
       
       <div className="order-details">
@@ -19,22 +20,22 @@ const OrderConfirmation = ({ order, purchasedItems }) => {
         
         <div className="order-info-row">
           <span className="order-info-label">Order Number:</span>
-          <span>{order.orderNumber}</span>
+          <span>{order.reference_number}</span>
         </div>
         
         <div className="order-info-row">
           <span className="order-info-label">Date:</span>
-          <span>{new Date(order.date).toLocaleDateString()}</span>
+          <span>{new Date(order.created_at).toLocaleDateString()}</span>
         </div>
         
         <div className="order-info-row">
           <span className="order-info-label">Payment Method:</span>
-          <span>{order.paymentMethod === 'creditCard' ? 'Credit Card' : 'PayPal'}</span>
+          <span>{payment.processor === 'creditCard' ? 'Credit Card' : 'PayPal'}</span>
         </div>
         
         <div className="order-info-row">
           <span className="order-info-label">Total Amount:</span>
-          <span>${order.totalAmount.toFixed(2)}</span>
+          <span>${payment.amount}</span>
         </div>
       </div>
       
@@ -42,11 +43,11 @@ const OrderConfirmation = ({ order, purchasedItems }) => {
         <h2 className="download-title">Your Downloads</h2>
         <div className="download-list">
           {purchasedItems.map((item) => (
-            <div key={item.id} className="download-item">
-              <h3 className="download-item-title">{item.name}</h3>
-              <p className="download-item-license">{item.license} License</p>
+            <div key={item.track_id} className="download-item">
+              <h3 className="download-item-title">{item.title}</h3>
+              <p className="download-item-license">{item.license_name} License</p>
               <a 
-                href={`/download/${item.id}`} 
+                href={`/download/${item.title}`} 
                 className="download-button"
                 target="_blank"
                 rel="noopener noreferrer"

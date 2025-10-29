@@ -8,9 +8,7 @@ import '../../styles/CartPreview.css';
 const CartItem = ({ item }) => {
   const { 
     // formatPrice, 
-    incrementQuantity, 
-    decrementQuantity, 
-    removeFromCart 
+    removeFromCart
   } = useCart();
   
   return (
@@ -34,10 +32,18 @@ const CartItem = ({ item }) => {
       </div>
       
       <div className="cart-item-price">
-        '${item.price}'
+        ${item.price}
       </div>
-      
-      <div className="cart-item-quantity">
+      <button 
+        className="remove-item-btn skeuomorphic-btn danger with-glare"
+        onClick={() => removeFromCart(item)}
+        aria-label="Remove item"
+      > 
+        ×
+      </button>
+
+      {/* The code below is for when I'm selling merch */}
+      {/* <div className="cart-item-quantity">
         <button 
           className="quantity-btn decrease skeuomorphic-btn with-glare"
           onClick={() => decrementQuantity(item.id)}
@@ -55,19 +61,15 @@ const CartItem = ({ item }) => {
         >
           +
         </button>
-      </div>
+      </div> */}
       
-      <div className="cart-item-total">
+      {/* <div className="cart-item-total">
         '${item.price * item.quantity}'
-      </div>
-      
-      <button 
-        className="remove-item-btn skeuomorphic-btn danger with-glare"
-        onClick={() => removeFromCart(item.id)}
-        aria-label="Remove item"
-      >
-        ×
-      </button>
+      </div> */}
+      {/* <div className="cart-item-total">
+        '${item.price}'
+      </div> */}
+
     </div>
   );
 };

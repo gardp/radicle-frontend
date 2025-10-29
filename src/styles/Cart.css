@@ -115,10 +115,9 @@ button.cart-button.primary.size-lg:active {
   border-color: rgba(196, 18, 48, 0.2) !important; /* Subtle crimson red border */
 }
 
-.cart-preview-header {
+/* .cart-preview-header {
   background: linear-gradient(145deg, rgba(15, 60, 120, 0.9), rgba(26, 26, 26, 0.95)) !important;
-  border-bottom: 1px solid rgba(230, 181, 76, 0.2) !important; /* Subtle gold border */
-}
+  border-bottom: 1px solid rgba(230, 181, 76, 0.2) !important; Subtle gold border} */
 
 .cart-preview-header h5 {
   color: rgba(230, 181, 76, 0.9) !important; /* Gold for headings */

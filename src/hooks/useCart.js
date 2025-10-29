@@ -21,9 +21,10 @@ const useCart = () => {
   // Action handlers using thunks for proper persistence
   const handleAddToCart = (item) => dispatch(addToCartAndSaveThunk(item));
   const handleAddTrackToCart = (currentTrack, licenseOption) =>  dispatch(addTrackToCartAndSaveThunk({track: currentTrack, licenseOption}));
-  const handleRemoveFromCart = (itemId) => dispatch(removeFromCartAndSaveThunk(itemId));
+  const handleRemoveFromCart = (item) => dispatch(removeFromCartAndSaveThunk(item));
+  //this will be for when I have merch on the website
   const handleUpdateQuantity = (itemId, quantity) => 
-    dispatch(updateQuantityAndSaveThunk({ itemId, quantity }));
+    dispatch(updateQuantityAndSaveThunk({ itemId, quantity })); 
   const handleClearCart = () => dispatch(clearCartAndStorageThunk());
   
   // Helper functions (these don't need to change)

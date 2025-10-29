@@ -12,6 +12,7 @@ import Catalog from './components/Catalog';
 import Checkout from './components/checkout/Checkout';
 import TrackPricingTable from './components/TrackPricingTable';
 import LicenseAgreement from './components/LicenseAgreement';
+import OrderConfirmation from './components/checkout/OrderConfirmation';
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function App() {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 {/* ADD this <Route path="*" element={<NotFound />} /> */}
                 {/* Always start with the most specific routes first then move to the more general ones... */}
                 {/* Add more routes as needed */}

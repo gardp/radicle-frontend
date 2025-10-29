@@ -2,24 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeLicenseModal, selectLicenseModalState, selectLicenseModalItem } from '../store/slices/licenseAgreementSlice';
 import { toggleLicenseAgreementAndSaveThunk } from '../store/slices/cartSlice';
+import { selectItemById } from '../store/slices/cartSlice';
 import '../styles/LicenseAgreement.css';
+import { useLicenseTypes } from '../hooks/useLicense';
 
 const LicenseAgreement = () => {
   const dispatch = useDispatch();
   const isOpen = useSelector(selectLicenseModalState); //I just need to access the state, not modify it
-  const currentItem = useSelector(selectLicenseModalItem);
-  
+  const currentItem = useSelector(selectLicenseModalItem); //extract the current item from the modal
+  const cartItem = useSelector(state => selectItemById(state, currentItem?.id)); //use the currentItem to extract the item from the cart (maintain synchronization)
+  const { data: license_types, isLoading, error } = useLicenseTypes();
+  console.log("license types", license_types);
+
+  // Safely find the license type after ensuring license_types is available
+  const license_type = license_types && currentItem ? 
+    license_types.find(license => license.license_id === currentItem.license_type_id) : 
+    null;
+//USE CurrentItem to grab the license type id and use in in turn to get the license content
   // State to track if user has checked the agreement box
   const [agreed, setAgreed] = useState(false);
   // State to track if agreement has been submitted
-  const [submitted, setSubmitted] = useState(false);
+  // const [submitted, setSubmitted] = useState(false);
   
   // Reset agreement state when modal opens with new item
   useEffect(() => {
-    if (currentItem) {
-      setAgreed(currentItem.licenseAgreementAcknowledged || false);
+    if (cartItem) {
+      setAgreed(cartItem.licenseAgreementAcknowledged || false);
     }
-  }, [currentItem]);
+  }, [cartItem]);
   
   // Close modal on ESC key
   useEffect(() => {
@@ -58,48 +68,43 @@ const LicenseAgreement = () => {
   const handleAgreeChange = (e) => {
     const isChecked = e.target.checked;
     setAgreed(isChecked);
+
+    console.log("isChecked", isChecked)
+    console.log("item to check", cartItem) //****this currentItem is from the licenseModalItem selector, it's note from the cartSlice!!!!
+    dispatch(toggleLicenseAgreementAndSaveThunk({ //*******PUT THIS IN AGREED CHANGE AS I'M NO LONGER USING HANDLESUBMIT PER TRACK
+      itemId: cartItem.id,
+      acknowledged: isChecked,
+    }));
+
   };
   
-  const handleSubmit = () => {
-    if (currentItem) {
-      // Update the license agreement state in Redux
+  // const handleSubmit = () => {
+  //   if (currentItem) {
+  //     // Update the license agreement state in Redux
 
-      dispatch(toggleLicenseAgreementAndSaveThunk({
-        itemId: currentItem.id,
-        acknowledged: agreed
-      }
-    ));
-      console.log("agreeeed", agreed)
-      // Set submitted state to true to show the success message
-      setSubmitted(true);
-      dispatch(closeLicenseModal());
-    }
-  };
+  //     dispatch(toggleLicenseAgreementAndSaveThunk({ //*******PUT THIS IN AGREED CHANGE AS I'M NO LONGER USING HANDLESUBMIT PER TRACK
+  //       itemId: currentItem.id,
+  //       acknowledged: agreed
+  //     }
+  //   ));
+  //     console.log("agreeeed", agreed)
+  //     // Set submitted state to true to show the success message
+  //     setSubmitted(true);
+  //     dispatch(closeLicenseModal());
+  //   }
+  // };
   
   if (!isOpen || !currentItem) return null;
   
   // Generate dynamic license agreement text based on the item
   const getLicenseAgreementText = () => {
+    if (isLoading) return "Loading license agreement...";
+    if (error) return "Error loading license agreement. Please try again later.";
+    if (!license_type) return "License template not found for this item.";
+
     return `
-    ## ${currentItem.name} - ${currentItem.license} LICENSE AGREEMENT
-    
-    This License Agreement (the "Agreement") is made between Radicle Music ("Licensor") and you ("Licensee").
-    
-    1. **LICENSE GRANT**: Subject to the terms of this Agreement, Licensor grants to Licensee a ${currentItem.license.toLowerCase()} license to use the musical composition titled "${currentItem.name}" (the "Work").
-    
-    2. **RESTRICTIONS**: Licensee shall not sublicense, assign, transfer, or otherwise make available the Work to any third party except as specifically permitted under the ${currentItem.license} license terms.
-    
-    3. **ROYALTIES**: Licensee understands and agrees to adhere to all royalty obligations as outlined in the ${currentItem.license} license terms.
-    
-    4. **COPYRIGHT**: Licensor retains all copyrights to the Work. Licensee must include appropriate credit in all uses.
-    
-    5. **TERMINATION**: This license automatically terminates upon any breach by Licensee of the terms of this Agreement.
-    
-    6. **DISCLAIMER OF WARRANTIES**: The Work is provided "as is" without warranty of any kind.
-    
-    7. **LIMITATION OF LIABILITY**: In no event shall Licensor be liable for any damages arising out of the use of the Work.
-    
-    8. **GOVERNING LAW**: This Agreement shall be governed by the laws of the jurisdiction in which Licensor operates.
+    ## ${cartItem.name} - ${cartItem.license} 
+    ${license_type.license_template}
     `;
   };
   
@@ -110,7 +115,7 @@ const LicenseAgreement = () => {
         
         <div className="license-header">
           <h2>License Agreement</h2>
-          <p>Please review and acknowledge the license terms for {currentItem.name}</p>
+          <p>Please review and acknowledge the license terms for {cartItem.name}</p>
         </div>
         
         <div className="license-agreement-content">
@@ -130,11 +135,27 @@ const LicenseAgreement = () => {
             </label>
           </div>
         </div>
+          <div className="license-footer">
+          {cartItem.licenseAgreementAcknowledged && agreed ? (
+            <div className="license-submit-success">
+              Agreement Acknowledged & Signed
+            </div>
+          ) : (
+            <div  
+              className="license-submit-button" 
+            >      
+              Review Agreement
+            </div>   
+          )}
+          {console.log("agreed", agreed)}
+          {console.log("cartItem licenseAgreementAcknowledged", cartItem.licenseAgreementAcknowledged)}
+        </div>
         
-        <div className="license-footer">
+        {/*<div className="license-footer">
           {currentItem.licenseAgreementAcknowledged ? (
             <div className="license-submit-success">
               Agreement Acknowledged & Signed
+            </div>)
             </div>
           ) : (
             <button 
@@ -145,7 +166,7 @@ const LicenseAgreement = () => {
               Submit
             </button>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
