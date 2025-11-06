@@ -23,36 +23,39 @@ import '../../styles/Checkout.css';
 const Checkout = () => {
   // State for form data
   const [formData, setFormData] = useState({
-    contact:{
-      contact_type: 'INDIVIDUAL',
+    licenseeContact:{
+      contactType: 'INDIVIDUAL',
       email: '',
       firstName: '',
       lastName: '',
-      sudo_name: '',
-      company_name: '',
-      phone_number: '',
+      sudoName: '',
+      companyName: '',
+      phoneNumber: '',
     },
-    contributor:{
-      ref_code: '',
-      sns_link_1: '',
-      sns_link_2: '',
-      pro_affiliation: '',
-      ipi_number: '',
-      note: '',
-    },
-    buyer:{
-      buyer_type: 'INDIVIDUAL',
-      contact: '',
-      address: '',
-    },
-    shippingAddress:{
-      address_type: 'shipping',
-      address_line_1: '',
-      address_line_2: '',
+    mailingRegistrationAddress:{
+      addressType: 'Registration',
+      addressLine1: '',
+      addressLine2: '',
       city: '',
-      state: '',
-      zipCode: '',
+      stateProvince: '',
+      postalCode: '',
       country: '',
+    },
+    musicProfessional:{
+      refCode: '',
+      proAffiliation: '',
+      ipiNumber: '',
+      snsLink1: '',
+      snsLink2: '',
+    },
+    buyerContact:{
+      contactType: 'INDIVIDUAL',
+      email: '',
+      firstName: '',
+      lastName: '',
+      sudoName: '',
+      companyName: '',
+      phoneNumber: '',
     },
     paymentProcessing:{
       card:{
@@ -63,12 +66,12 @@ const Checkout = () => {
         },
         BillingSameAddressAsShipping: true,
         billingAddress:{
-          address_type: 'billing',
-          address_line_1: '',
-          address_line_2: '',
+          addressType: 'BILLING',
+          addressLine1: '',
+          addressLine2: '',
           city: '',
-          state: '',
-          zipCode: '',
+          stateProvince: '',
+          postalCode: '',
           country: '',
         },
         paymentMethod: 'creditCard',
@@ -201,29 +204,29 @@ const Checkout = () => {
     }
     
     // Email validation
-    if (!formData.contact.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contact.email)) {
+    if (!formData.licenseeContact.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.licenseContact.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
     
     // Name validation
-    if (!formData.contact.firstName || formData.contact.firstName.length < 2) {
+    if (!formData.licenseeContact.firstName || formData.licenseContact.firstName.length < 2) {
       newErrors.firstName = 'First name is required';
     }
     
-    if (!formData.contact.lastName || formData.contact.lastName.length < 2) {
+    if (!formData.licenseeContact.lastName || formData.licenseContact.lastName.length < 2) {
       newErrors.lastName = 'Last name is required';
     }
     
     // Shipping Address validation
-    if (!formData.shippingAddress.address_line_1 || formData.shippingAddress.address_line_1.length < 5) {
-      newErrors.address_line_1 = 'Valid street address is required';
+    if (!formData.mailingRegistrationAddress.addressLine1 || formData.shippingAddress.addressLine1.length < 5) {
+      newErrors.addressLine1 = 'Valid street address is required';
     }
     
-    if (!formData.shippingAddress.city) {
+    if (!formData.mailingRegistrationAddress.city) {
       newErrors.city = 'City is required';
     }
     
-    if (!formData.shippingAddress.state) {
+    if (!formData.mailingRegistrationAddress.state) {
       newErrors.state = 'State/Province is required';
     }
     
@@ -236,8 +239,8 @@ const Checkout = () => {
     }
 
     // Billing Address validation
-    if (!formData.paymentProcessing.card.billingAddress.address_line_1 || formData.paymentProcessing.card.billingAddress.address_line_1.length < 5) {
-      newErrors.address_line_1 = 'Valid street address is required';
+    if (!formData.paymentProcessing.card.billingAddress.addressLine1 || formData.paymentProcessing.card.billingAddress.addressLine1.length < 5) {
+      newErrors.addressLine1 = 'Valid street address is required';
     }
     
     if (!formData.paymentProcessing.card.billingAddress.city) {
@@ -306,51 +309,52 @@ const Checkout = () => {
     // 1) Create a per-submission idempotency base
     // const checkoutId = (crypto?.randomUUID && crypto.randomUUID()) 
     // || `CHK-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-    const reference_number = `${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${String(Math.floor(Math.random()*100000)).padStart(5,'0')}`;
-    console.log('Reference Number:', reference_number);
+    const referenceNumber = `${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${String(Math.floor(Math.random()*100000)).padStart(5,'0')}`;
+    console.log('Reference Number:', referenceNumber);
     // console.log('Checkout ID:', checkoutId);
     try {
       // Build payload once, reuse for API call and UI state
       const payload = {
         //***REFERENCE NUMBER for the order***//
-        reference_number: reference_number,
+        reference_number: referenceNumber,
         //***CONTRIBUTOR INFO***//
-        contributor_contact: {
+        licenseeContact: {
           contact_type: 'INDIVIDUAL',
-          first_name: formData.contact.firstName,
-          last_name: formData.contact.lastName,
-          email: formData.contact.email,
-          sudo_name: formData.contact.sudo_name,
-          company_name: formData.contact.company_name,
-          phone_number: formData.contact.phone_number,
+          first_name: formData.licenseeContact.firstName,
+          last_name: formData.licenseeContact.lastName,
+          email: formData.licenseeContact.email,
+          sudo_name: formData.licenseeContact.sudoName,
+          company_name: formData.licenseeContact.companyName,
+          phone_number: formData.licenseeContact.phoneNumber,
         },
-        contributor: {
-          ref_code: formData.contributor.ref_code,
-          sns_link1: formData.contributor.sns_link_1,
-          sns_link2: formData.contributor.sns_link_2,
-          pro_affiliation: formData.contributor.pro_affiliation,
-          ipi_number: formData.contributor.ipi_number,
-          note: formData.contributor.note,
+        mailingRegistrationAddress: {
+          address_line_1: formData.mailingRegistrationAddress.addressLine1,
+          address_line_2: formData.mailingRegistrationAddress.addressLine2,
+          city: formData.mailingRegistrationAddress.city,
+          state_province: formData.mailingRegistrationAddress.state,
+          postal_code: formData.mailingRegistrationAddress.zipCode,
+          country: formData.mailingRegistrationAddress.country,
         },
-        shipping_address: {
-          address_line_1: formData.shippingAddress.address_line_1,
-          address_line_2: formData.shippingAddress.address_line_2,
-          city: formData.shippingAddress.city,
-          state_province: formData.shippingAddress.state,
-          postal_code: formData.shippingAddress.zipCode,
-          country: formData.shippingAddress.country,
+        musicProfessional: {
+          ref_code: formData.musicProfessional.refCode,
+          pro_affiliation: formData.musicProfessional.proAffiliation,
+          ipi_number: formData.musicProfessional.ipiNumber,
         },
+        socialMediaLink: {
+          url: [formData.musicProfessional.snsLink1, formData.musicProfessional.snsLink2],
+        },
+          
         //***BUYER INFO***//
-        buyer_contact: {
+        buyerContact: {
           first_name: formData.paymentProcessing.card.contact.firstNameOnCard,
           last_name: formData.paymentProcessing.card.contact.lastNameOnCard,
           email: formData.paymentProcessing.card.contact.email,
           company_name: formData.paymentProcessing.card.contact.company_name,
           phone_number: formData.paymentProcessing.card.contact.phone_number,
         },
-        billing_address: {
-          address_line_1: formData.paymentProcessing.card.billingAddress.address_line_1,
-          address_line_2: formData.paymentProcessing.card.billingAddress.address_line_2,
+        billingAddress: {
+          address_line_1: formData.paymentProcessing.card.billingAddress.addressLine1,
+          address_line_2: formData.paymentProcessing.card.billingAddress.addressLine2,
           city: formData.paymentProcessing.card.billingAddress.city,
           state_province: formData.paymentProcessing.card.billingAddress.state,
           postal_code: formData.paymentProcessing.card.billingAddress.zipCode,
@@ -358,8 +362,8 @@ const Checkout = () => {
         },
         //***ITEMS-TRACKS***//
         items: items.filter(item => item.type === 'track').map(item => ({
-          track_id: item.id,
-          licenseId: item.licenseId,
+          trackId: item.trackId, //from the cartslice
+          licenseTypeId: item.licenseTypeId,
           price: item.price,
           quantity: item.quantity,
         })),
@@ -376,7 +380,7 @@ const Checkout = () => {
         payload,
         {
           headers: {
-            'Idempotency-Key': reference_number,
+            'Idempotency-Key': payload.reference_number,
           },
         }
       );
@@ -461,39 +465,39 @@ const Checkout = () => {
   // ******Test data for quick form filling during development
   
   const testData = {
-    contact:{
-      contact_type: 'INDIVIDUAL',
+    licenseeContact:{
+      contactType: 'INDIVIDUAL',
       email: 'test@example.com',
       firstName: 'John',
       lastName: 'Doe',
-      sudo_name: 'Johnyyy Doe',
-      company_name: 'Test Company',
-      phone_number: '123-456-7890',
+      sudoName: 'Johnyyy Doe',
+      companyName: 'Test Company',
+      phoneNumber: '123-456-7890',
     },
-    contributor:{
-      ref_code: '',
-      sns_link_1: '',
-      sns_link_2: '',
-      pro_affiliation: '',
-      ipi_number: '',
-    },
-    contribution:{
-      contribution_type: '',
-      note: '',
-    },
-    buyer:{
-      buyer_type: 'INDIVIDUAL',
-      contact: '',
-      address: '',
-    },
-    shippingAddress:{
-      address_type: 'shipping',
-      address_line_1: '123 Test Street',
-      address_line_2: 'Apt 456',
+    mailingRegistrationAddress:{
+      addressType: 'mailing',
+      addressLine1: '123 Test Street',
+      addressLine2: 'Apt 456',
       city: 'Testville',
       state: 'TS',
       zipCode: '12345',
       country: 'United States',
+    },
+      MusicProfessional:{
+      refCode: '123456',
+      proAffiliation: 'ASCAP',
+      ipiNumber: '123456789',
+      snsLink1: 'https://www.facebook.com/test',
+      snsLink2: 'https://www.instagram.com/test',
+    },
+    buyerContact:{
+      buyerType: 'INDIVIDUAL',
+      email: 'test@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
+      sudoName: 'Johnyyy Doe',
+      companyName: 'Test Company',
+      phoneNumber: '123-456-7890',
     },
     paymentProcessing:{
       card:{
@@ -504,9 +508,9 @@ const Checkout = () => {
         },
         BillingSameAddressAsShipping: false,
         billingAddress:{
-          address_type: 'billing',
-          address_line_1: '123 Test Street',
-          address_line_2: 'Apt 456',
+          addressType: 'billing',
+          addressLine1: '123 Test Street',
+          addressLine2: 'Apt 456',
           city: 'Testville',
           state: 'TS',
           zipCode: '12345',

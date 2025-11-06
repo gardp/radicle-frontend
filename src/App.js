@@ -32,7 +32,7 @@ function App() {
               <Route path="/" exact element={<HomePage />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<AboutUs />} />
-              <Route path="/catalog" element={<Catalog />} />
+              {/* <Route path="/catalog" element={<Catalog />} /> */}
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 {/* ADD this <Route path="*" element={<NotFound />} /> */}

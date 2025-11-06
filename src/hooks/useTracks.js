@@ -1,70 +1,71 @@
 // src/hooks/useTracks.js
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { libraryApi } from '../api'; 
 import { trackApi } from '../api'; 
 import { trackLicenseOptionApi } from '../api'; 
 import { trackStorageFileApi } from '../api'; 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchLibrariesWithTracks, selectAllTracks, selectIsLoading, selectError, selectLastFetched, selectLibraries } from '../store/slices/trackLibrarySlice';
 
 //GETTING THE LIBRARY, FETCH THE TRACKS, THEN TRACKSTORAGEFILES FROM THE CORRECT NAMES, THEN PASS TO AUDIOPLAYER
 
 // creating an array of libraries to append all the libraries
-let trackLibraries = [];
-// creating a trackLicenseOption object that will go in the trackLicenseOption array of each track
-const trackLicenseOption = {
-  // Get the trackLicenseOption for the trackLicenseOption array
-trackLicenseOptionID: "",
-trackId: "",
-licenseType: {
-  licenseTypeId: "",
-  licenseTypeName: "",
-  licenseTypeTemplate: "",
-  price: "",
-  currency: "",
-}
-};
-// creating a track object that will go in the track array of each library
-const track = {
-trackID: "",
-trackTitle: "",
-trackAlterTitle: "",
-trackVersionSubTitle: "",
-trackArtistFeaturesLine: "",
-trackDuration: "",
-trackBPM: "",
-trackDescription: "",
-trackKey: "",
-trackGenres: "",
-trackMoods: "",
-trackTags: "",
-trackInstruments: "",
-trackLyrics: "",  
-trackVocalDescription: "",
-trackTimeSignature: "",
-trackReleaseDate: "",
-trackThumbnail: "",
-trackVinylThumbnail: "",
-trackCoverArt: "",
-trackBuyLink: "",
-trackDownloadLink: "",
-trackStreamLink: "",
-trackDonationLink: "",
-// I use the track_id to access the TrackLicence Option as the trackLicenseOption table joins track and track and license type and storageFile
-// append all the trackLicenseOptions for each track
-trackLicenseOptions: [],
-// for each trackLicenseOption get trackLicenseOption.trackStorageFile (for the id)-> 
-// use this trackStorageFile.id to get trackStorageFile and  check if the fileFormat name is Stem. If it is, pass it below
-// Add fileformat to trackStorageFile serializer
-trackStorageFileDescription: "",
-trackStorageFileBitDepth: "",
-trackStorageFilePath: "",
-trackStorageFileFormat: "",
-trackStorageFileFormatName: "",
-trackStorageFileFormatExtension: "",
-trackStorageFileFormatBitDepth: "",
-trackStorageFileFormatSampleRate: "",
-};
+// let trackLibraries = [];
+// // creating a trackLicenseOption object that will go in the trackLicenseOption array of each track
+// const trackLicenseOption = {
+//   // Get the trackLicenseOption for the trackLicenseOption array
+// trackLicenseOptionID: "",
+// trackId: "",
+// licenseType: {
+//   licenseTypeId: "",
+//   licenseTypeName: "",
+//   licenseTypeTemplate: "",
+//   price: "",
+//   currency: "",
+// }
+// };
+// // creating a track object that will go in the track array of each library
+// const track = {
+// trackID: "",
+// trackTitle: "",
+// trackAlterTitle: "",
+// trackVersionSubTitle: "",
+// trackArtistFeaturesLine: "",
+// trackDuration: "",
+// trackBPM: "",
+// trackDescription: "",
+// trackKey: "",
+// trackGenres: "",
+// trackMoods: "",
+// trackTags: "",
+// trackInstruments: "",
+// trackLyrics: "",  
+// trackVocalDescription: "",
+// trackTimeSignature: "",
+// trackReleaseDate: "",
+// trackThumbnail: "",
+// trackVinylThumbnail: "",
+// trackCoverArt: "",
+// trackBuyLink: "",
+// trackDownloadLink: "",
+// trackStreamLink: "",
+// trackDonationLink: "",
+// // I use the track_id to access the TrackLicence Option as the trackLicenseOption table joins track and track and license type and storageFile
+// // append all the trackLicenseOptions for each track
+// trackLicenseOptions: [],
+// // for each trackLicenseOption get trackLicenseOption.trackStorageFile (for the id)-> 
+// // use this trackStorageFile.id to get trackStorageFile and  check if the fileFormat name is Stem. If it is, pass it below
+// // Add fileformat to trackStorageFile serializer
+// trackStorageFileDescription: "",
+// trackStorageFileBitDepth: "",
+// trackStorageFilePath: "",
+// trackStorageFileFormat: "",
+// trackStorageFileFormatName: "",
+// trackStorageFileFormatExtension: "",
+// trackStorageFileFormatBitDepth: "",
+// trackStorageFileFormatSampleRate: "",
+// };
 
 // starting with the libraries object
 const trackLibrary = {
@@ -181,18 +182,23 @@ export const useAllLibrariesWithTracks = (autoFetch = true) => {
 
   useEffect(() => {
     if (librariesWithTracks.length===0 && autoFetch && !isLoading && !error) {
-      dispatch(fetchLibrariesWithTracks());
+     dispatch(fetchLibrariesWithTracks());
+     console.log('librariesWithTracks', librariesWithTracks)
       
     }
-  }, [librariesWithTracks, autoFetch, isLoading, error]);
+  }, [librariesWithTracks.length, autoFetch, isLoading, error]);
+  
   const refetch = () => {
     dispatch(fetchLibrariesWithTracks())
   };
+  // refetch();
   return {
     librariesWithTracks,
     tracks,
     isLoading,
     error,
+    refetch,
+    lastFetched,
 
   }
 };

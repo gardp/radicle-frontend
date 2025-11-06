@@ -210,7 +210,7 @@ export const trackLicenseOptionApi = {
   
 
   // License Type API to extract the license types for the pricing table
-export const LicenseTypeApi = {
+export const licenseTypeApi = {
     getLicenseTypes: () => api.get('/license_types/')
     .then(response => {
       return response.data;
@@ -230,7 +230,7 @@ export const LicenseTypeApi = {
   };
 
   // now the endpoint to get the license to show to the licensee after the backend has created it
-  export const LicenseApi = {
+  export const licenseApi = {
     getLicense: () => api.get('/licenses/')
     .then(response => {
       return response.data;
@@ -245,6 +245,18 @@ export const LicenseTypeApi = {
     })
     .catch(error => {
       console.error('Failed to get license:', error);
+      throw error;
+    }),
+  };
+
+  //now export orderApi for the checkout
+  export const orderApi = {
+    checkoutOrder: (orderData, config = {}) => api.post('/orders/checkout/', orderData, config)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Failed to checkout order:', error);
       throw error;
     }),
   };

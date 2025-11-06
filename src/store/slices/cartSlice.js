@@ -20,15 +20,15 @@ import { loadCartFromStorage, saveCartToStorage, clearCartFromStorage } from '..
 //   };
 
 // remember user can't buy the songs directly on the platform, they have to go to DSP platforms for that. But they can buy the beat
-export const createCartItemFromTrack = (track, trackLicenseOption) => { //Selecting one option from the list of licenseOptions
+export const createCartItemFromTrack = (track, trackLicenseOption) => { //the tracklicenseOption passed from the trackPricingTable handleAddTrackToCart function as the selectedLicenseOption state in line 88
     return {
-      id: track.trackID,
+      trackId: track.trackID,
       title: `${track.trackTitle}`,
       description: `${track.trackStorageFileDescription}`,
-      image: track.trackVinylThumbnail, //Make sure the thumbnail is a blank vinyl for license purchases track being uploaded!!!
+      vinylThumbnail: track.trackVinylThumbnail, //Make sure the thumbnail is a blank vinyl for license purchases track being uploaded!!!
       price: Number(trackLicenseOption.licenseType.price).toFixed(2), //from the trackLicenseOption object
       currency: trackLicenseOption.licenseType.currency,
-      licenseTypeId: trackLicenseOption.licenseType.licenseTypeId,
+      licenseTypeId: trackLicenseOption.licenseType.licenseTypeId, //getting the license type from the licensetypeOption that the user chose
       licenseTypeName: trackLicenseOption.licenseType.licenseTypeName,
       licenseTypeTemplate: trackLicenseOption.licenseType.licenseTypeTemplate,
       quantity: 1,
@@ -80,7 +80,7 @@ export const cartSlice = createSlice({
       // Check if this exact combination of track and license exists. So check if the item is a track and not a merch
       if (action.payload.type === 'track') {
         existingItemIndex = state.items.findIndex(
-          i => i.id === action.payload.id && i.licenseTypeId === action.payload.licenseTypeId
+          i => i.trackId === action.payload.trackId && i.trackLicenseOptions.trackLicenseOptionId === action.payload.trackLicenseOption.trackLicenseOptionId
         );
           }
       else {
@@ -113,7 +113,7 @@ export const cartSlice = createSlice({
       console.log("items before filter:", [...state.items])
       if (cartItem.type === 'track') {
       state.items = state.items.filter(item => 
-        !(item.id === cartItem.id && item.licenseTypeId === cartItem.licenseTypeId));
+        !(item.trackId === cartItem.trackId && item.trackLicenseOptions.trackLicenseOptionId === cartItem.trackLicenseOption.trackLicenseOptionId));
       }
       else {
         state.items = state.items.filter(item => 

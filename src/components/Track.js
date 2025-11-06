@@ -27,7 +27,7 @@ const Track = ({ track, isActive, onClick }) => {
   // Handle cart icon click to open pricing modal
   const handleCartClick = (e) => {
     e.preventDefault();
-    dispatch(openPricingModal(track));
+    dispatch(openPricingModal(track)); // this turns isOpen to true in the priceLicensing slice which opens the pricing modal (see TrackPricingTable.js)
     // currentTrack = track; //After reading the track from the useSelector, assign it to the currentTrack state
   };
   
@@ -56,7 +56,7 @@ const Track = ({ track, isActive, onClick }) => {
           <div className="track-info-line">
             <span className="track-title">{track.title}</span>
             <span className="track-separator"> - </span>
-            <span className="track-artist">{track.artists}</span>
+            <span className="track-artist">{track.artists_features_line}</span>
             <span className="track-bpm">{track.bpm}bpm</span>
           </div>  
           <img
@@ -70,7 +70,7 @@ const Track = ({ track, isActive, onClick }) => {
         <div className="track-icons">
           {/* Buy and Download icons */}
           <div className="track-icons-up">
-            {track.buy_link && (
+            {track.buyLink && (
               <a href="#" onClick={(e) => { e.stopPropagation(); handleCartClick(e); 
                 console.log("Buy clicked");
               }}>
@@ -83,7 +83,7 @@ const Track = ({ track, isActive, onClick }) => {
                 <span className="tooltip">Buy</span>
               </a>
             )}
-            {track.download_link && (
+            {track.downloadLink && (
               <a href={track.download_link} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.stopPropagation(); console.log("Download clicked"); }}>
                 <img
                   className="track-icon download-icon skeuomorphic-btn accent with-glare"
@@ -96,8 +96,8 @@ const Track = ({ track, isActive, onClick }) => {
           </div>
           {/* Stream icon */}
           <div className="track-icons-down">
-            {track.stream_link && (
-              <a href={track.stream_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+            {track.streamLink && (
+              <a href={track.streamLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                 <img
                   className="track-icon stream-icon skeuomorphic-btn"
                   src={streamIcon}

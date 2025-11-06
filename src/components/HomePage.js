@@ -5,12 +5,14 @@ import MusicContainer from './MusicContainer';
 import Media from './Media';
 import NewsletterSub from './NewsletterSub';
 import Section from './Section';
-import { useTrackLibrary } from '../hooks/useTracks';
+import { useAllLibrariesWithTracks } from '../hooks/useTracks';
 
 const HomePage = () => {
-  const { tracks, isLoading, error } = useTrackLibrary();
-  
-  console.log('here are the tracks', tracks);
+  const { librariesWithTracks, isLoading, error } = useAllLibrariesWithTracks();
+
+  console.log('HomePage', librariesWithTracks);
+  console.log('HomePage Loading', isLoading);
+  console.log('HomePage Error', error);
 
   return (
     <div className="page-wrapper">
@@ -28,10 +30,11 @@ const HomePage = () => {
         </div>
         <Section title="Latest Music Releases">
           {isLoading && <p>Loading music...</p>}
-          {isError && <p>Error fetching music. Please try again later.</p>}
-          {tracks && (
+          {error && <p>Error fetching music. Please try again later.</p>}
+          {librariesWithTracks && (
             <MusicContainer 
-              tracks={tracks} 
+              libraries={librariesWithTracks} 
+              trackCount={3}
               playerTitle="New Features" 
               scale={0.5} /* Scale from 0.5 to 1, where 1 is 100% (default) */
             />

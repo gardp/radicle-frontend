@@ -6,22 +6,23 @@ import "../styles/AudioPlayer.css";
 import { API_BASE_URL } from "../api";
 
 
-const AudioPlayer = ({ tracks, playerTitle}) => {
-  console.log("AudioPlayer received tracks:", tracks); // Debug log
+const AudioPlayer = ({ libraries, playerTitle }) => {
+  console.log("AudioPlayer received libraries:", libraries); // Debug log
+  // desctructure tracks from libraries
   // State
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [trackProgress, setTrackProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   // console.log("Initial render - isPlaying:", isPlaying, "isActive:", isActive);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [currentLibTrackIndex, setCurrentLibTrackIndex] = useState({libraryIndex: 0, trackIndex: 0}); //I don't need to have a separate state for the library index as it is already set in TrackFrame based on the active library.
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
-  // Filter tracks based on search term
-  const filteredTracks = tracks.filter(track => 
-    track.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    track.artist.toLowerCase().includes(searchTerm.toLowerCase())
-    || track.tempo_bpm.toLowerCase().includes(searchTerm.toLowerCase())
-    || track.description.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter tracks based on search term in the pertaining library
+  const filteredTracks = libraries[currentLibTrackIndex.libraryIndex]?.tracks?.filter(track => 
+    track.trackTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    track.trackArtist.toLowerCase().includes(searchTerm.toLowerCase())
+    || track.trackBpm.toLowerCase().includes(searchTerm.toLowerCase())
+    || track.trackDescription.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Use filteredTracks for display, but manage currentTrackIndex based on the original tracks array
@@ -29,14 +30,15 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
   // If a track is filtered out, the player might behave unexpectedly if it was the current track.
   // A more robust solution would involve updating currentTrackIndex when tracks are filtered,
   // or ensuring the currently playing track is always part of filteredTracks.
-  const currentTrack = tracks[currentTrackIndex]; 
-  // console.log("The current track is:", tracks);
-  const { title, artist, audio_file, vinyl_thumbnail} = currentTrack || {}; // Add guard for undefined currentTrack
+  const currentLibrary = libraries[currentLibTrackIndex.libraryIndex]; //the current library by default
+  const tracks = currentLibrary?.tracks || [];
+  const currentTrack = tracks[currentLibTrackIndex.trackIndex]; 
+  const { trackTitle, trackArtist, trackStorageFilePath, vinylThumbnail} = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
   // Construct the full, playable URL
-  const fullAudioUrl = audio_file ? `${API_BASE_URL}${audio_file}` : '';
+  const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : ''; // extracting the audioFile from currentTrack above
 
   // Refs
-  const audioRef = useRef(new Audio(fullAudioUrl));
+  const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
   const intervalRef = useRef();
   const isReady = useRef(false);
 
@@ -76,7 +78,7 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
     startTimer();
   };
 
-  const handlePlay = () => {
+  const handlePlay = () => { 
     if (!hasUserInteracted) {
       setHasUserInteracted(true);
     }
@@ -92,10 +94,10 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
     if (!hasUserInteracted) {
       setHasUserInteracted(true);
     }
-    if (currentTrackIndex - 1 < 0) {
-      setCurrentTrackIndex(tracks.length - 1);
+    if (currentLibTrackIndex.trackIndex - 1 < 0) {
+      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: tracks.length - 1});
     } else {
-      setCurrentTrackIndex(currentTrackIndex - 1);
+      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: currentLibTrackIndex.trackIndex - 1});
     }
   };
 
@@ -103,10 +105,10 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
     if (!hasUserInteracted) {
       setHasUserInteracted(true);
     }
-    if (currentTrackIndex < tracks.length - 1) {
-      setCurrentTrackIndex(currentTrackIndex + 1);
+    if (currentLibTrackIndex.trackIndex < tracks.length - 1) {
+      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: currentLibTrackIndex.trackIndex + 1});
     } else {
-      setCurrentTrackIndex(0);
+      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: 0});
     }
   };
 
@@ -120,7 +122,7 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
           setIsPlaying(false);
           audioRef.current.pause();
       }
-    },[currentTrackIndex]);
+    },[currentLibTrackIndex]);
 
   // Ahh got it- when HandlePlay sets isPlaying to true,
   //HandlePlay is receives onPlay which is a parameter that receives
@@ -140,9 +142,9 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
   // This hook now ONLY loads the new audio source. It does not play it.
   useEffect(() => {
     audioRef.current.pause();
-    audioRef.current = new Audio(audio_file);
+    audioRef.current = new Audio(fullAudioUrl);
     setTrackProgress(audioRef.current.currentTime);
-  }, [audio_file]);
+  }, [fullAudioUrl]);
 
   // player change
   useEffect(() => {
@@ -163,27 +165,16 @@ const AudioPlayer = ({ tracks, playerTitle}) => {
 
   return (
     <div className="audio-player">
-      {/* {playerTitle && <h2 className="player-title">{playerTitle}</h2>} */}
+      {playerTitle && <h2 className="player-title">{playerTitle}</h2>}
       <div className="player-grid">
         <div className="track-frame-container">
           <SearchBar onSearch={handleSearch} /> {/* Add SearchBar here */}
           <TrackFrame 
-            tabs={
-              [
-                {
-                  label: "Tab 1",
-                  content: filteredTracks, // Use filteredTracks for the content
-                },
-                {
-                  label: "Tab 2",
-                  content: filteredTracks, // Use filteredTracks for the content
-                },
-              ]
-    }
+            libraries={libraries}
           //put isActive here instead of the MusicContainer
           //add to the trackframe parameters and check here isActive = {CurrentTrackIndex === index}
-            currentTrackIndex={currentTrackIndex} // This index still refers to the original `tracks` array
-            onTrackSelect={setCurrentTrackIndex}
+            currentLibTrackIndex={currentLibTrackIndex}
+            onTrackSelect={setCurrentLibTrackIndex}
           />
         </div>
         <AudioControls

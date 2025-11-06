@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaGitSquare } from "react-icons/fa";
 import '../styles/SkeuomorphicButtons.css';
 import '../styles/AudioControlButtons.css';
@@ -15,6 +15,7 @@ import playIconYellow from '../assets/images/icons8-play-yellow.png';
 import pauseIconYellow from '../assets/images/icons8-pause-yellow.png';
 import prevIconYellow from '../assets/images/icons8-prev-yellow.png';
 
+
 // New icons for streaming and buying
 import streamIcon from '../assets/images/icons8-music-stream-black.png';
 import buyIcon from '../assets/images/icons8-cart-black.png';
@@ -24,14 +25,8 @@ const AudioControls = ({
   onPlayPauseClick,
   onPrevClick,
   onNextClick,
-  // Track info props
-  track,
-  // vinyl_thumbnail,
-  // title,  
-  // artist,
-  // audio_file,
-  // Audio control props
   trackProgress,
+  track,
   audioRef,
   onScrub,
   onScrubEnd,
@@ -40,9 +35,10 @@ const AudioControls = ({
   // Size customization functionality has been removed
 
   // Using a ref to track media query for desktop view
-  const [isDesktop, setIsDesktop] = React.useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  console.log("AudioControls received track:", track);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Check if we're on desktop
     const mediaQuery = window.matchMedia('(min-width: 768px)');
     setIsDesktop(mediaQuery.matches);
@@ -61,8 +57,8 @@ const AudioControls = ({
         <div className={`vinyl-artwork-container ${isPlaying ? 'is-playing' : ''}`}>
           <img
             className="vinyl-artwork"
-            src={track.vinyl_thumbnail}
-            alt={`track artwork for ${track.title}`}
+            src={track.trackVinylThumbnail}
+            alt={`track artwork for ${track.trackTitle}`}
           />
         </div>
       )}
@@ -82,16 +78,16 @@ const AudioControls = ({
           <div className={`vinyl-artwork-container ${isPlaying ? 'is-playing' : ''}`}>
             <img
               className="vinyl-artwork"
-              src={track.vinyl_thumbnail}
-              alt={`track artwork for ${track.title}`}
+              src={track.trackVinylThumbnail}
+              alt={`track artwork for ${track.trackTitle}`}
             />
           </div>
         )}
         
         <div className="track-info-frame">
           <div className="track-info">
-            <h2 className="title">{track.title}</h2>
-            <h3 className="artist">{track.artists}</h3>
+            <h2 className="title">{track.trackTitle}</h2>
+            <h3 className="artist">{track.trackArtistFeaturesLine}</h3>
           </div>
         </div>
         

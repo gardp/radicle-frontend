@@ -12,7 +12,10 @@ const trackLicenseOption = {
   licenseType: {
     licenseTypeId: "",
     licenseTypeName: "",
-    licenseTypeTemplate: "",
+    licenseTerm: "",
+    licenseTemplate: "",
+    DownloadLimit: "",
+    licenseStreamingLimit: "",
     price: "",
     currency: "",
   }
@@ -91,12 +94,12 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
           const trackLibrary = {
             libraryId: library.library_id,
             libraryName: library.library_name,
-            track: [],
+            tracks: [],
           };
       // if library has tracks, fetch track details from the track_id array of the library
-          if (library.track && library.track.length > 0) {
-            trackLibrary.track = await Promise.all(
-              library.track.map(async (trackId) => {
+          if (library.tracks && library.tracks.length > 0) {
+            trackLibrary.tracks = await Promise.all(
+              library.tracks.map(async (trackId) => {
                 try {
                   const trackDetail = await trackApi.getTrackDetail(trackId);
                   
@@ -157,7 +160,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
             );
             
             // Filter out failed fetches
-            trackLibrary.track = trackLibrary.track.filter(t => t !== null);
+            trackLibrary.tracks = trackLibrary.tracks.filter(t => t !== null);
           }
           
           return trackLibrary;
@@ -211,7 +214,7 @@ const trackLibrarySlice = createSlice({
 
 export const { clearLibraries } = trackLibrarySlice.actions;
 
-// Selectors
+// Selectors to select state elements
 export const selectLibraries = (state) => state.trackLibrary.libraries;
 export const selectIsLoading = (state) => state.trackLibrary.isLoading;
 export const selectError = (state) => state.trackLibrary.error;
@@ -219,7 +222,7 @@ export const selectLastFetched = (state) => state.trackLibrary.lastFetched;
 
 // Selector to get all tracks from all libraries flattened
 export const selectAllTracks = (state) => {
-  return state.trackLibrary.libraries.flatMap(library => library.track || []);
+  return state.trackLibrary.libraries.flatMap(library => library.tracks || []);
 };
 
 export default trackLibrarySlice.reducer;

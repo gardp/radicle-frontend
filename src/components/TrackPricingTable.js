@@ -13,11 +13,11 @@ const TrackPricingTable = () => {
   const [selectedLicenseOption, setSelectedLicenseOption] = useState(null); //save the entire license option object, not just the id
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isOpen, currentTrack } = useSelector((state) => state.priceLicensing); //destructuring the state
+  const { isOpen, currentTrack } = useSelector((state) => state.priceLicensing); //destructuring the state srored in priceLicensing
   // console.log("license types", currentTrack.license_types);
   // const track_id = currentTrack.track_id; //getting the track id from the currentTrack
   const { addTrackToCart, isTrackLicenseInCart, items } = useCart(); //importing the useCart hook and destructuring the addToCartfunction
-  const { data: license_types } = useLicenseTypes();
+  // const { data: license_types } = useLicenseTypes();
   console.log("pricing table current track", currentTrack);
 
   
@@ -71,21 +71,21 @@ const TrackPricingTable = () => {
   };
   
   // Handle option select from the licenses types in the pricing table
-  const handleOptionSelect = (trackLicenseType) => {
-    setSelectedLicenseOption(trackLicenseType); //this will set the selectedLicenseOption to the trackLicenseType_id
+  const handleOptionSelect = (trackLicenseOption) => {
+    setSelectedLicenseOption(trackLicenseOption); //this will set the selectedLicenseOption to the trackLicenseType_id
   };
   
-  // Get the selected license option details
-  const getSelectedOption = () => {
-    const trackLicenseType = license_types.find(option => option.license_type_id === selectedLicenseOption);
-    // return licenseOptions.find(option => option.id === selectedOption);
-    return trackLicenseType; //this will return the full license type object that was selected
-  };
+  // // Get the selected license option details
+  // const getSelectedOption = () => {
+  //   const trackLicenseType = currentTrack.license_types.find(option => option.license_type_id === selectedLicenseOption);
+  //   // return licenseOptions.find(option => option.id === selectedOption);
+  //   return trackLicenseType; //this will return the full license type object that was selected
+  // };
   
   const handleAddTrackToCart = () => { 
     if (selectedLicenseOption && currentTrack) { //so assuming that an option is selected and the state of track in priceLicensing is not null
       //await the promise returned by the thunk
-      addTrackToCart(currentTrack, selectedLicenseOption); //adds the track to cart with the license option id that was selected- This is from useCart...passed from cartContext
+      addTrackToCart(currentTrack, selectedLicenseOption); //adds the track to cart with the license option
       const storedCart = loadCartFromStorage();
       console.log("cart content:", storedCart);
       // console.log("Verification: Cart from storage:", storedCart);
@@ -115,7 +115,7 @@ const TrackPricingTable = () => {
     // So the isTrackLicenseInCart will check the "track_id" against the "id" in the cart.items array
     const isSelectedLicenseInCart = () => {
       if (!selectedLicenseOption || !currentTrack) return false;
-      return isTrackLicenseInCart(currentTrack.track_id, selectedLicenseOption.license_type_id);
+      return isTrackLicenseInCart(currentTrack.trackId, selectedLicenseOption);
     };
     
   const handleContactClick = () => {
@@ -136,39 +136,33 @@ const TrackPricingTable = () => {
         </div>
         
         <div className="pricing-options-container">
-          {currentTrack.license_types.map(licenseOption => (
+          {currentTrack.trackLicenseOptions.map(trackLicenseOption => (
             <div 
-              key={licenseOption.license_type_id}
-              className={`pricing-option ${selectedLicenseOption === licenseOption? 'selected' : ''}`} //${option.recommended ? 'recommended' : ''}` 
-              onClick={() => handleOptionSelect(licenseOption)}
+              key={trackLicenseOption.trackLicenseOptionId}
+              className={`pricing-option ${selectedLicenseOption === trackLicenseOption? 'selected' : ''}`} //${option.recommended ? 'recommended' : ''}` 
+              onClick={() => handleOptionSelect(trackLicenseOption)}
             >
               {/* {option.recommended && <div className="recommended-badge">Recommended</div>} */}
-              <h3>{licenseOption.license_type_name} License</h3>
-              {console.log(typeof("license type fee", licenseOption.license_fee))};
-              {console.log(typeof("id type", currentTrack.track_id))};
-              <div className="price">${licenseOption.license_fee}</div>
+              <h3>{trackLicenseOption.licenseTypeName} License</h3>
+              {console.log(typeof("license type fee", trackLicenseOption.price))};
+              {/* {console.log(typeof("id type", currentTrack.trackId))}; */}
+              <div className="price">${trackLicenseOption.price}</div>
               <ul className="features">
-                <li>{licenseOption.license_type_name}</li>
-                <li>{licenseOption.license_term}</li>
-                <li>{licenseOption.file_format}</li>
-                <li>{licenseOption.download_limit}</li>
-                <li>{licenseOption.streaming_limit}</li>
+                <li>{trackLicenseOption.licenseTypeName}</li>
+                <li>{trackLicenseOption.licenseTerm}</li>
+                <li>{trackLicenseOption?.file_format?.name}</li> {/*******fix this later***** */}
+                <li>{trackLicenseOption.downloadLimit}</li>
+                <li>{trackLicenseOption.streamingLimit}</li>
                 <li>No Refunds</li>
-                  {/* <li key={index}>{option.license_type_name}</li>
-                  <li key={index}>{option.license_term}</li>
-                  <li key={index}>{option.file_format}</li>
-                  <li key={index}>{option.download_limit}</li>
-                  <li key={index}>{option.streaming_limit}</li>
-                  <li key={index}>No Refunds</li> */}
               </ul>
               <button 
-                className={`select-button ${selectedLicenseOption === licenseOption.license_type_id ? 'selected' : ''}`}
+                className={`select-button ${selectedLicenseOption === trackLicenseOption ? 'selected' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleOptionSelect(licenseOption.license_type_id);
+                  handleOptionSelect(trackLicenseOption);
                 }}
               >
-                {selectedLicenseOption === licenseOption.license_type_id ? 'Selected' : 'Select'}
+                {selectedLicenseOption === trackLicenseOption ? 'Selected' : 'Select'}
               </button>
             </div>
           ))}
