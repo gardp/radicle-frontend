@@ -8,7 +8,9 @@ import Section from './Section';
 import { useAllLibrariesWithTracks } from '../hooks/useTracks';
 
 const HomePage = () => {
-  const { librariesWithTracks, isLoading, error } = useAllLibrariesWithTracks();
+  const { librariesWithTracks, isLoading, error } = useAllLibrariesWithTracks(); 
+  //when executing the useAllLibrariesWithTracks hook, it will automatically execute the fetchLibrariesWithTracks,....(see next line)
+  // so you don't need the function in the component, you just need the state objects extracted using the selectors!!!
 
   console.log('HomePage', librariesWithTracks);
   console.log('HomePage Loading', isLoading);

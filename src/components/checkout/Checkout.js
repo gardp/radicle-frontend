@@ -363,7 +363,7 @@ const Checkout = () => {
         //***ITEMS-TRACKS***//
         items: items.filter(item => item.type === 'track').map(item => ({
           trackId: item.trackId, //from the cartslice
-          licenseTypeId: item.licenseTypeId,
+          licenseTypeId: item.licenseType.licenseTypeId,
           price: item.price,
           quantity: item.quantity,
         })),

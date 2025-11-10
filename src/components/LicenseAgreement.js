@@ -10,7 +10,7 @@ const LicenseAgreement = () => {
   const dispatch = useDispatch();
   const isOpen = useSelector(selectLicenseModalState); //I just need to access the state, not modify it
   const currentItem = useSelector(selectLicenseModalItem); //extract the current item from the modal
-  const cartItem = useSelector(state => selectItemById(state, currentItem?.id)); //use the currentItem to extract the item from the cart (maintain synchronization)
+  const cartItem = useSelector(state => selectItemById(state, currentItem?.trackId)); //use the currentItem to extract the item from the cart (maintain synchronization)
   const { data: license_types, isLoading, error } = useLicenseTypes();
   console.log("license types", license_types);
 

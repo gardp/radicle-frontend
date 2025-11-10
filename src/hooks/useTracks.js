@@ -6,7 +6,7 @@ import { trackApi } from '../api';
 import { trackLicenseOptionApi } from '../api'; 
 import { trackStorageFileApi } from '../api'; 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLibrariesWithTracks, selectAllTracks, selectIsLoading, selectError, selectLastFetched, selectLibraries } from '../store/slices/trackLibrarySlice';
+import { fetchLibrariesWithTracks, selectAllTracks, selectIsLoading, selectError, selectLastFetched, selectLibraries, clearLibraries } from '../store/slices/trackLibrarySlice';
 
 //GETTING THE LIBRARY, FETCH THE TRACKS, THEN TRACKSTORAGEFILES FROM THE CORRECT NAMES, THEN PASS TO AUDIOPLAYER
 
@@ -68,13 +68,13 @@ import { fetchLibrariesWithTracks, selectAllTracks, selectIsLoading, selectError
 // };
 
 // starting with the libraries object
-const trackLibrary = {
-  // Get the libraries
-libraryID: "",
-libraryName: "",
-// append all the tracks for each library
-tracks: [],
-}; 
+// const trackLibrary = {
+//   // Get the libraries
+// libraryID: "",
+// libraryName: "",
+// // append all the tracks for each library
+// tracks: [],
+// }; 
 
 // GETTING LIBRARIES
 export const useLibraries = () => {
@@ -150,10 +150,10 @@ export const useTrackLicenseOptionById = (trackLicenseOptionId) => {
 // GETTING TRACK LICENSE OPTION BY trackId
 export const useTrackLicenseOptionByTrackId = (trackId) => {
   return useQuery({
-    queryKey: ['track-license-option', trackId],
+    queryKey: ['track-license-option-track-id', trackId],
     queryFn: async () => {
       const response = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(trackId);
-      console.log('check out my track license option ', response)
+      console.log('check out my track license option by track id', response)
       return response; 
     },
   })
@@ -173,6 +173,7 @@ export const useTrackStorageFile = (trackStorageFileId) => {
 
 //custom hook to get all tracks from all libraries
 export const useAllLibrariesWithTracks = (autoFetch = true) => {
+  console.log('hook running....')
   const dispatch = useDispatch();
   const librariesWithTracks = useSelector(selectLibraries);
   const tracks = useSelector(selectAllTracks)
@@ -180,14 +181,20 @@ export const useAllLibrariesWithTracks = (autoFetch = true) => {
   const error = useSelector(selectError);
   const lastFetched = useSelector(selectLastFetched);
 
+  console.log('librariesWithTracks length', librariesWithTracks.length)
+
   useEffect(() => {
+    console.log('librariesWithTracks length', librariesWithTracks.length)
+    console.log('useTracks autoFetch', autoFetch)
+    console.log('useTracks isLoading', isLoading)
+    console.log('useTracks error', error)
     if (librariesWithTracks.length===0 && autoFetch && !isLoading && !error) {
-     dispatch(fetchLibrariesWithTracks());
-     console.log('librariesWithTracks', librariesWithTracks)
-      
+      dispatch(fetchLibrariesWithTracks());
     }
-  }, [librariesWithTracks.length, autoFetch, isLoading, error]);
-  
+    // console.log('here librariesWithTracks', librariesWithTracks)
+  }, [dispatch, librariesWithTracks.length, autoFetch, isLoading, error]);
+
+
   const refetch = () => {
     dispatch(fetchLibrariesWithTracks())
   };

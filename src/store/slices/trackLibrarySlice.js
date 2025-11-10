@@ -85,9 +85,10 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
   'trackLibrary/fetchLibrariesWithTracks',
   async (_, { rejectWithValue }) => {
     try {
+      console.log('🚀 Starting fetchLibrariesWithTracks...');
       // 1. Fetch all libraries
       const librariesResponse = await libraryApi.getLibraries();
-      console.log('Fetched libraries:', librariesResponse);
+      console.log('✅ Fetched libraries:', librariesResponse);
       // 2. For each library, fetch tracks and license options
       const enrichedLibraries = await Promise.all(
         librariesResponse.map(async (library) => {
@@ -102,10 +103,9 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
               library.tracks.map(async (trackId) => {
                 try {
                   const trackDetail = await trackApi.getTrackDetail(trackId);
-                  
                   // Fetch all license options for this track
                   const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(trackId);
-                  
+                  console.log('✅ Fetched licensin options:', licensingOptions);
                   // Find the Sample license option (use .find() not .filter())
                   const sampleLicenseOption = licensingOptions.find(option => 
                     option.track_storage_file?.file_format?.name === "Sample"

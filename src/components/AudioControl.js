@@ -49,7 +49,9 @@ const AudioControls = ({
 
     return () => mediaQuery.removeEventListener('change', handleResize);
   }, []);
-
+  if (!track) {
+    return null;
+  }
   return (
     <div className="controls-container">
       {/* Vinyl artwork for desktop - direct child of controls-container */}

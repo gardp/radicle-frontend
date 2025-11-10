@@ -33,13 +33,13 @@ const OrderSummary = ({ items, totalPrice }) => {
       
       <div className="order-items">
         {items.map((item) => (
-          <div key={item.id} className="order-item">
+          <div key={item.trackId} className="order-item">
             <div className="order-item-image">
-              <img src={item.image} alt={item.name} />
+              <img src={item.trackThumbnail} alt={item.trackTitle} />
             </div>
             <div className="order-item-details">
-              <div className="order-item-name">{item.name}</div>
-              <div className="order-item-license">{item.license} License</div>
+              <div className="order-item-name">{item.trackTitle}</div>
+              <div className="order-item-license">{item.trackLicenseOptions.licenseType.licenseTypeName} License</div>
               <div className="order-item-price">
                 ${item.price} × {item.quantity}
               </div>

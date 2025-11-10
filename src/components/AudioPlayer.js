@@ -31,12 +31,12 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
   // A more robust solution would involve updating currentTrackIndex when tracks are filtered,
   // or ensuring the currently playing track is always part of filteredTracks.
   const currentLibrary = libraries[currentLibTrackIndex.libraryIndex]; //the current library by default
+  console.log('This is the current library', currentLibrary)
   const tracks = currentLibrary?.tracks || [];
   const currentTrack = tracks[currentLibTrackIndex.trackIndex]; 
   const { trackTitle, trackArtist, trackStorageFilePath, vinylThumbnail} = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
   // Construct the full, playable URL
   const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : ''; // extracting the audioFile from currentTrack above
-
   // Refs
   const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
   const intervalRef = useRef();
@@ -187,7 +187,7 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
           onScrubEnd={onScrubEnd}
           trackStyling={trackStyling}
           audioRef={audioRef}
-          track={currentTrack}
+          track={currentTrack?currentTrack: null}
           // controlsSize prop removed
         />
       </div>

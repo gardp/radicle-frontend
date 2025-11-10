@@ -176,12 +176,12 @@ export const trackLicenseOptionApi = {
       console.error('Failed to get track license option:', error);
       throw error;
     }),
-    getTrackLicenseOptionByTrackId: (id) => api.get(`/track-license-options/${id}/`)
+    getTrackLicenseOptionByTrackId: (id) => api.get(`/track-license-options/by-track/${id}/`)
     .then(response => {
       return response.data;
     })
     .catch(error => {
-      console.error('Failed to get track license option:', error);
+      console.error('Failed to get track license option by track id:', error);
       throw error;
     }),
   };
