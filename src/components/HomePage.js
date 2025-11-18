@@ -30,7 +30,7 @@ const HomePage = () => {
         <div className="content-section">
 
         </div>
-        <Section title="Latest Music Releases">
+        <Section title="Latest Releases">
           {isLoading && <p>Loading music...</p>}
           {error && <p>Error fetching music. Please try again later.</p>}
           {librariesWithTracks && (

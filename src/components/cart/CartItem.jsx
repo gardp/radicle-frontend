@@ -15,24 +15,24 @@ const CartItem = ({ item }) => {
     <div className="cart-item">
       <div className="cart-item-image">
         <img 
-          src={item.image} 
-          alt={item.name} 
+          src={item.vinylThumbnail} 
+          alt={item.trackTitle} 
           className="cart-thumb"
         />
       </div>
       
       <div className="cart-item-details">
-        <h4 className="cart-item-name">{item.name}</h4>
-        <p className="cart-item-description">{item.description}</p>
+        <h4 className="cart-item-name">{item.trackTitle}</h4>
+        <p className="cart-item-description">{item.trackDescription}</p>
         <div className="cart-item-license">
           {item.type === 'track' && (
-            <span className="license-badge">{item.license}</span>
+            <span className="license-badge">{item.trackLicenseOption.licenseType.licenseTypeName}</span>
           )}
         </div>
       </div>
       
       <div className="cart-item-price">
-        ${item.price}
+        ${item.trackLicenseOption.licenseType.price}
       </div>
       <button 
         className="remove-item-btn skeuomorphic-btn danger with-glare"
@@ -64,10 +64,10 @@ const CartItem = ({ item }) => {
       </div> */}
       
       {/* <div className="cart-item-total">
-        '${item.price * item.quantity}'
+        '${item.trackLicenseOption.licenseType.price * item.quantity}'
       </div> */}
       {/* <div className="cart-item-total">
-        '${item.price}'
+        '${item.trackLicenseOption.licenseType.price}'
       </div> */}
 
     </div>

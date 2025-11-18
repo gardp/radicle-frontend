@@ -5,7 +5,7 @@ import { FaMusic, FaMicrophone, FaCompactDisc, FaGuitar } from 'react-icons/fa';
 
 const AboutUs = () => {
     return (
-        <div className="page-wrapper">
+        <div className="about-container page-wrapper">
             <div className="main-content">
                 <div className="content-section">
                     {/* The existing content of AboutUs page will be here, removing the 'about-glass' div */}

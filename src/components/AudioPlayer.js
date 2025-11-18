@@ -35,8 +35,9 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
   const tracks = currentLibrary?.tracks || [];
   const currentTrack = tracks[currentLibTrackIndex.trackIndex]; 
   const { trackTitle, trackArtist, trackStorageFilePath, vinylThumbnail} = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
-  // Construct the full, playable URL
-  const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : ''; // extracting the audioFile from currentTrack above
+  // Construct the full, playable URL. The browser automatically adds/resolves the base host url automatically...so don't add in development phase
+  const fullAudioUrl = trackStorageFilePath ? `${trackStorageFilePath}` : ''; // extracting the audioFile from currentTrack above
+  // const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : '';
   // Refs
   const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
   const intervalRef = useRef();
@@ -58,17 +59,54 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
         handlePause();
         // clearInterval(intervalRef.current);
       } else {
-        setTrackProgress(audioRef.current.currentTime);
+        setTrackProgress((audioRef.current.currentTime / audioRef.current.duration) * 100); // Update progress
       }
-    }, [1000]);
+    }, [500]);
   };
 
+  // const onScrub = (value) => {
+  //   // Clear any timers already running
+  //   clearInterval(intervalRef.current);
+
+  //   // Convert slider value to time value
+  //   const timeValue = (value * audioRef.current.duration) / 100;
+  //   console.log('Input value:', value);
+  //   console.log('Audio duration:', audioRef.current.duration);
+  //   console.log('Calculated time:', timeValue);
+  //   audioRef.current.currentTime = timeValue;
+  //   // setTrackProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
+  //   const newProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+  //   console.log('New progress:', newProgress);
+  //   setTrackProgress(newProgress);
+  // };
   const onScrub = (value) => {
-    // Clear any timers already running
-    clearInterval(intervalRef.current);
-    audioRef.current.currentTime = value;
-    setTrackProgress(audioRef.current.currentTime);
-  };
+  clearInterval(intervalRef.current);
+
+  if (!audioRef.current.readyState) {
+    console.log('Audio not ready yet');
+    return;
+  }
+
+  const timeValue = (value * audioRef.current.duration) / 100;
+  console.log('Input value:', value);
+  console.log('Audio duration:', audioRef.current.duration);
+
+  try {
+    // Set the time directly
+    audioRef.current.currentTime = timeValue;
+    
+    // Update progress immediately
+    const newProgress = (timeValue / audioRef.current.duration) * 100;
+    setTrackProgress(newProgress);
+    
+    // Restart timer if playing
+    if (isPlaying) {
+      startTimer();
+    }
+  } catch (error) {
+    console.error('Error setting time:', error);
+  }
+};
 
   const onScrubEnd = () => {
     // If not already playing, start

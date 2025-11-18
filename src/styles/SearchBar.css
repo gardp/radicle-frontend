@@ -8,7 +8,7 @@
 .search-input {
   width: 80%; /* Adjust as needed */
   padding: 8px 12px;
-  border-radius: 20px; /* Rounded corners */
+  border-radius: 12px; /* Rounded corners */
   border: 1px solid var(--haiti-blue); /* Using existing color variable */
   background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
   color: var(--white);

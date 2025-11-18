@@ -14,8 +14,8 @@ const trackLicenseOption = {
     licenseTypeName: "",
     licenseTerm: "",
     licenseTemplate: "",
-    DownloadLimit: "",
-    licenseStreamingLimit: "",
+    downloadLimit: "",
+    streamingLimit: "",
     price: "",
     currency: "",
   }
@@ -101,11 +101,27 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
           if (library.tracks && library.tracks.length > 0) {
             trackLibrary.tracks = await Promise.all(
               library.tracks.map(async (trackId) => {
+                console.log('🚀 Fetching track details for track ID:', trackId);
                 try {
                   const trackDetail = await trackApi.getTrackDetail(trackId);
                   // Fetch all license options for this track
                   const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(trackId);
-                  console.log('✅ Fetched licensin options:', licensingOptions);
+                  console.log('✅ Fetched licensing options:', licensingOptions);
+                  //Now destructure the licensingOptions list into the trackLicenseOption object
+                  const trackLicenseOptions = await licensingOptions.map(option => ({
+                    trackLicenseOptionId: option.track_license_option_id,
+                    licenseType: {
+                      licenseTypeId: option.license_type.license_type_id,
+                      licenseTypeName: option.license_type.license_type_name,
+                      licenseTerm: option.license_type.license_term,
+                      licenseTemplate: option.license_type.license_template,
+                      downloadLimit: option.license_type.download_limit,
+                      streamingLimit: option.license_type.streaming_limit,
+                      price: parseFloat(option.license_type.price),
+                      currency: option.license_type.currency,
+                    },
+                  }));
+                  console.log('✅ Fetched track license options:', trackLicenseOptions);
                   // Find the Sample license option (use .find() not .filter())
                   const sampleLicenseOption = licensingOptions.find(option => 
                     option.track_storage_file?.file_format?.name === "Sample"
@@ -142,7 +158,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackDownloadLink: trackDetail.download_link || "",
                     trackStreamLink: trackDetail.stream_link || "",
                     trackDonationLink: trackDetail.donation_link || "",
-                    trackLicenseOptions: licensingOptions || [],
+                    trackLicenseOptions: trackLicenseOptions || [],
                     trackStorageFileDescription: sampleStorageFile?.description || "",
                     trackStorageFilePath: sampleStorageFile?.file_path || "",
                     trackStorageFileFormatName: sampleStorageFile?.file_format?.name || "",

@@ -27,8 +27,7 @@ const Track = ({ track, isActive, onClick }) => {
   // Handle cart icon click to open pricing modal
   const handleCartClick = (e) => {
     e.preventDefault();
-    dispatch(openPricingModal(track)); // this turns isOpen to true in the priceLicensing slice which opens the pricing modal (see TrackPricingTable.js)
-    // currentTrack = track; //After reading the track from the useSelector, assign it to the currentTrack state
+    dispatch(openPricingModal(track)); // this turns isOpen to true in the priceLicensing slice which opens the pricing modal (see TrackPricingTable.js) and populates currentTrack with the track object
   };
   
   // Close the pricing modal
@@ -46,22 +45,22 @@ const Track = ({ track, isActive, onClick }) => {
         <div className="track-thumb-container">
           <img
             className="track-thumb"
-            src={track.vinyl_thumbnail}
-            alt={`track artwork for ${track.title}`}
+            src={track.trackVinylThumbnail}
+            alt={`track artwork for ${track.trackTitle}`}
           />
         </div>
         
         {/* Track details - positioned between stream icon and buy/download icons */}
         <div className="track-label">
           <div className="track-info-line">
-            <span className="track-title">{track.title}</span>
+            <span className="track-title">{track.trackTitle}</span>
             <span className="track-separator"> - </span>
-            <span className="track-artist">{track.artists_features_line}</span>
-            <span className="track-bpm">{track.bpm}bpm</span>
+            <span className="track-artist">{track.trackArtistFeaturesLine}</span>
+            <span className="track-bpm">{track.trackBpm}bpm</span>
           </div>  
           <img
             className="track-label-thumbnail"
-            src={track.thumbnail}
+            src={track.trackThumbnail}
             alt="Decorative thumbnail"
           />
         </div>
@@ -70,9 +69,9 @@ const Track = ({ track, isActive, onClick }) => {
         <div className="track-icons">
           {/* Buy and Download icons */}
           <div className="track-icons-up">
-            {track.buyLink && (
+            {track.trackBuyLink && (
               <a href="#" onClick={(e) => { e.stopPropagation(); handleCartClick(e); 
-                console.log("Buy clicked");
+                console.log("Buy clicked", track);
               }}>
                 <img
                   // className="track-icon buy-icon skeuomorphic-btn primary with-glare" justink
@@ -83,8 +82,8 @@ const Track = ({ track, isActive, onClick }) => {
                 <span className="tooltip">Buy</span>
               </a>
             )}
-            {track.downloadLink && (
-              <a href={track.download_link} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.stopPropagation(); console.log("Download clicked"); }}>
+            {track.trackDownloadLink && (
+              <a href={track.trackDownloadLink} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.stopPropagation(); console.log("Download clicked"); }}>
                 <img
                   className="track-icon download-icon skeuomorphic-btn accent with-glare"
                   src={downloadIcon}
@@ -96,8 +95,8 @@ const Track = ({ track, isActive, onClick }) => {
           </div>
           {/* Stream icon */}
           <div className="track-icons-down">
-            {track.streamLink && (
-              <a href={track.streamLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+            {track.trackStreamLink && (
+              <a href={track.trackStreamLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                 <img
                   className="track-icon stream-icon skeuomorphic-btn"
                   src={streamIcon}

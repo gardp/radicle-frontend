@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isOpen: false,
   currentItem: null, // Current item to show agreement for
+  // isLoading: false,
+  // error: null,
 };
 
 const licenseAgreementSlice = createSlice({
@@ -17,6 +19,12 @@ const licenseAgreementSlice = createSlice({
       state.isOpen = false;
       state.currentItem = null;
     },
+    // setLoading: (state, action) => {
+    //   state.isLoading = action.payload;
+    // },
+    // setError: (state, action) => {
+    //   state.error = action.payload;
+    // },
   },
 });
 

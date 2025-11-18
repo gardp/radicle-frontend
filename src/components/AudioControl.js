@@ -37,6 +37,7 @@ const AudioControls = ({
   // Using a ref to track media query for desktop view
   const [isDesktop, setIsDesktop] = useState(false);
   console.log("AudioControls received track:", track);
+  console.log("AudioControls received audioRef:", audioRef || "No audioRef");
 
   useEffect(() => {
     // Check if we're on desktop
@@ -98,7 +99,7 @@ const AudioControls = ({
           value={trackProgress}
           step="1"
           min="0"
-          max={audioRef.current.duration ? audioRef.current.duration : `${audioRef.current.duration}`}
+          max="100"  // Use actual duration, fallback to 0 if not loaded
           className="progress"
           onChange={(e) => onScrub(e.target.value)}
           onMouseUp={onScrubEnd}
@@ -124,7 +125,7 @@ const AudioControls = ({
               <button
                 type="button"
                 className="pause size-md"
-                onClick={() => onPlayPauseClick(false)}
+                onClick={() => onPlayPauseClick()}
                 aria-label="Pause"
               >
                 <img 
@@ -137,7 +138,7 @@ const AudioControls = ({
               <button
                 type="button"
                 className="play size-md"
-                onClick={() => onPlayPauseClick(true)}
+                onClick={() => onPlayPauseClick()}
                 aria-label="Play"
               >
                 <img 

@@ -22,16 +22,24 @@ import { loadCartFromStorage, saveCartToStorage, clearCartFromStorage } from '..
 // remember user can't buy the songs directly on the platform, they have to go to DSP platforms for that. But they can buy the beat
 export const createCartItemFromTrack = (track, trackLicenseOption) => { //the tracklicenseOption passed from the trackPricingTable handleAddTrackToCart function as the selectedLicenseOption state in line 88
     return {
-      trackId: track.trackID,
+      trackId: track.trackId,
       title: `${track.trackTitle}`,
       description: `${track.trackStorageFileDescription}`,
       vinylThumbnail: track.trackVinylThumbnail, //Make sure the thumbnail is a blank vinyl for license purchases track being uploaded!!!
-      price: Number(trackLicenseOption.licenseType.price).toFixed(2), //from the trackLicenseOption object
-      currency: trackLicenseOption.licenseType.currency,
-      licenseTypeId: trackLicenseOption.licenseType.licenseTypeId, //getting the license type from the licensetypeOption that the user chose
-      licenseTypeName: trackLicenseOption.licenseType.licenseTypeName,
-      licenseTypeTemplate: trackLicenseOption.licenseType.licenseTypeTemplate,
-      quantity: 1,
+      trackLicenseOption: {
+        trackLicenseOptionId: trackLicenseOption.trackLicenseOptionId,
+        licenseType: {
+          licenseTypeId: trackLicenseOption.licenseType.licenseTypeId,
+          licenseTypeName: trackLicenseOption.licenseType.licenseTypeName,
+          licenseTerm: trackLicenseOption.licenseType.licenseTerm,
+          licenseTemplate: trackLicenseOption.licenseType.licenseTemplate,
+          DownloadLimit: trackLicenseOption.licenseType.DownloadLimit,
+          licenseStreamingLimit: trackLicenseOption.licenseType.licenseStreamingLimit,
+          price: Number(trackLicenseOption.licenseType.price).toFixed(2), //from the trackLicenseOption object,
+          currency: trackLicenseOption.licenseType.currency,
+        }
+      }, 
+      quantity: 1, 
       type: 'track',
       licenseAgreementAcknowledged: false
     };
@@ -80,7 +88,7 @@ export const cartSlice = createSlice({
       // Check if this exact combination of track and license exists. So check if the item is a track and not a merch
       if (action.payload.type === 'track') {
         existingItemIndex = state.items.findIndex(
-          i => i.trackId === action.payload.trackId && i.trackLicenseOptions.trackLicenseOptionId === action.payload.trackLicenseOption.trackLicenseOptionId
+          i => i.trackId === action.payload.trackId && i.trackLicenseOption.trackLicenseOptionId === action.payload.trackLicenseOption.trackLicenseOptionId
         );
           }
       else {
@@ -113,7 +121,7 @@ export const cartSlice = createSlice({
       console.log("items before filter:", [...state.items])
       if (cartItem.type === 'track') {
       state.items = state.items.filter(item => 
-        !(item.trackId === cartItem.trackId && item.trackLicenseOptions.trackLicenseOptionId === cartItem.trackLicenseOption.trackLicenseOptionId));
+        !(item.trackId === cartItem.trackId && item.trackLicenseOption.trackLicenseOptionId === cartItem.trackLicenseOption.trackLicenseOptionId));
       }
       else {
         state.items = state.items.filter(item => 
@@ -134,7 +142,7 @@ export const cartSlice = createSlice({
       // Ensure quantity is valid (minimum 1)
       const safeQuantity = Math.max(1, quantity);
       if (action.payload.type === 'track') {
-        const itemIndex = state.items.findIndex(item => item.id === id && item.licenseTypeId === action.payload.licenseTypeId);
+        const itemIndex = state.items.findIndex(item => item.id === id && item.trackLicenseOption.trackLicenseOptionId === action.payload.trackLicenseOption.trackLicenseOptionId);
         if (itemIndex >= 0) {
           state.items[itemIndex].quantity = safeQuantity;
         }
@@ -151,22 +159,16 @@ export const cartSlice = createSlice({
       state.totalPrice = totals.totalPrice;
       state.error = null;
     },
-    
+     
     // Toggle license agreement aknowledgment for an item
     toggleLicenseAgreement: (state, action) => {
-      const { id, acknowledged } = action.payload;
-      if (action.payload.type === 'track') { //for track license
-      const itemIndex = state.items.findIndex(item => item.id === id && item.licenseTypeId === action.payload.licenseTypeId);
+      const { item, acknowledged } = action.payload;
+      if (item.type === 'track') { //for track license
+      const itemIndex = state.items.findIndex(item => item === item);
       if (itemIndex >= 0) {
         state.items[itemIndex].licenseAgreementAcknowledged = acknowledged;
       }
-      }
-      else { //merch/asset, so there is nothing for this on the website yet
-        const itemIndex = state.items.findIndex(item => item.id === id);
-        if (itemIndex >= 0) {
-          state.items[itemIndex].licenseAgreementAcknowledged = acknowledged;
-        }
-      }      
+      }   
     },
 
     // Clear all items from the cart
@@ -214,17 +216,28 @@ export const selectCartError = (state) => state.cart.error;
 export const selectIsInCart = (state, id) => 
   state.cart.items.some(item => item.id === id);
 
-// check if track+license is in cart
-export const selectIsTrackLicenseInCart = (state, id, licenseTypeId) => 
-  state.cart.items.some(item => item.id === id && item.licenseTypeId === licenseTypeId);
+// check if track+license is in cart  
+export const selectIsTrackLicenseInCart = (state, id, trackLicenseOptionId) => 
+  state.cart.items.some(item => item.id === id && item.trackLicenseOption.trackLicenseOptionId === trackLicenseOptionId);
 
 // select merch/asset by id
 export const selectItemById = (state, id) => 
   state.cart.items.find(item => item.id === id) || null;
-  
+
+
 // select track+license by id
-export const selectTrackLicenseByid = (state, id) => 
-  state.cart.items.filter(item => item.id === id);
+export const selectTrackAndLicense = (state, track) => {
+  if (!track) return null;
+
+  const { trackId, trackLicenseOption } = track;
+  const optionId = trackLicenseOption?.trackLicenseOptionId;
+
+  return state.cart.items.find(
+    item =>
+      item.trackId === trackId &&
+      item.trackLicenseOption.trackLicenseOptionId === optionId
+  ) ?? null;
+};
 
 // Add selector to check if a specific item has acknowledged the license agreement
 export const selectLicenseAgreementAcknowledged = (state, id) => 

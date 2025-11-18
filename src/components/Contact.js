@@ -97,7 +97,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="contact-container">
+    <div className="contact-container page-wrapper">
       <div className="contact-form-container">
         <h2>Get in Touch</h2>
         <form onSubmit={handleSubmit}>

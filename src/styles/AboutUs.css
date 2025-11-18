@@ -13,6 +13,9 @@
     padding: 3rem;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 } */
+.about-container {
+  padding-top: 100px; /* adjust to match your navbar height */
+}
 
 .about-content {
     display: grid;

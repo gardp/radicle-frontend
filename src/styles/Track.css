@@ -87,7 +87,7 @@
     /* For example, if track-label had padding, ensure it's compatible with the new flex layout */
     padding: 18px 24px; /* Example: Re-apply or adjust padding as needed */
     opacity: 0.9;
-    border-radius: 0px;
+    border-radius: 12px;
     background: rgba(26, 26, 26, 0.6);
     overflow: hidden;
     backdrop-filter: blur(8px);
@@ -218,7 +218,7 @@
   /* Frame styling to match track-label */
   padding: 18px 24px; /* Match track-label padding */
   opacity: 0.9;
-  border-radius: 0px; /* Match track-label */
+  border-radius: 12px; /* Match track-label */
   background: rgba(26, 26, 26, 0.6); /* Match track-label background */
   backdrop-filter: blur(8px); /* Match track-label */
   border: 1px solid rgba(230, 181, 76, 0.1); /* Match track-label gold border */
@@ -337,7 +337,7 @@ a:has(.download-icon) .tooltip::after {
   box-sizing: border-box;
   /* overflow: visible; */
   opacity: 0.9;
-  border-radius: 0px; /* From track-item justink */
+  border-radius: 12px; /* From track-item justink */
   background: rgba(26, 26, 26, 0.6); /* From track-item - Semi-transparent background */
   backdrop-filter: blur(8px); /* From track-item */
   border: 1px solid rgba(230, 181, 76, 0.1); /* From track-item - Subtle gold border */

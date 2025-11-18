@@ -20,6 +20,7 @@ function App() {
   // Load cart data from localStorage when app initializes
   useEffect(() => {
     dispatch(loadCartFromStorageThunk());
+    console.log("cart loaded from storage");
   }, [dispatch]);
   
   return (

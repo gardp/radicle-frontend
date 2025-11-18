@@ -83,11 +83,13 @@ const TrackPricingTable = () => {
   // };
   
   const handleAddTrackToCart = () => { 
+    console.log("selected license option to add", selectedLicenseOption);
+    console.log("current track to add", currentTrack);
     if (selectedLicenseOption && currentTrack) { //so assuming that an option is selected and the state of track in priceLicensing is not null
       //await the promise returned by the thunk
       addTrackToCart(currentTrack, selectedLicenseOption); //adds the track to cart with the license option
       const storedCart = loadCartFromStorage();
-      console.log("cart content:", storedCart);
+      console.log("cart content:", currentTrack);
       // console.log("Verification: Cart from storage:", storedCart);
       dispatch(closePricingModal());
     }
@@ -137,6 +139,7 @@ const TrackPricingTable = () => {
         
         <div className="pricing-options-container">
           {currentTrack.trackLicenseOptions.map(trackLicenseOption => (
+            console.log("track license option", currentTrack.trackLicenseOptions),
             <div 
               key={trackLicenseOption.trackLicenseOptionId}
               className={`pricing-option ${selectedLicenseOption === trackLicenseOption? 'selected' : ''}`} //${option.recommended ? 'recommended' : ''}` 
@@ -144,15 +147,14 @@ const TrackPricingTable = () => {
             >
               {/* {option.recommended && <div className="recommended-badge">Recommended</div>} */}
               <h3>{trackLicenseOption.licenseTypeName} License</h3>
-              {console.log(typeof("license type fee", trackLicenseOption.price))};
               {/* {console.log(typeof("id type", currentTrack.trackId))}; */}
               <div className="price">${trackLicenseOption.price}</div>
               <ul className="features">
-                <li>{trackLicenseOption.licenseTypeName}</li>
-                <li>{trackLicenseOption.licenseTerm}</li>
-                <li>{trackLicenseOption?.file_format?.name}</li> {/*******fix this later***** */}
-                <li>{trackLicenseOption.downloadLimit}</li>
-                <li>{trackLicenseOption.streamingLimit}</li>
+                <li>{trackLicenseOption?.licenseType?.licenseTypeName}</li>
+                <li>{trackLicenseOption?.licenseType?.licenseTerm}</li>
+                {/* <li>{trackLicenseOption?.licenseType?.file_format?.name}</li> ******fix this later***** */}
+                <li>{trackLicenseOption?.licenseType?.downloadLimit}</li>
+                <li>{trackLicenseOption?.licenseType?.streamingLimit}</li>
                 <li>No Refunds</li>
               </ul>
               <button 
@@ -181,7 +183,7 @@ const TrackPricingTable = () => {
           >
             {isSelectedLicenseInCart() 
               ? 'Already In Cart' 
-              : `Add to Cart ${selectedLicenseOption && currentTrack.license_types.some(license => license === selectedLicenseOption) ? `- $${selectedLicenseOption.license_fee} selected` : ''}`}
+              : `Add to Cart ${selectedLicenseOption && currentTrack.trackLicenseOptions.some(license => license === selectedLicenseOption) ? `- $${selectedLicenseOption.licenseType.price} selected` : ''}`} {/** this is from the pricingLicensingOption that's passed from the cartLibraryslice...so format it correctly */}
           </button>
         </div>
       </div>

@@ -23,7 +23,9 @@ const TrackFrame = ({ libraries, currentLibTrackIndex, onTrackSelect }) => (
         <Nav variant="tabs" className="modern-tabs">
           {libraries.map((lib, libIndex) => (
             <Nav.Item key={libIndex} className="modern-tab-item">
-              <Nav.Link eventKey={libIndex} className="modern-tab-link">{lib.name}</Nav.Link>
+              <Nav.Link eventKey={libIndex} className="modern-tab-link">
+                {lib?.libraryName}
+              </Nav.Link>
             </Nav.Item>
           ))}
         </Nav>
@@ -36,11 +38,12 @@ const TrackFrame = ({ libraries, currentLibTrackIndex, onTrackSelect }) => (
                 <Tab.Pane eventKey={libIndex} key={libIndex}>
                   {/* Map through tracks in the current tab */}
                   {lib.tracks?.map((track, trackIndex) => (
+                    console.log('Libtracks for trackframe', track),
                     <Track
                       key={track.trackId}
                       track={track}
                       isActive={trackIndex === currentLibTrackIndex.trackIndex && libIndex === currentLibTrackIndex.libraryIndex} //after clicking on a track, it will update the currentLibTrackIndex and make it active in isActive...which changes the styling of the track
-                      onClick={() => onTrackSelect(trackIndex, libIndex)} //so by clicking on it, it will update the currentLibTrackIndex and make it active in isActive above...which changes the styling of the track
+                      onClick={() => onTrackSelect({libraryIndex: libIndex, trackIndex: trackIndex})} //so by clicking on it, it will update the currentLibTrackIndex and make it active in isActive above...which changes the styling of the track
                     />
                   ))}
                 </Tab.Pane>

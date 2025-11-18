@@ -1,3 +1,7 @@
+.contact-container {
+  padding-top: 100px; /* adjust to match your navbar height */
+}
+
 .contact-form-container {
   max-width: 600px;
   margin: 2rem auto;
