@@ -39,7 +39,8 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
   const fullAudioUrl = trackStorageFilePath ? `${trackStorageFilePath}` : ''; // extracting the audioFile from currentTrack above
   // const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : '';
   // Refs
-  const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
+  // const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
+  const audioRef = useRef(new Audio(fullAudioUrl));
   const intervalRef = useRef();
   const isReady = useRef(false);
 
@@ -50,63 +51,71 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
     -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
   `;
 
-  const startTimer = () => {
+  const startTimer = () => { 
     // Clear any timers already running
     clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
       if (audioRef.current.ended) {
+        setTrackProgress(100); 
         handlePause();
+        console.log('Audio currentTime:', audioRef.current.currentTime);
+        console.log('Audio duration:', audioRef.current.duration);
+        console.log('trackprogress:', trackProgress);
+        console.log('currentPercentage:', currentPercentage);
+
         // clearInterval(intervalRef.current);
       } else {
-        setTrackProgress((audioRef.current.currentTime / audioRef.current.duration) * 100); // Update progress
+        const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+        setTrackProgress(newPercentage); // Update progress
       }
+      console.log('Audio trackStyling:', trackStyling);
     }, [500]);
   };
 
-  // const onScrub = (value) => {
-  //   // Clear any timers already running
-  //   clearInterval(intervalRef.current);
-
-  //   // Convert slider value to time value
-  //   const timeValue = (value * audioRef.current.duration) / 100;
-  //   console.log('Input value:', value);
-  //   console.log('Audio duration:', audioRef.current.duration);
-  //   console.log('Calculated time:', timeValue);
-  //   audioRef.current.currentTime = timeValue;
-  //   // setTrackProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
-  //   const newProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-  //   console.log('New progress:', newProgress);
-  //   setTrackProgress(newProgress);
-  // };
   const onScrub = (value) => {
-  clearInterval(intervalRef.current);
+    // Clear any timers already running
+    clearInterval(intervalRef.current);
 
-  if (!audioRef.current.readyState) {
-    console.log('Audio not ready yet');
-    return;
-  }
-
-  const timeValue = (value * audioRef.current.duration) / 100;
-  console.log('Input value:', value);
-  console.log('Audio duration:', audioRef.current.duration);
-
-  try {
-    // Set the time directly
+    // Convert slider value to time value
+    const timeValue = (value * audioRef.current.duration) / 100;
+    console.log('Input value:', value);
+    console.log('Audio duration:', audioRef.current.duration);
+    console.log('Calculated time:', timeValue);
     audioRef.current.currentTime = timeValue;
-    
-    // Update progress immediately
-    const newProgress = (timeValue / audioRef.current.duration) * 100;
+    // setTrackProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
+    const newProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+    console.log('New progress:', newProgress);
     setTrackProgress(newProgress);
+  };
+//   const onScrub = (value) => {
+//   clearInterval(intervalRef.current);
+
+//   if (!audioRef.current.readyState) {
+//     console.log('Audio not ready yet');
+//     return;
+//   }
+
+//   const timeValue = (value * audioRef.current.duration) / 100;
+//   console.log('Input value:', value);
+//   console.log('Audio duration:', audioRef.current.duration);
+
+//   try {
+//     // Set the time directly
+//     audioRef.current.currentTime = timeValue;
     
-    // Restart timer if playing
-    if (isPlaying) {
-      startTimer();
-    }
-  } catch (error) {
-    console.error('Error setting time:', error);
-  }
-};
+//     // Update progress immediately
+//     const newProgress = (timeValue / audioRef.current.duration) * 100;
+//     setTrackProgress(newProgress);
+    
+//     // Restart timer if playing
+//     if (isPlaying) {
+//       startTimer();
+//     }
+//   } catch (error) {
+//     console.error('Error setting time:', error);
+//   }
+// };
 
   const onScrubEnd = () => {
     // If not already playing, start
