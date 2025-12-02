@@ -64,7 +64,7 @@ const Checkout = () => {
           lastNameOnCard: '',
           email: '',
         },
-        BillingSameAddressAsShipping: true,
+        BillingSameAddressAsMailing: true,
         billingAddress:{
           addressType: 'BILLING',
           addressLine1: '',
@@ -103,6 +103,8 @@ const Checkout = () => {
   // Check if all license agreements are acknowledged
   const allLicenseAgreementsAcknowledged = useSelector(selectAllLicenseAgreementsAcknowledged);
   
+  // Use effect that automatically passes all initial form values to formData upon rendering
+
   // Redirect if cart is empty
   useEffect(() => {
     if (items.length === 0 && !orderComplete && !isProcessing) {
@@ -133,7 +135,7 @@ const Checkout = () => {
     // Check if the "Same Address as shipping" checkbox is checked
     // Check if the field being changed is part of the billing address
     // Completely ignore the change attempt if both conditions are true
-    if (formData.paymentProcessing.card.BillingSameAddressAsShipping && name.startsWith('paymentProcessing.card.billingAddress')) {
+    if (formData.paymentProcessing.card.BillingSameAddressAsMailing && name.startsWith('paymentProcessing.card.billingAddress')) {
       return;
     }
     
@@ -158,7 +160,7 @@ const Checkout = () => {
           return { ...obj, [head]: value };
         }
         
-        // We need to go deeper in the object
+        // We need to go deeper in the object with the recursive function setNestedValue
         return {
           ...obj,
           [head]: setNestedValue(obj[head] || {}, rest, value)
@@ -176,22 +178,20 @@ const Checkout = () => {
   
   // make building address the same as shipping or on its own depending on user choice on sameAddressAsShipping checkbox
   useEffect(() => {
-    if (formData.paymentProcessing.card.BillingSameAddressAsShipping) {
+    if (formData.paymentProcessing.card.BillingSameAddressAsMailing) {
       setFormData({
         ...formData,
         paymentProcessing: {
           ...formData.paymentProcessing,
           card: {
             ...formData.paymentProcessing.card,
-            billingAddress: formData.shippingAddress,
+            billingAddress: formData.mailingRegistrationAddress,
           },
-          // billingAddress: {
-          //   ...formData.shippingAddress,
-          // },
         },
       });
     }
-  }, [formData.paymentProcessing.card.BillingSameAddressAsShipping]); 
+    console.log("addressLine1", formData.paymentProcessing.card.billingAddress.addressLine1);
+  }, [formData.paymentProcessing.card.BillingSameAddressAsMailing, formData.mailingRegistrationAddress]); 
   
   // Validate form data
   const validateForm = () => {
@@ -204,21 +204,21 @@ const Checkout = () => {
     }
     
     // Email validation
-    if (!formData.licenseeContact.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.licenseContact.email)) {
+    if (!formData.licenseeContact.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.licenseeContact.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
     
     // Name validation
-    if (!formData.licenseeContact.firstName || formData.licenseContact.firstName.length < 2) {
-      newErrors.firstName = 'First name is required';
+    if (!formData.licenseeContact.firstName || formData.licenseeContact.firstName.length < 2) {
+      newErrors.firstName = 'First name is required'; 
     }
     
-    if (!formData.licenseeContact.lastName || formData.licenseContact.lastName.length < 2) {
+    if (!formData.licenseeContact.lastName || formData.licenseeContact.lastName.length < 2) {
       newErrors.lastName = 'Last name is required';
     }
     
     // Shipping Address validation
-    if (!formData.mailingRegistrationAddress.addressLine1 || formData.shippingAddress.addressLine1.length < 5) {
+    if (!formData.mailingRegistrationAddress.addressLine1 || formData.mailingRegistrationAddress.addressLine1.length < 4) {
       newErrors.addressLine1 = 'Valid street address is required';
     }
     
@@ -230,11 +230,11 @@ const Checkout = () => {
       newErrors.state = 'State/Province is required';
     }
     
-    if (!formData.shippingAddress.zipCode || !/^[0-9]{5}(-[0-9]{4})?$/.test(formData.shippingAddress.zipCode)) {
+    if (!formData.mailingRegistrationAddress.zipCode || !/^[0-9]{5}(-[0-9]{4})?$/.test(formData.mailingRegistrationAddress.zipCode)) {
       newErrors.zipCode = 'Valid zip code is required (e.g., 12345 or 12345-6789)';
     }
     
-    if (!formData.shippingAddress.country) {
+    if (!formData.mailingRegistrationAddress.country) {
       newErrors.country = 'Country is required';
     }
 
@@ -316,7 +316,7 @@ const Checkout = () => {
       // Build payload once, reuse for API call and UI state
       const payload = {
         //***REFERENCE NUMBER for the order***//
-        reference_number: referenceNumber,
+        referenceNumber: referenceNumber,
         //***CONTRIBUTOR INFO***//
         licenseeContact: {
           contact_type: 'INDIVIDUAL',
@@ -340,7 +340,7 @@ const Checkout = () => {
           pro_affiliation: formData.musicProfessional.proAffiliation,
           ipi_number: formData.musicProfessional.ipiNumber,
         },
-        socialMediaLink: {
+        socialMediaLinks: {
           url: [formData.musicProfessional.snsLink1, formData.musicProfessional.snsLink2],
         },
           
@@ -349,8 +349,8 @@ const Checkout = () => {
           first_name: formData.paymentProcessing.card.contact.firstNameOnCard,
           last_name: formData.paymentProcessing.card.contact.lastNameOnCard,
           email: formData.paymentProcessing.card.contact.email,
-          company_name: formData.paymentProcessing.card.contact.company_name,
-          phone_number: formData.paymentProcessing.card.contact.phone_number,
+          company_name: formData.paymentProcessing.card.contact.companyName,
+          phone_number: formData.paymentProcessing.card.contact.phoneNumber,
         },
         billingAddress: {
           address_line_1: formData.paymentProcessing.card.billingAddress.addressLine1,
@@ -362,8 +362,8 @@ const Checkout = () => {
         },
         //***ITEMS-TRACKS***//
         items: items.filter(item => item.type === 'track').map(item => ({
-          trackId: item.trackId, //from the cartslice
-          licenseTypeId: item.licenseType.licenseTypeId,
+          track_id: item.id, //from the cartslice
+          track_license_option_id: item.trackLicenseOption.trackLicenseOptionId,
           price: item.price,
           quantity: item.quantity,
         })),
@@ -380,14 +380,14 @@ const Checkout = () => {
         payload,
         {
           headers: {
-            'Idempotency-Key': payload.reference_number,
+            'Idempotency-Key': payload.referenceNumber,
           },
         }
       );
       console.log('Order created:', result);
 
       setOrder(result);
-      setOrderedItems(result.licenses);
+      setOrderedItems(result.license_holdings.licenses || []);
       // Prevent null payment in OrderConfirmation: use backend's payment or fallback to our payload
       setPayment(result?.payment || payload.payment);
       // Set completion last so confirmation renders with non-null payment
@@ -408,7 +408,7 @@ const Checkout = () => {
 };
       // If order is complete, show confirmation
   if (orderComplete && order) {
-    return <OrderConfirmation order={order} purchasedItems={orderedItems} payment={payment} email={formData.contact.email}/>
+    return <OrderConfirmation order={order} purchasedItems={orderedItems} payment={payment} email={formData.licenseeContact.email}/>
   };
     //   // Save order items to thunk for caching
     //   dispatch(submitOrderThunk(orderItems));
@@ -483,7 +483,7 @@ const Checkout = () => {
       zipCode: '12345',
       country: 'United States',
     },
-      MusicProfessional:{
+    musicProfessional:{
       refCode: '123456',
       proAffiliation: 'ASCAP',
       ipiNumber: '123456789',
@@ -506,7 +506,7 @@ const Checkout = () => {
           lastNameOnCard: 'Doe',
           email: 'test@example.com',
         },
-        BillingSameAddressAsShipping: false,
+        BillingSameAddressAsMailing: true,
         billingAddress:{
           addressType: 'billing',
           addressLine1: '123 Test Street',

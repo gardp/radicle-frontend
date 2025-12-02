@@ -7,7 +7,7 @@ import { API_BASE_URL } from "../api";
 
 
 const AudioPlayer = ({ libraries, playerTitle }) => {
-  console.log("AudioPlayer received libraries:", libraries); // Debug log
+  // console.log("AudioPlayer received libraries:", libraries); // Debug log
   // desctructure tracks from libraries
   // State
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
@@ -31,7 +31,7 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
   // A more robust solution would involve updating currentTrackIndex when tracks are filtered,
   // or ensuring the currently playing track is always part of filteredTracks.
   const currentLibrary = libraries[currentLibTrackIndex.libraryIndex]; //the current library by default
-  console.log('This is the current library', currentLibrary)
+  // console.log('This is the current library', currentLibrary)
   const tracks = currentLibrary?.tracks || [];
   const currentTrack = tracks[currentLibTrackIndex.trackIndex]; 
   const { trackTitle, trackArtist, trackStorageFilePath, vinylThumbnail} = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
@@ -44,49 +44,82 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
   const intervalRef = useRef();
   const isReady = useRef(false);
 
-  const currentPercentage = audioRef.current.duration
-    ? `${(trackProgress / audioRef.current.duration) * 100}%`
-    : "0%";
-  const trackStyling = `
-    -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
-  `;
+  // const currentTrackProgress = audioRef.current.duration
+  //   ? `${trackProgress}%`
+  //   : "0%";
+  const duration = audioRef.current.duration || 0;
+
+  const currentTrackPercent = duration
+    ? (trackProgress / duration) * 100  // 0–100
+    : 0;
+    const trackStyling = `
+      -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentTrackPercent}%, #fff), color-stop(${currentTrackPercent}%, #777))
+    `;
 
   const startTimer = () => { 
     // Clear any timers already running
     clearInterval(intervalRef.current);
-
+    console.log('timer audio object:', audioRef.current);
+    console.log('timer audio src:', audioRef.current.src);
+    console.log('timer currentTime', audioRef.current.currentTime);
     intervalRef.current = setInterval(() => {
       if (audioRef.current.ended) {
-        setTrackProgress(100); 
+        setTrackProgress(audioRef.current.duration); 
         handlePause();
         console.log('Audio currentTime:', audioRef.current.currentTime);
         console.log('Audio duration:', audioRef.current.duration);
         console.log('trackprogress:', trackProgress);
-        console.log('currentPercentage:', currentPercentage);
+        console.log('currentPercentage:', currentTrackPercent);
 
         // clearInterval(intervalRef.current);
       } else {
-        const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-        setTrackProgress(newPercentage); // Update progress
+        // const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+        setTrackProgress(audioRef.current.currentTime); // Update progress
       }
-      console.log('Audio trackStyling:', trackStyling);
-    }, [500]);
+      console.log('timer currentTime', audioRef.current.currentTime);
+    }, 1000);
   };
 
   const onScrub = (value) => {
     // Clear any timers already running
     clearInterval(intervalRef.current);
+    const numericValue = parseFloat(value); // slider in seconds
+    console.log('raw value from range:', value, 'type:', typeof value);
+    console.log('numericValue:', numericValue, 'isNaN:', Number.isNaN(numericValue));
+    // Check if audio duration is ready
+    const duration = audioRef.current.duration;
+    console.log('Audio state', audioRef.current.readyState)
+    console.log('Audio duration in onScrub:', duration);
+    if (!duration || Number.isNaN(duration)) {
+      console.log('Audio duration not ready');
+      setTrackProgress(numericValue);
+      return;
+    }
+    console.log('scrub audio object:', audioRef.current);
+    console.log('scrub audio src:', audioRef.current.src);
+    console.log('seekable.length:', audioRef.current.seekable.length);
+    for (let i = 0; i < audioRef.current.seekable.length; i++) {
+      console.log(
+        `seekable[${i}]:`,
+        audioRef.current.seekable.start(i),
+        '→',
+        audioRef.current.seekable.end(i)
+      );
+    }
 
-    // Convert slider value to time value
-    const timeValue = (value * audioRef.current.duration) / 100;
-    console.log('Input value:', value);
-    console.log('Audio duration:', audioRef.current.duration);
-    console.log('Calculated time:', timeValue);
-    audioRef.current.currentTime = timeValue;
-    // setTrackProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
-    const newProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-    console.log('New progress:', newProgress);
-    setTrackProgress(newProgress);
+    try {
+    audioRef.current.currentTime = numericValue;
+    console.log('scrub currentTime after assignment', audioRef.current.currentTime);
+    const rejectChecker = numericValue;
+    console.log('rejectChecker', rejectChecker);
+    // setTimeout(() => {
+    //   audioRef.current.currentTime = numericValue;
+    //   console.log('50ms later currentTime:', audioRef.current.currentTime);
+    // }, 500);
+    setTrackProgress(audioRef.current.currentTime);
+    } catch (error) {
+      console.error('Error scrubbing audio:', error);
+    }
   };
 //   const onScrub = (value) => {
 //   clearInterval(intervalRef.current);
@@ -118,6 +151,11 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
 // };
 
   const onScrubEnd = () => {
+    const duration = audioRef.current.duration;
+    if (!duration || Number.isNaN(duration)) {
+      console.log('Audio duration not ready');
+      return;
+    }
     // If not already playing, start
     if (!isPlaying) {
       handlePlay();
@@ -134,7 +172,6 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
 
   const handlePause = () => {
     setIsPlaying(false);
-    // onPause();
   };
 
   const toPrevTrack = () => {
@@ -182,6 +219,7 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
       startTimer();
     } else {
       audioRef.current.pause();
+      clearInterval(intervalRef.current);
     }
   }, [isPlaying, hasUserInteracted]);
 
@@ -190,7 +228,7 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
   useEffect(() => {
     audioRef.current.pause();
     audioRef.current = new Audio(fullAudioUrl);
-    setTrackProgress(audioRef.current.currentTime);
+    setTrackProgress(0);
   }, [fullAudioUrl]);
 
   // player change

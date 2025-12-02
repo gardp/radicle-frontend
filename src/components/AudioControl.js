@@ -97,14 +97,15 @@ const AudioControls = ({
         <input
           type="range"
           value={trackProgress}
-          step="1"
+          step="0.1"
           min="0"
-          max="100"  // Use actual duration, fallback to 0 if not loaded
+          max={audioRef.current.duration}  // Use actual duration, fallback to 0 if not loaded
           className="progress"
           onChange={(e) => onScrub(e.target.value)}
           onMouseUp={onScrubEnd}
           onKeyUp={onScrubEnd}
           style={{ background: trackStyling }}
+          disabled={!audioRef.current.duration} //disable the progress bar if the audio is not loaded i.e. no duration
         />
         
         <div className="controls-frame">

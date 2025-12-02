@@ -23,14 +23,14 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             <input
               type="email"
               id="email"
-              name="contact.email"
+              name="licenseeContact.email"
               className={`form-control ${errors.email ? 'error' : ''}`}
               value={formData.licenseeContact.email || 'your@email.com'}
               onChange={onChange}
               placeholder="your@email.com"
               required
             />
-            {errors.email && <div className="error-message">{errors.email}</div>}
+            { errors.email && <div className="error-message">{errors.email}</div>}
           </div>
           
           <div className="form-row">
@@ -39,7 +39,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               <input
                 type="text"
                 id="firstName"
-                name="contact.firstName"
+                name="licenseeContact.firstName"
                 className={`form-control ${errors.firstName ? 'error' : ''}`}
                 value={formData.licenseeContact.firstName || 'John'}
                 onChange={onChange}
@@ -54,7 +54,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               <input
                 type="text"
                 id="lastName"
-                name="contact.lastName"
+                name="licenseeContact.lastName"
                 className={`form-control ${errors.lastName ? 'error' : ''}`}
                 value={formData.licenseeContact.lastName || 'Doe'}
                 onChange={onChange}
@@ -68,21 +68,21 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
         <br />
         {/* shipping Address */}
         <div className="checkout-form-section">
-          <h3 className="form-section-title">Shipping-Registration Address</h3>
+          <h3 className="form-section-title">Mailing-Registration Address</h3>
           
           <div className="form-group">
             <label htmlFor="address">Street Address</label>
             <input
               type="text"
               id="address"
-              name="shippingAddress.address_line_1"
-              className={`form-control ${errors.address_line_1 ? 'error' : ''}`}
-              value={formData.mailingRegistrationAddress.address_line_1 || '123 Main St'}
+              name="mailingRegistrationAddress.addressLine1"
+              className={`form-control ${errors.addressLine1 ? 'error' : ''}`}
+              value={formData.mailingRegistrationAddress.addressLine1 || '123 Main St'}
               onChange={onChange}
               placeholder="123 Main St"
               required
             />
-            {errors.address_line_1 && <div className="error-message">{errors.address_line_1}</div>}
+            {errors.addressLine1 && <div className="error-message">{errors.addressLine1}</div>}
           </div>
           
           <div className="form-group">
@@ -90,9 +90,9 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             <input
               type="text"
               id="address_line_2"
-              name="mailingRegistrationAddress.address_line_2"
+              name="mailingRegistrationAddress.addressLine2"
               className={`form-control`}
-              value={formData.mailingRegistrationAddress.address_line_2 || '123 Main St'}
+              value={formData.mailingRegistrationAddress.addressLine2 || '123 Main St'}
               onChange={onChange}
               placeholder="123 Main St"
             />
@@ -176,17 +176,17 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             <label className="checkbox-container">
               <input
                 type="checkbox"
-                name="paymentProcessing.card.BillingSameAddressAsShipping"
-                checked={formData.paymentProcessing.card.BillingSameAddressAsShipping}
+                name="paymentProcessing.card.BillingSameAddressAsMailing"
+                checked={formData.paymentProcessing.card.BillingSameAddressAsMailing}
                 onChange={onChange}
               />
-              <span>Same Address as shipping address</span>
+              <span>Same Address as mailing address</span>
             </label>
           </div>
           
 
         {/* billing Address */}
-        {!formData.paymentProcessing.card.BillingSameAddressAsShipping && (
+        {!formData.paymentProcessing.card.BillingSameAddressAsMailing && (
           <div className="checkout-form-section">
             <h3 className="form-section-title">Billing Address</h3>
             
@@ -195,24 +195,24 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               <input
                 type="text"
                 id="address"
-                name="billingAddress.address_line_1"
-                className={`form-control ${errors.address ? 'error' : ''}`}
-                value={formData.paymentProcessing.card.billingAddress.address_line_1}
+                name="paymentProcessing.card.billingAddress.addressLine1"
+                className={`form-control ${errors.addressLine1 ? 'error' : ''}`}
+                value={formData.paymentProcessing.card.billingAddress.addressLine1}
                 onChange={onChange}
                 placeholder="123 Main St"
                 required
               />
-              {errors.address_line_1 && <div className="error-message">{errors.address_line_1}</div>}
+              {errors.addressLine1 && <div className="error-message">{errors.addressLine1}</div>}
             </div>
 
             <div className="form-group">
               <label htmlFor="address">Address Line 2</label>
               <input
                 type="text"
-                id="address_line_2"
-                name="billingAddress.address_line_2"
+                id="addressLine2"
+                name="paymentProcessing.card.billingAddress.addressLine2"
                 className={`form-control`}
-                value={formData.paymentProcessing.card.billingAddress.address_line_2}
+                value={formData.paymentProcessing.card.billingAddress.addressLine2}
                 onChange={onChange}
                 placeholder="123 Main St"
               />
@@ -224,9 +224,9 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 <input
                   type="text"
                   id="city"
-                  name="billingAddress.city"
+                  name="paymentProcessing.card.billingAddress.city"
                   className={`form-control ${errors.city ? 'error' : ''}`}
-                  value={formData.billingAddress.city}
+                  value={formData.paymentProcessing.card.billingAddress.city}
                   onChange={onChange}
                   placeholder="New York"
                   required
@@ -239,9 +239,9 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 <input
                   type="text"
                   id="state"
-                  name="billingAddress.state"
+                  name="paymentProcessing.card.billingAddress.state"
                   className={`form-control ${errors.state ? 'error' : ''}`}
-                  value={formData.billingAddress.state}
+                  value={formData.paymentProcessing.card.billingAddress.state}
                   onChange={onChange}
                   placeholder="NY"
                   required
@@ -256,9 +256,9 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 <input
                   type="text"
                   id="zipCode"
-                  name="billingAddress.zipCode"
+                  name="paymentProcessing.card.billingAddress.zipCode"
                   className={`form-control ${errors.zipCode ? 'error' : ''}`}
-                  value={formData.billingAddress.zipCode}
+                  value={formData.paymentProcessing.card.billingAddress.zipCode}
                   onChange={onChange}
                   placeholder="10001"
                   required
@@ -270,9 +270,9 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 <label htmlFor="country">Country</label>
                 <select
                   id="country"
-                  name="billingAddress.country"
+                  name="paymentProcessing.card.billingAddress.country"
                   className={`form-control ${errors.country ? 'error' : ''}`}
-                  value={formData.billingAddress.country}
+                  value={formData.paymentProcessing.card.billingAddress.country}
                   onChange={onChange}
                   required
                 >

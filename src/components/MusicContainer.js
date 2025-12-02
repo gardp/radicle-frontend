@@ -6,7 +6,7 @@ import React from 'react';
 
 const MusicContainer = ({ libraries, trackCount, playerTitle, scale = 1 }) => {
   // Props for customization have been simplified
-  console.log("MusicContainer received library", libraries); // Debug log
+  // console.log("MusicContainer received library", libraries); // Debug log
   
   // Filter tracks if trackCount is specified (creates new array/objects, doesn't mutate props) to decrease the number of tracks in the AudioPlayer
   const newLibraries = trackCount

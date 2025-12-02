@@ -20,7 +20,10 @@ const useCart = () => {
   
   // Action handlers using thunks for proper persistence
   const handleAddToCart = (item) => dispatch(addToCartAndSaveThunk(item));
-  const handleAddTrackToCart = (currentTrack, licenseOption) =>  dispatch(addTrackToCartAndSaveThunk({track: currentTrack, trackLicenseOption: licenseOption}));
+  const handleAddTrackToCart = (currentTrack, licenseOption) =>  {
+    dispatch(addTrackToCartAndSaveThunk({track: currentTrack, trackLicenseOption: licenseOption}));
+    console.log("track added to cart", items);
+  };
   const handleRemoveFromCart = (item) => dispatch(removeFromCartAndSaveThunk(item));
   // const loadCartFromStorage = () => dispatch(loadCartFromStorageThunk());
 

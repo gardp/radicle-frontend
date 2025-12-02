@@ -10,7 +10,7 @@ const OrderSummary = ({ items, totalPrice }) => {
   const dispatch = useDispatch();
   
   // Calculate subtotal (before tax/shipping)
-  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = totalPrice;
   
   // Calculate tax (assuming 8% tax rate)
   const taxRate = 0.08;

@@ -38,7 +38,7 @@ const TrackFrame = ({ libraries, currentLibTrackIndex, onTrackSelect }) => (
                 <Tab.Pane eventKey={libIndex} key={libIndex}>
                   {/* Map through tracks in the current tab */}
                   {lib.tracks?.map((track, trackIndex) => (
-                    console.log('Libtracks for trackframe', track),
+                    // console.log('Libtracks for trackframe', trasck),
                     <Track
                       key={track.trackId}
                       track={track}

@@ -88,8 +88,9 @@ const TrackPricingTable = () => {
     if (selectedLicenseOption && currentTrack) { //so assuming that an option is selected and the state of track in priceLicensing is not null
       //await the promise returned by the thunk
       addTrackToCart(currentTrack, selectedLicenseOption); //adds the track to cart with the license option
-      const storedCart = loadCartFromStorage();
+      // const storedCart = loadCartFromStorage();
       console.log("cart content:", currentTrack);
+      console.log("selected license option:", selectedLicenseOption);
       // console.log("Verification: Cart from storage:", storedCart);
       dispatch(closePricingModal());
     }

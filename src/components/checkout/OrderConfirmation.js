@@ -45,7 +45,7 @@ const OrderConfirmation = ({ order, purchasedItems, payment, email}) => {
           {purchasedItems.map((item) => (
             <div key={item.track_id} className="download-item">
               <h3 className="download-item-title">{item.title}</h3>
-              <p className="download-item-license">{item.license_name} License</p>
+              <p className="download-item-license">{item.license_type} License</p>
               <a 
                 href={`/download/${item.title}`} 
                 className="download-button"
