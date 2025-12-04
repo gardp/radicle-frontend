@@ -300,7 +300,7 @@
     .track-frame-wrapper {
         transform: scale(1); /* Remove any scaling effect at mobile */
         width: 100%;
-        max-width: 320px;
+        max-width: 500px;
         margin: 0 auto;
         padding: 0;
         height: auto;

@@ -231,3 +231,24 @@ a:hover {
   /* For example, if you want to ensure it doesn't have extra top margin: */
   /* margin-top: 0; */
 }
+
+@media (max-width: 768px) {
+  .content-section-title-frame {
+    margin: 2rem auto 0;
+  }
+
+  .content-section-title {
+    font-size: 1.5em;
+    letter-spacing: 0.03em;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-section-title-frame {
+    margin: 1.5rem auto 0;
+  }
+
+  .content-section-title {
+    font-size: 1.25em;
+  }
+}

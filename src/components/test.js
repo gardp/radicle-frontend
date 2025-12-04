@@ -100,3 +100,83 @@
 //       Player.init();
 //       playerInitializedRef.current = true;
 //     }
+
+ {/* Icons container - stacked vertically */}
+        // <div className="track-icons">
+        //   {/* Buy and Download icons */}
+        //   <div className="track-icons-up">
+        //     {track.trackBuyLink && (
+        //       <a href="#" onClick={(e) => { e.stopPropagation(); handleCartClick(e); 
+        //         console.log("Buy clicked", track);
+        //       }}>
+        //         <img
+        //           // className="track-icon buy-icon skeuomorphic-btn primary with-glare" justink
+        //           className="track-icon buy-icon primary with-glare"
+        //           src={cartIconRed}
+        //           alt="Buy"
+        //         />
+        //         <span className="tooltip">Buy</span>
+        //       </a>
+        //     )}
+        //     {track.trackDownloadLink && (
+        //       <a href={track.trackDownloadLink} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.stopPropagation(); console.log("Download clicked"); }}>
+        //         <img
+        //           className="track-icon download-icon skeuomorphic-btn accent with-glare"
+        //           src={downloadIcon}
+        //           alt="Download"
+        //         />
+        //         <span className="tooltip">Download</span>
+        //       </a>
+        //     )}
+        //   </div>
+        //   {/* Stream icon */}
+        //   <div className="track-icons-down">
+        //     {track.trackStreamLink && (
+        //       <a href={track.trackStreamLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+        //         <img
+        //           className="track-icon stream-icon skeuomorphic-btn"
+        //           src={streamIcon}
+        //           alt="Stream"
+        //         />
+        //         <span className="tooltip">Stream</span>
+        //       </a>
+        //     )}
+        //   </div>
+        // </div>
+
+
+        {/* Icons container - grid layout */}
+{/* <div className="track-icons-grid">
+  {track.trackBuyLink && (
+    <a href="#" className="track-icon-wrapper" onClick={(e) => { e.stopPropagation(); handleCartClick(e); 
+      console.log("Buy clicked", track);
+    }}>
+      <img
+        className="track-icon buy-icon primary with-glare"
+        src={cartIconRed}
+        alt="Buy"
+      />
+      <span className="tooltip">Buy</span>
+    </a>
+  )}
+  {track.trackDownloadLink && (
+    <a href={track.trackDownloadLink} className="track-icon-wrapper" target="_blank" rel="noopener noreferrer" onClick={(e) => { e.stopPropagation(); console.log("Download clicked"); }}>
+      <img
+        className="track-icon download-icon skeuomorphic-btn accent with-glare"
+        src={downloadIcon}
+        alt="Download"
+      />
+      <span className="tooltip">Download</span>
+    </a>
+  )}
+  {track.trackStreamLink && (
+    <a href={track.trackStreamLink} className="track-icon-wrapper" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+      <img
+        className="track-icon stream-icon skeuomorphic-btn"
+        src={streamIcon}
+        alt="Stream"
+      />
+      <span className="tooltip">Stream</span>
+    </a>
+  )}
+</div> */}

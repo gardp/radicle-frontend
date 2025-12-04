@@ -308,7 +308,7 @@ carousel-styles {
 
 @media (max-width: 768px) {
     .carousel-container {
-        padding: 1rem;
+        padding: 0;
         margin: 0 auto;
         max-width: 1600px;
     }

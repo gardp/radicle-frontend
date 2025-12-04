@@ -66,7 +66,8 @@ const AudioControls = ({
         </div>
       )}
       <h1 className="now-playing-title">Now Playing</h1>
-      {/* New div for stream and buy icons */}
+      <div className="now-playing-container">
+              {/* New div for stream and buy icons */}
       <div className="audio-actions-bar">
         <div className="stream-icon-container">
           <img src={streamIcon} alt="Stream Track" className="action-icon" />
@@ -75,7 +76,6 @@ const AudioControls = ({
           <img src={buyIcon} alt="Buy Track" className="action-icon" />
         </div>
       </div>
-      <div className="now-playing-container">
         {/* Vinyl artwork for mobile - inside now-playing-container */}
         {!isDesktop && (
           <div className={`vinyl-artwork-container ${isPlaying ? 'is-playing' : ''}`}>

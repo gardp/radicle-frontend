@@ -253,31 +253,43 @@
 }
 
 /* Mobile view - 1 column */
+/* Mobile view - 1 column */
 @media (max-width: 768px) {
-    .media-section {
-        padding: 2rem 0;
-    }
-    
     .media-container {
         padding: 0 1rem;
     }
-    
+
     .media-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr;  /* Single column on mobile */
         gap: 1.5rem;
     }
     
     .media-card {
-        height: 340px; /* Further reduced height for mobile */
+        height: 300px;  /* Reduced height for mobile */
     }
     
-    /* Simplify some effects for better mobile performance */
-    .media-card:hover {
-        transform: translateY(-3px); /* Reduced animation */
+    .media-frame {
+        padding: 10px;
+    }
+    
+    .media-caption {
+        padding: 12px 14px;
+    }
+    
+    .media-caption h3 {
+        font-size: 1rem;
+    }
+    
+    .media-caption p {
+        font-size: 0.85rem;
     }
     
     .media-play-indicator {
         width: 50px;
         height: 50px;
+    }
+    
+    .play-icon {
+        border-width: 8px 0 8px 14px;
     }
 }

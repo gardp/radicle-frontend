@@ -199,3 +199,23 @@ button {
   transform: scale(0.98);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
+/* ===========================================
+   RESPONSIVE PLAYER TITLE
+   =========================================== */
+@media (max-width: 768px) {
+  .player-title {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .player-grid > .controls-container {
+  justify-self: center;
+}
+}
+
+@media (max-width: 480px) {
+  .player-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+}

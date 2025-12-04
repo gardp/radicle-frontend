@@ -1,31 +1,37 @@
+/* ===========================================
+   NAVBAR STYLES - Mobile-First Approach
+   =========================================== */
 
+/* --- CSS Custom Properties (for consistency) --- */
+:root {
+  --navbar-height-mobile: 60px;
+  --navbar-height-desktop: 70px;
+  --navbar-bg: rgba(26, 26, 26, 0.4);
+  --navbar-bg-scrolled: rgba(26, 26, 26, 0.9);
+}
+
+/* --- Base Navbar (Mobile-First) --- */
 .navbar {
   font-family: 'Montserrat', sans-serif;
-  margin: 0 auto;
-  max-width: calc(100% - 300px); /* Match carousel image width */
-  background-color: rgba(26, 26, 26, 0.4); /* More transparent background */
+  width: 100%;
+  background-color: var(--navbar-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(196, 18, 48, 0.15); /* Subtle crimson red border */
-  z-index: 1030; /* Ensure it's above carousel */
+  border-bottom: 1px solid rgba(196, 18, 48, 0.15);
+  z-index: 1030;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease, padding 0.3s ease;
 }
 
 .navbar.scrolled {
-  background-color: rgba(26, 26, 26, 0.9); /* Less transparent when scrolled */
+  background-color: var(--navbar-bg-scrolled);
 }
 
-.navbar-nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-}
-
+/* --- Brand/Logo --- */
 .navbar-brand {
   color: var(--haiti-gold) !important;
-  padding: 10px;
+  padding: 0.5rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   transition: all 0.3s ease;
@@ -38,25 +44,46 @@
 }
 
 .navbar-logo {
-  height: 60px;
+  height: 40px;
   width: auto;
   vertical-align: middle;
   filter: brightness(0) saturate(100%) invert(97%) sepia(19%) saturate(184%) hue-rotate(9deg) brightness(106%) contrast(96%);
+  transition: height 0.3s ease;
 }
 
+/* --- Nav Links Container (Mobile) --- */
+.navbar-nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  gap: 0.25rem;
+}
+
+/* --- Individual Nav Links --- */
 .nav-link {
   color: rgba(255, 255, 255, 0.85) !important;
-  padding: 10px;
+  padding: 0.75rem 1rem;
   position: relative;
   transition: all 0.3s ease;
   font-weight: 500;
+  font-size: 0.9rem;
   letter-spacing: 0.02em;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.nav-link:last-child {
+  border-bottom: none;
+}
+
+/* Underline effect */
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 5px;
+  bottom: 0.5rem;
   left: 50%;
   width: 0;
   height: 2px;
@@ -68,11 +95,11 @@
 
 .nav-link:hover {
   color: #ffffff !important;
-  transform: translateY(-1px);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .nav-link:hover::after {
-  width: 60%;
+  width: 40%;
   opacity: 1;
 }
 
@@ -82,16 +109,17 @@
 }
 
 .nav-link.active::after {
-  width: 70%;
+  width: 50%;
   opacity: 1;
   background-color: var(--haiti-gold);
 }
 
-/* Navbar toggle button (mobile) */
+/* --- Hamburger Toggle (Mobile) --- */
 .navbar-toggler {
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  padding: 5px 8px;
+  padding: 0.4rem 0.6rem;
   transition: all 0.3s ease;
+  order: 1; /* Ensure toggle stays on right */
 }
 
 .navbar-toggler:hover {
@@ -104,10 +132,21 @@
 }
 
 .navbar-toggler-icon {
+  width: 1.25em;
+  height: 1.25em;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(230, 181, 76, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
-/* Styling for dropdown menus if you have them */
+/* --- Collapsed Menu Styling --- */
+.navbar-collapse {
+  background-color: rgba(26, 26, 26, 0.95);
+  border-radius: 0 0 8px 8px;
+  margin-top: 0.5rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* --- Dropdown Menus --- */
 .dropdown-menu {
   background-color: rgba(26, 26, 26, 0.95);
   backdrop-filter: blur(10px);
@@ -116,15 +155,15 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  padding: 8px 0;
-  margin-top: 10px;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
 }
 
 .dropdown-item {
   color: rgba(255, 255, 255, 0.85);
   transition: all 0.2s ease;
   font-weight: 500;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   position: relative;
 }
 
@@ -134,8 +173,91 @@
   transform: translateX(5px);
 }
 
-.dropdown-item.active, 
+.dropdown-item.active,
 .dropdown-item:active {
   background-color: rgba(196, 18, 48, 0.35);
   color: #ffffff;
+}
+
+/* ===========================================
+   TABLET BREAKPOINT (≥768px)
+   =========================================== */
+@media (min-width: 768px) {
+  .navbar {
+    padding: 0.5rem 2rem;
+  }
+
+  .navbar-logo {
+    height: 50px;
+  }
+
+  .nav-link {
+    font-size: 0.95rem;
+    padding: 0.75rem 1.25rem;
+  }
+}
+
+/* ===========================================
+   DESKTOP BREAKPOINT (≥992px)
+   Bootstrap's 'lg' breakpoint where expand="lg" kicks in
+   =========================================== */
+@media (min-width: 992px) {
+  .navbar {
+    margin: 0 auto;
+    max-width: calc(100% - 300px); /* Match carousel width */
+    padding: 0 1.5rem;
+  }
+
+  /* Center nav links on desktop */
+  .navbar-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    width: auto;
+    padding: 0;
+    gap: 0;
+  }
+
+  .nav-link {
+    width: auto;
+    padding: 1rem 0.75rem;
+    border-bottom: none;
+    text-align: center;
+  }
+
+  .nav-link:hover {
+    background-color: transparent;
+    transform: translateY(-1px);
+  }
+
+  .nav-link:hover::after {
+    width: 60%;
+  }
+
+  .nav-link.active::after {
+    width: 70%;
+  }
+
+  .navbar-logo {
+    height: 60px;
+  }
+
+  /* Hide collapsed menu background on desktop */
+  .navbar-collapse {
+    background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    margin-top: 0;
+  }
+}
+
+/* ===========================================
+   LARGE DESKTOP (≥1200px)
+   =========================================== */
+@media (min-width: 1200px) {
+  .nav-link {
+    padding: 1rem 1rem;
+    font-size: 1rem;
+  }
 }

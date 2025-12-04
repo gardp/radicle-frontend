@@ -25,3 +25,18 @@
   border-color: var(--haiti-gold);
   box-shadow: 0 0 8px rgba(var(--haiti-gold-rgb, 230, 181, 76), 0.5); /* Using gold for focus, ensure --haiti-gold-rgb is defined or use a fallback */
 }
+
+/* Center SearchBar on mobile */
+@media (max-width: 768px) {
+  .search-bar-container {
+    width: 80%;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .search-input {
+    width: 90%;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}

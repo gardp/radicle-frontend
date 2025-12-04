@@ -283,6 +283,35 @@
     }
     
     .slider-control {
-        width: 80px;
+        width: 60px;
     }
+
+       /* Halve button size on smaller screens */
+    .slide-nav-button {
+        padding: 0.6rem 1.125rem;       /* Half of 1.2rem 2.25rem */
+        font-size: 0.675rem;            /* Half of 1.35rem */
+        border-radius: 3px;             /* Half of 6px */
+        bottom: 1.5rem;                 /* Adjust position */
+    }
+    .slide-subheadline {
+        font-size: 0.9rem;
+        max-width: 90%;
+    }
+
+    .slide-nav-button {
+        left: 35%;
+        transform: translateX(-50%);
+        right: auto;
+    }
+
+    .slide-title {
+        font-size: 1.5rem;              /* Reduced from 2rem */
+        margin: 0 1rem 0.5rem;          /* Tighter margins on mobile */
+    }   
+
+    .slide-subheadline {
+        font-size: 0.8rem;
+        max-width: 90%;
+    }
+    
 }
