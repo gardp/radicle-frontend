@@ -2,31 +2,21 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { openLicenseModal } from '../../store/slices/licenseAgreementSlice';
 import '../../styles/Checkout.css';
-
+import useCart from '../../hooks/useCart';
 /**
  * OrderSummary component displays the items in the cart and total calculations
  */
-const OrderSummary = ({ items, totalPrice }) => {
+const OrderSummary = () => {
   const dispatch = useDispatch();
-  
-  // Calculate subtotal (before tax/shipping)
-  const subtotal = totalPrice;
-  
-  // Calculate tax (assuming 8% tax rate)
-  const taxRate = 0.08;
-  const tax = subtotal * taxRate;
-  
-  // Shipping is free for digital products
-  const shipping = 0;
-  
-  // Calculate final total
-  const total = subtotal + tax + shipping;
+  const { items, subtotal, taxRate, taxAmount, totalPrice } = useCart();
   
   // Handle opening the license agreement modal
   const handleOpenLicenseAgreement = (item) => {
     console.log("ITEM PASSED TO LICENSE AGREEMENT MODAL", item)
     dispatch(openLicenseModal(item));
   };
+
+  const shipping = 0; // Placeholder for shipping cost
   
   return (
     <div className="order-summary">
@@ -64,7 +54,7 @@ const OrderSummary = ({ items, totalPrice }) => {
         </div>
         <div className="order-total-row">
           <span>Tax ({(taxRate * 100).toFixed(0)}%)</span>
-          <span>${tax.toFixed(2)}</span>
+          <span>${taxAmount.toFixed(2)}</span>
         </div>
         <div className="order-total-row">
           <span>Shipping</span>
@@ -72,7 +62,7 @@ const OrderSummary = ({ items, totalPrice }) => {
         </div>
         <div className="order-total-row final">
           <span>Total</span>
-          <span>${total.toFixed(2)}</span>
+          <span>${totalPrice.toFixed(2)}</span>
         </div>
       </div>
     </div>

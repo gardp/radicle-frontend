@@ -148,6 +148,28 @@
   min-width: 120px;
 }
 
+/* Form Subsection Styling */
+.form-subsection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-subsection-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--accent-text-color);
+  font-family: var(--subheading-font);
+}
+
+.form-subsection-description {
+  font-size: 0.85rem;
+  color: var(--secondary-text-color);
+  margin-bottom: 1.25rem;
+  opacity: 0.8;
+}
+
 /* Payment method styling */
 .payment-methods {
   display: flex;

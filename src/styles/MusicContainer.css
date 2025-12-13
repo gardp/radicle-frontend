@@ -63,14 +63,6 @@
   border-bottom-right-radius: 8px;
 }
   /* gemini */
-
-/* Applying the scale transform for desktop views */
-@media (min-width: 768px) {
-  .music-container {
-    transform: scale(var(--music-container-scale));
-  }
-}
-
 /* Default scale for largest screens */
 @media (min-width: 1200px) {
   .music-container {
@@ -81,30 +73,45 @@
 /* Step 1: Scale down from 1200px */
 @media (max-width: 1199.98px) and (min-width: 1088px) {
   .music-container {
-    --music-container-scale: 0.875;
+    --music-container-scale: 0.95;
   }
 }
 
 /* Step 2 */
 @media (max-width: 1087.98px) and (min-width: 976px) {
   .music-container {
-    --music-container-scale: 0.75;
+    --music-container-scale: 0.90;
   }
 }
 
-/* Step 3 */
+/* Step 3: 976px down to 864px */
 @media (max-width: 975.98px) and (min-width: 864px) {
   .music-container {
-    --music-container-scale: 0.625;
+    --music-container-scale: 0.85;
   }
 }
 
-/* Step 4: Final scale at 768px */
+/* Step 4: 864px down to 768px */
 @media (max-width: 863.98px) and (min-width: 768px) {
+  .music-container {
+    --music-container-scale: 0.8;
+  }
+}
+
+/* @media (max-width: 768px) {
   .music-container {
     --music-container-scale: 0.5;
   }
-}
+} */
+
+/* Applying the scale transform for desktop views
+@media (min-width: 768px) {
+  .music-container {
+    transform: scale(var(--music-container-scale));
+  }
+} */
+
+
  
 .g-0 {
     display: flex;
@@ -118,11 +125,11 @@
     overflow: visible;
 }
 
-@media (max-width: 767.98px) { /* Adjusted max-width */
+@media (max-width: 768px) { /* Adjusted max-width */
     .music-container {
         padding: 0;
         margin: 0 auto;
-        max-width: 100%;
+        /* max-width: 100%; */
         aspect-ratio: auto; /* Remove fixed aspect ratio on mobile */
         height: auto;
         overflow: visible;
@@ -148,3 +155,19 @@
     }
 }
 
+/* @media (max-width: 600px) { */
+  /* .music-container { */
+    /* Keep your scale for proportional shrink */
+
+    /* transform: scale(0.7); */
+    /* transform-origin: center top; or center center */
+
+    /* IMPORTANT: center the scaled content */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: flex-start; or center, depending on what feels better */
+    /* Ensure the grid cell itself isn't doing something weird */
+    /* margin: 0 auto; */
+    /* width: 100%; */
+  /* } */
+/* } */

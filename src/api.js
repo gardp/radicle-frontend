@@ -249,7 +249,7 @@ export const licenseTypeApi = {
     }),
   };
 
-  //now export orderApi for the checkout
+  //now export orderApi for the checkout to submit order before payment
   export const orderApi = {
     checkoutOrder: (orderData, config = {}) => api.post('/orders/checkout/', orderData, config)
     .then(response => {
@@ -261,250 +261,24 @@ export const licenseTypeApi = {
     }),
   };
 
-
-
-//   // Order API for the order object from the api
-//   export const orderApi = {
-//     // Submit order to backend
-//     submitOrder: (orderData, config = {}) => api.post('/orders/', orderData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to submit order:', error);
-//       if (error.response) {
-//         console.error('Order submit details:', {
-//           status: error.response.status,
-//           data: error.response.data,
-//         });
-//       }
-//       throw error;
-//     }),
-//     // Get order details
-//     getOrder: (id) => api.get(`/orders/${id}/`)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get order:', error);
-//       throw error;
-//     }),
-//     // Get user order history
-//     getUserOrders: () => api.get('/orders/user/')
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get user orders:', error);
-//       throw error;
-//     }),
-//     //create checkout endpoint
-//     checkoutOrder: (orderData, config = {}) => api.post('/orders/checkout/', orderData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to checkout order:', error);
-//       throw error;
-//     }),
-//   };
-
-//   // Order API for the order_items object from the api
-//   export const orderItemApi = {
-//     // Submit order to backend
-//     submitOrderItem: (orderItemData, config = {}) => api.post('/order-items/', orderItemData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to submit order item:', error);
-//       throw error;
-//     }),
-//     // Get order details
-//     getOrderItem: (id) => api.get(`/order-items/${id}/`)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get order item:', error);
-//       throw error;
-//     }),
-//     // Get user order history
-//     getUserOrderItems: () => api.get('/order-items/user/')
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get user order items:', error);
-//       throw error;
-//     }),
-//   };
-  
-//   // address api
-//   export const addressApi = {
-//     // Submit address to backend
-//     submitAddress: (addressData, config = {}) => api.post('/addresses/', addressData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to submit address:', error);
-//       throw error;
-//     }),
-//     // Get address details
-//     getAddress: (id) => api.get(`/addresses/${id}/`)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get address:', error);
-//       throw error;
-//     }),
-//     // Get user address history
-//     getUserAddresses: () => api.get('/addresses/user/')
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get user addresses:', error);
-//       throw error;
-//     }),
-//   };
-
-//   // contact api
-//   export const contactApi = {
-//     // Submit contact to backend
-//     submitContact: (contactData, config = {}) => api.post('/contacts/', contactData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to submit contact:', error);
-//       throw error;
-//     }),
-//     // Get contact details
-//     getContact: (id) => api.get(`/contacts/${id}/`)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get contact:', error);
-//       throw error;
-//     }),
-//     // Get user contact history
-//     getUserContacts: () => api.get('/contacts/user/')
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get user contacts:', error);
-//       throw error;
-//     }),
-//   };
-
-//   export const contributorApi = {
-//     // Submit contributor to backend
-//     submitContributor: (contributorData, config = {}) => api.post('/contributors/', contributorData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to submit contributor:', error);
-//       throw error;
-//     }),
-//     // Get contributor details
-//     getContributor: (id) => api.get(`/contributors/${id}/`)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get contributor:', error);
-//       throw error;
-//     }),
-//     // Get user contributor history
-//     getUserContributors: () => api.get('/contributors/user/')
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get user contributors:', error);
-//       throw error;
-//     }),
-//   };
-
-//   // buyer api
-//   export const buyerApi = {
-//     // Submit buyer to backend
-//     submitBuyer: (buyerData, config = {}) => api.post('/buyers/', buyerData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to submit buyer:', error);
-//       throw error;
-//     }),
-//     // Get buyer details
-//     getBuyer: (id) => api.get(`/buyers/${id}/`)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get buyer:', error);
-//       throw error;
-//     }),
-//     // Get user buyer history
-//     getUserBuyers: () => api.get('/buyers/user/')
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to get user buyers:', error);
-//       throw error;
-//     }),
-//   };
-
-//   // The content type from the backend that will be used to build the generic item foreign key for the orderitem
-//   export const contentTypeApi = {
-//     // Get content type mappings for generic relations
-//     getContentTypeMappings: () => api.get('/content-type-mappings/')
-//       .then(response => {
-//         return response.data;
-//       })
-//       .catch(error => {
-//         console.error('Failed to get content type mappings:', error);
-//         throw error;
-//       }),
-//   };
-
-//   export const paymentApi = {
-//     // Submit payment to backend
-//     submitPayment: (paymentData, config = {}) => api.post('/payments/', paymentData, config)
-//     .then(response => {
-//       return response.data;
-//     })
-//     .catch(error => {
-//       console.error('Failed to submit payment:', error);
-//       if (error.response) console.log(error.response.data);
-//       throw error;
-//     }),
-//   }
+  // Now the payment API
+  export const paymentApi = {
+    paymentIntent: (paymentData, config = {}) => api.post('/payments/create_payment_intent/', paymentData, config)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Failed to process payment:', error);
+      throw error;
+    }),
+    // Add this for PayPal capture
+    capturePayPalOrder: (data, config = {}) => api.post('/payments/capture_paypal_order/', data, config)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Failed to capture PayPal order:', error);
+      throw error;
+    }),
+  };
 
 
 
-    
-//     // Get user content type history
-//     // getUserContentTypes: () => api.get('/content_types/user/')
-//     // .then(response => {
-//     //   return response.data;
-//     // })
-//     // .catch(error => {
-//     //   console.error('Failed to get user content types:', error);
-//     //   throw error;
-//     // }),
-
-
-  
-//   // You can add more API groups as needed (e.g., cartApi)
-
-
-// export default api;

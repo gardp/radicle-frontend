@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@paypal/react-paypal-js": "^8.9.2",
     "@reduxjs/toolkit": "^2.6.1",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.5.3",
     "@tanstack/react-query": "^5.81.5",
     "@tanstack/react-query-devtools": "^5.81.5",
     "@testing-library/jest-dom": "^5.17.0",

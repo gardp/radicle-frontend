@@ -139,7 +139,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackTitle: trackDetail.title || "",
                     trackAlternateTitle: trackDetail.alternate_titles || "",
                     trackVersionSubtitle: trackDetail.version_subtitle || "",
-                    trackArtistFeaturesLine: trackDetail.artist_features_line || "",
+                    trackArtistFeaturesLine: trackDetail.artists_features_line || "",
                     trackContributorId: trackDetail.contributor_id || "",
                     trackDuration: trackDetail.duration_seconds || "",
                     trackBpm: trackDetail.bpm || "",

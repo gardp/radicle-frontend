@@ -51,43 +51,48 @@ export const createCartItemFromTrack = (track, trackLicenseOption) => { //the tr
 const initialState = {
   items: [],
   totalItems: 0,
+  subtotal: 0,
+  taxRate: 0.08,
+  taxAmount: 0,
   totalPrice: 0,
   isLoading: false,
   error: null,
 };
 
-// Helper function to calculate cart totals - reused from your existing code
+// Helper function to calculate cart totals when needed inside the reducers
 const calculateCartTotals = (items) => {
   return items.reduce(
     (totals, item) => {
       totals.totalItems = totals.totalItems + item.quantity;
 
       if (item.type === 'track') {
-        totals.totalPrice =
-          totals.totalPrice +
+        totals.subtotal =
+          totals.subtotal +
           item.trackLicenseOption.licenseType.price * item.quantity;
       } else {
-        totals.totalPrice =
-          totals.totalPrice + item.price * item.quantity;
+        totals.subtotal =
+          totals.subtotal + item.price * item.quantity;
       }
 
       return totals;
     },
-    { totalItems: 0, totalPrice: 0 }
+    { totalItems: 0, subtotal: 0 } //The totalprice state will be modified at the summary when addingt he tax rate
   );
 };
 
 // Create the slice
 export const cartSlice = createSlice({
   name: 'cart',
-  initialState,
+  initialState, 
   reducers: {
     // Initialize cart with items (often from localStorage)
     initCart: (state, action) => {
       state.items = action.payload;
       const totals = calculateCartTotals(action.payload);
       state.totalItems = totals.totalItems;
-      state.totalPrice = totals.totalPrice;
+      state.subtotal = totals.subtotal;
+      state.taxAmount = totals.subtotal * state.taxRate;
+      state.totalPrice = totals.subtotal + (totals.subtotal * state.taxRate);
       state.isLoading = false;
       state.error = null;
       },
@@ -119,8 +124,6 @@ export const cartSlice = createSlice({
       
       // Update totals
       const totals = calculateCartTotals(state.items);
-      state.totalItems = totals.totalItems;
-      state.totalPrice = totals.totalPrice;
       state.error = null;
     },
     
@@ -141,7 +144,10 @@ export const cartSlice = createSlice({
       // Update totals
       const totals = calculateCartTotals(state.items);
       state.totalItems = totals.totalItems;
-      state.totalPrice = totals.totalPrice;
+      state.subtotal = totals.subtotal;
+      state.taxAmount = totals.subtotal * state.taxRate;
+      state.totalPrice = totals.subtotal + (totals.subtotal * state.taxRate);
+      state.isLoading = false;
       state.error = null;
     },
     
@@ -166,7 +172,10 @@ export const cartSlice = createSlice({
       // Update totals
       const totals = calculateCartTotals(state.items);
       state.totalItems = totals.totalItems;
-      state.totalPrice = totals.totalPrice;
+      state.subtotal = totals.subtotal;
+      state.taxAmount = totals.subtotal * state.taxRate;
+      state.totalPrice = totals.subtotal + (totals.subtotal * state.taxRate);
+      state.isLoading = false;
       state.error = null;
     },
      
@@ -185,7 +194,10 @@ export const cartSlice = createSlice({
     clearCart: (state) => {
       state.items = [];
       state.totalItems = 0;
+      state.subtotal = 0;
+      state.taxAmount = 0;
       state.totalPrice = 0;
+      state.isLoading = false;
       state.error = null;
     },
     

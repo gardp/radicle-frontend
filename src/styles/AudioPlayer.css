@@ -168,11 +168,11 @@ button {
     align-items: center;
     justify-items: center;
     max-height: none;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 
   .audio-controls {
-    width: 100%;
+    /* width: 100%; */
     margin-bottom: 0.5rem;
   }
 
@@ -203,7 +203,7 @@ button {
 /* ===========================================
    RESPONSIVE PLAYER TITLE
    =========================================== */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .player-title {
     font-size: 2rem;
     margin-bottom: 0.75rem;
@@ -211,11 +211,12 @@ button {
   .player-grid > .controls-container {
   justify-self: center;
 }
-}
+} */
 
-@media (max-width: 480px) {
-  .player-title {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+/* @media (max-width: 400px) {
+  .controls-container {
+    transform: scale(0.8);
+    transform-origin: center top;
+    margin: 0 auto;
   }
-}
+} */

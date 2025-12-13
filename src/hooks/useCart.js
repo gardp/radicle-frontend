@@ -10,7 +10,7 @@ import {
 
 const useCart = () => {
   const dispatch = useDispatch();
-  const { items, totalItems, totalPrice, isLoading, error } = useSelector(state => state.cart);
+  const { items, totalItems, subtotal, totalPrice, isLoading, error } = useSelector(state => state.cart);
   // const initItem = (item) => {
   //   if (item.type === 'track') {
   //     item.id = item.track_id + item.license_type_id;
@@ -43,6 +43,7 @@ const useCart = () => {
     // State
     items,
     totalItems,
+    subtotal,
     totalPrice,
     isLoading,
     error,

@@ -6,6 +6,7 @@ import { selectAllLicenseAgreementsAcknowledged } from '../../store/slices/cartS
 import CheckoutForm from './CheckoutForm';
 import OrderSummary from './OrderSummary';
 import OrderConfirmation from './OrderConfirmation';
+import PaymentWrapper from './PaymentWrapper';
 import { contactApi } from '../../api';
 import { buyerApi } from '../../api';
 import { orderApi } from '../../api';
@@ -93,8 +94,11 @@ const Checkout = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [order, setOrder] = useState(null);
-  const [payment, setPayment] = useState(null);
   const [orderedItems, setOrderedItems] = useState(null);
+  const [paymentIntent, setPaymentIntent] = useState(null);
+  const [paymentProcessed, setPaymentProcessed] = useState(false);
+  const [checkoutPhase, setCheckoutPhase] = useState('');
+  const [clientSecret, setClientSecret] = useState(null);
   
   // Get cart data from context to format orders and send to APi
   const { items, totalPrice, clearCart } = useCart();
@@ -304,6 +308,7 @@ const Checkout = () => {
     if (isProcessing) return; // extra safety Add a guard at the very top of handleSubmit to catch extra clicks or fast key submits
     // Start processing
     setIsProcessing(true);
+    setErrors({});
     console.log('Processing order...', isProcessing);
     
     // 1) Create a per-submission idempotency base
@@ -314,7 +319,7 @@ const Checkout = () => {
     // console.log('Checkout ID:', checkoutId);
     try {
       // Build payload once, reuse for API call and UI state
-      const payload = {
+      const orderPayload = {
         //***REFERENCE NUMBER for the order***//
         referenceNumber: referenceNumber,
         //***CONTRIBUTOR INFO***//
@@ -367,100 +372,140 @@ const Checkout = () => {
           price: item.price,
           quantity: item.quantity,
         })),
-        //***PAYMENT***/
-        payment: {
-          amount: Number.parseFloat(totalPrice),
-          processor: formData.paymentProcessing.card.paymentMethod,
-          transaction_id: `TXN-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
-        },
       };
 
       // ONE API CALL instead of many
-      const result = await orderApi.checkoutOrder(
-        payload,
+      const orderData = await orderApi.checkoutOrder(
+        orderPayload,
         {
           headers: {
-            'Idempotency-Key': payload.referenceNumber,
+            'Idempotency-Key': orderPayload.referenceNumber,
           },
         }
       );
-      console.log('Order created:', result);
+      console.log('Order created:', orderData); //returned from the server endpoint
 
-      setOrder(result);
-      setOrderedItems(result.license_holdings.licenses || []);
+      // Order and licensed will be used in orderConfirmation
+      setOrder(orderData);
+      setOrderedItems(orderData.license_holdings.licenses || []);
       // Prevent null payment in OrderConfirmation: use backend's payment or fallback to our payload
-      setPayment(result?.payment || payload.payment);
       // Set completion last so confirmation renders with non-null payment
-      setOrderComplete(true);
-      clearCart();
 
-  } catch (error) {
-    console.error('Error submitting order:', error);
-    setErrors({
-      ...errors,
-      payment: 'Failed to submit order to our system. Please try again.'
-    });
-  } finally {
+      // ***BEGINNING OF PAYMENT INTENT RESPONSE*** //
+      const paymentMethod = formData.paymentProcessing.card.paymentMethod;
+      
+      if (orderData && orderData.status === "pending") {
+        try {
+        const paymentIntentResponse = await paymentApi.paymentIntent({
+        order_id: orderData.order_id,
+        currency: "usd",
+        provider: paymentMethod==='creditCart' ? 'stripe' : 'paypal',
+      }, {
+        headers: {
+          'Idempotency-Key': `PAY-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+        },
+        });
+        console.log('Payment Intent created:', paymentIntentResponse);
+      // ***END OF PAYMENT INTENT RESPONSE***
+
+      // ***NOW EXTRACTING SERVER CLIENT SECRET 
+      if (paymentMethod === 'creditCard') {
+        // For Stripe: store client_secret and move to payment phase
+        setClientSecret(paymentIntentResponse.client_secret);
+        setCheckoutPhase('payment');
+      } else {
+        // For PayPal: store order info for PayPal buttons
+        setPaymentIntent(paymentIntentResponse);
+        setCheckoutPhase('payment');
+      }
+        // *******If the payment doens't go through
+    }   catch (paymentError) {
+        console.error('Payment processing failed:', paymentError);
+        setErrors({
+        paymentSubmission: paymentError.response?.data?.message || 'Failed to process payment. Please try again.'
+      });
+    } finally {
+        setIsProcessing(false);
+      }
+      }
+    } // The try-catch block closing bracketfor the whole order if it doesn't go through
+     
+    catch (orderError) {
+      console.error('Order error:', orderError)
+      setErrors({
+        orderSubmission: orderError.response?.data?.message || 'Failed to process Order'
+      })
+    } 
+    finally {
+        setIsProcessing(false);
+      }
+  }; // closing bracket for handleSubmit
+
+  //NOW HANDLE SUCCESSFUL STRIPE PAYMENT
+    const handleStripePaymentSuccess = (paymentIntent) => {
+    console.log('Stripe payment succeeded:', paymentIntent);
+    setPaymentIntent(paymentIntent);
+    setPaymentProcessed(true);
+    setOrderComplete(true);
+    setCheckoutPhase('complete');
+    clearCart();
+  };
+
+  // NOW HANDLE STRIPE PAYMENT ERROR
+    const handlePaymentError = (errorMessage) => {
+    setErrors({ paymentSubmission: errorMessage });
     setIsProcessing(false);
-  }
-  console.log('My Order created:', order);
-  console.log('My Order complete:', orderComplete);
-};
+  };
+
+  // NEW: PayPal create order callback
+    const handlePayPalCreateOrder = async (data, actions) => {
+    // Your backend should have already created the PayPal order
+    // Return the PayPal order ID from your payment response
+    if (paymentIntent?.paypal_order_id) {
+      return paymentIntent.paypal_order_id;
+    }
+        // Or create via actions if your backend returns approval_url instead
+    return actions.order.create({
+      purchase_units: [{
+        amount: {
+          value: totalPrice.toFixed(2),
+        },
+        reference_id: order?.reference_number,
+      }],
+    });
+  };
+
+    // NEW: PayPal approve callback
+  const handlePayPalApprove = async (data, actions) => {
+    try {
+      // Option 1: Capture on frontend (simpler)
+      const details = await actions.order.capture();
+      console.log('PayPal payment captured:', details);
+      
+      // Option 2: Send to your backend to capture (more secure)
+      // await paymentApi.capturePayPalOrder({ paypal_order_id: data.orderID });
+      
+      setPaymentIntent(details);
+      setPaymentProcessed(true);
+      setOrderComplete(true);
+      setCheckoutPhase('complete');
+      clearCart();
+    } catch (error) {
+      console.error('PayPal capture error:', error);
+      handlePaymentError('PayPal payment failed. Please try again.');
+    }
+  };
+
+
+
       // If order is complete, show confirmation
-  if (orderComplete && order) {
+  if (orderComplete && order && paymentProcessed) {
+    const payment = {
+      amount: order.totalAmount,
+      processor: order.paymentMethod,
+    }
     return <OrderConfirmation order={order} purchasedItems={orderedItems} payment={payment} email={formData.licenseeContact.email}/>
   };
-    //   // Save order items to thunk for caching
-    //   dispatch(submitOrderThunk(orderItems));
-    //   // Now save the completed order to thunk for caching
-    //   const completedOrder = {
-    //     reference_number: order.reference_number,
-    //     buyer: buyerId,
-    //     status: 'completed',
-    //     order_items: items.map(item => ({
-    //       id: item.id,
-    //       name: item.name,
-    //       price: item.price,
-    //       quantity: item.quantity,
-    //       license: item.license
-    //     })),
-    //     paymentMethod: formData.paymentMethod,
-    //     subtotal: items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-    //     tax: items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 0.08,
-    //     shipping: 0,
-    //     totalAmount: items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 1.08
-    //   };
-      
-    //   // Set order data and complete order
-     
-    //   // Dispatch returns a promise we can await
-    //   const resultAction = await dispatch(submitOrderThunk(order));
-    //   // Check if the action was fulfilled (successful API call)
-    //   if (submitOrderThunk.fulfilled.match(resultAction)) {
-    //     setOrder(resultAction.payload);
-    //     setOrderComplete(true);
-    //     clearCart();
-    //   }
-    //   else {
-    //     // Handle failed API call
-    //     console.error('Order submission failed:', resultAction.error);
-    //     setErrors({
-    //       ...errors,
-    //       payment: 'Failed to submit order to our system. Please try again.'
-    //     });
-    //   }
-      
-      
-    // } catch (error) {
-    //   console.error('Payment processing error:', error);
-    //   setErrors({
-    //     ...errors,
-    //     payment: 'There was an error processing your payment. Please try again.'
-    //   });
-    // } finally {
-    //   setIsProcessing(false);
-    // }
-
   
   // ******Test data for quick form filling during development
   
@@ -537,11 +582,15 @@ const Checkout = () => {
     <div className="checkout-container">
       <div className="checkout-header">
         <h1>Checkout</h1>
-        <p>Complete your purchase by providing your details below</p>
+        <p>
+          {checkoutPhase === 'info' 
+            ? 'Complete your purchase by providing your details below'
+            : 'Complete your payment'}
+        </p>
       </div>
       
       {/**********Development only - Test data button */}
-      {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === 'development' && checkoutPhase === 'info' && (
         <button 
           type="button" 
           onClick={fillTestData} 
@@ -552,29 +601,119 @@ const Checkout = () => {
       )}
        {/**********Development only - Test data button */}
       
-      {!allLicenseAgreementsAcknowledged && (
+      {!allLicenseAgreementsAcknowledged && checkoutPhase === 'info' && (
         <div className="license-agreement-warning">
           <p>⚠️ You must acknowledge all license agreements before completing checkout.</p>
-          <p>Please click "Review License Agreement" for each item in your order.</p>
+        </div>
+      )}
+
+            {/* Error display */}
+      {(errors.orderSubmission || errors.payment) && (
+        <div className="checkout-error-banner" style={{ background: '#fee', padding: '12px', borderRadius: '4px', marginBottom: '20px', color: '#c00' }}>
+          {errors.orderSubmission || errors.payment}
         </div>
       )}
       
       <div className="checkout-layout">
-        <CheckoutForm 
-          formData={formData}
-          onChange={handleInputChange}
-          errors={errors}
-          onSubmit={handleSubmit}
-          isProcessing={isProcessing}
-          isSubmitDisabled={!allLicenseAgreementsAcknowledged}
-        />
-        <OrderSummary 
-          items={items}
-          totalPrice={totalPrice}
-        />
+        {checkoutPhase === 'info' ? (
+          <>
+            <CheckoutForm 
+              formData={formData}
+              onChange={handleInputChange}
+              errors={errors}
+              onSubmit={handleSubmit}
+              isProcessing={isProcessing}
+              isSubmitDisabled={!allLicenseAgreementsAcknowledged}
+            />
+            <OrderSummary />
+          </>
+        ) : (
+          <>
+            <div className="payment-section">
+              <h2>Payment Details</h2>
+              <p>Order Reference: {order?.reference_number}</p>
+              
+              <PaymentWrapper
+                paymentMethod={formData.paymentProcessing.card.paymentMethod}
+                clientSecret={clientSecret}
+                orderId={order?.id}
+                onPaymentSuccess={handleStripePaymentSuccess}
+                onPaymentError={handlePaymentError}
+                isProcessing={isProcessing}
+                setIsProcessing={setIsProcessing}
+                onPayPalCreateOrder={handlePayPalCreateOrder}
+                onPayPalApprove={handlePayPalApprove}
+                disabled={isProcessing}
+              />
+              
+              <button
+                type="button"
+                onClick={() => setCheckoutPhase('info')}
+                style={{ marginTop: '20px', background: 'transparent', border: '1px solid #ccc', padding: '8px 16px', cursor: 'pointer' }}
+              >
+                ← Back to Details
+              </button>
+            </div>
+            <OrderSummary />
+          </>
+        )}
       </div>
     </div>
   );
 };
 
 export default Checkout;
+
+
+
+
+//   // Save order items to thunk for caching
+    //   dispatch(submitOrderThunk(orderItems));
+    //   // Now save the completed order to thunk for caching
+    //   const completedOrder = {
+    //     reference_number: order.reference_number,
+    //     buyer: buyerId,
+    //     status: 'completed',
+    //     order_items: items.map(item => ({
+    //       id: item.id,
+    //       name: item.name,
+    //       price: item.price,
+    //       quantity: item.quantity,
+    //       license: item.license
+    //     })),
+    //     paymentMethod: formData.paymentMethod,
+    //     subtotal: items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+    //     tax: items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 0.08,
+    //     shipping: 0,
+    //     totalAmount: items.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 1.08
+    //   };
+      
+    //   // Set order data and complete order
+     
+    //   // Dispatch returns a promise we can await
+    //   const resultAction = await dispatch(submitOrderThunk(order));
+    //   // Check if the action was fulfilled (successful API call)
+    //   if (submitOrderThunk.fulfilled.match(resultAction)) {
+    //     setOrder(resultAction.payload);
+    //     setOrderComplete(true);
+    //     clearCart();
+    //   }
+    //   else {
+    //     // Handle failed API call
+    //     console.error('Order submission failed:', resultAction.error);
+    //     setErrors({
+    //       ...errors,
+    //       payment: 'Failed to submit order to our system. Please try again.'
+    //     });
+    //   }
+      
+      
+    // } catch (error) {
+    //   console.error('Payment processing error:', error);
+    //   setErrors({
+    //     ...errors,
+    //     payment: 'There was an error processing your payment. Please try again.'
+    //   });
+    // } finally {
+    //   setIsProcessing(false);
+    // }

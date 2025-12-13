@@ -349,7 +349,7 @@
   /* Container adjustments */
   .controls-container {
     width: 100%;
-    max-width: 320px;
+    /* max-width: 320px; */
     padding: 0.5rem;
     overflow: visible;
     margin: 0 auto;
@@ -528,3 +528,36 @@
   }
 }
     
+@media (max-width: 600px) {
+  .controls-container {
+    /* Keep your scale for proportional shrink */
+    /* transform: scale(0.9); */
+    transform-origin: center top; /* or center center */
+
+    /* IMPORTANT: center the scaled content */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* or center, depending on what feels better */
+
+    /* Ensure the grid cell itself isn't doing something weird */
+    margin: 0 auto;
+    /* width: 100%; */
+    /* max-width: 100%; */
+  }
+}
+
+@media (max-width: 400px) {
+  .controls-container {
+    /* Fluid approach - no transform scaling */
+    width: 100%;
+    max-width: 100%;
+    padding: 0.25rem;
+    margin: 0 auto;
+    
+    /* Flexbox centering */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}

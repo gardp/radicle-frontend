@@ -16,7 +16,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
       <form onSubmit={onSubmit}>
         {/* Contact Information */}
         <div className="checkout-form-section">
-          <h3 className="form-section-title">Contact Information</h3>
+          <h3 className="form-section-title">Licensee Contact Information</h3>
           
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
@@ -62,6 +62,120 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 required
               />
               {errors.lastName && <div className="error-message">{errors.lastName}</div>}
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="sudoName">Stage Name / Artist Alias</label>
+              <input
+                type="text"
+                id="sudoName"
+                name="licenseeContact.sudoName"
+                className="form-control"
+                value={formData.licenseeContact.sudoName || ''}
+                onChange={onChange}
+                placeholder="Your artist name"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="companyName">Company / Label Name</label>
+              <input
+                type="text"
+                id="companyName"
+                name="licenseeContact.companyName"
+                className="form-control"
+                value={formData.licenseeContact.companyName || ''}
+                onChange={onChange}
+                placeholder="Your company or label"
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="licenseeContact.phoneNumber"
+              className="form-control"
+              value={formData.licenseeContact.phoneNumber || ''}
+              onChange={onChange}
+              placeholder="+1 (555) 123-4567"
+            />
+          </div>
+
+          {/* Music Professional Details */}
+          <div className="form-subsection">
+            <h4 className="form-subsection-title">Music Professional Details</h4>
+            <p className="form-subsection-description">Optional information for registered music professionals</p>
+            
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="proAffiliation">PRO Affiliation</label>
+                <input
+                  type="text"
+                  id="proAffiliation"
+                  name="musicProfessional.proAffiliation"
+                  className="form-control"
+                  value={formData.musicProfessional?.proAffiliation || ''}
+                  onChange={onChange}
+                  placeholder="e.g., ASCAP, BMI, SESAC"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="ipiNumber">IPI/CAE Number</label>
+                <input
+                  type="text"
+                  id="ipiNumber"
+                  name="musicProfessional.ipiNumber"
+                  className="form-control"
+                  value={formData.musicProfessional?.ipiNumber || ''}
+                  onChange={onChange}
+                  placeholder="Your IPI/CAE number"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="refCode">Referral Code</label>
+              <input
+                type="text"
+                id="refCode"
+                name="musicProfessional.refCode"
+                className="form-control"
+                value={formData.musicProfessional?.refCode || ''}
+                onChange={onChange}
+                placeholder="Enter referral code if you have one"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="snsLink1">Social Media Link 1</label>
+              <input
+                type="url"
+                id="snsLink1"
+                name="musicProfessional.snsLink1"
+                className="form-control"
+                value={formData.musicProfessional?.snsLink1 || ''}
+                onChange={onChange}
+                placeholder="https://instagram.com/yourprofile"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="snsLink2">Social Media Link 2</label>
+              <input
+                type="url"
+                id="snsLink2"
+                name="musicProfessional.snsLink2"
+                className="form-control"
+                value={formData.musicProfessional?.snsLink2 || ''}
+                onChange={onChange}
+                placeholder="https://soundcloud.com/yourprofile"
+              />
             </div>
           </div>
         </div>
@@ -292,110 +406,22 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
           </div>
         )}
         
-        {/* Payment Information */}
-        <div className="checkout-form-section">
-          <h3 className="form-section-title">Payment Method</h3>
-          
-          <div className="payment-methods">
-            <div 
-              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'creditCard' ? 'selected' : ''}`}
-              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'creditCard' } })}
-            >
-              <img src={paymentIcons.creditCard} alt="Credit Card" />
-              <span>Credit Card</span>
-            </div>
-            
-            <div 
-              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'paypal' ? 'selected' : ''}`}
-              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'paypal' } })}
-            >
-              <img src={paymentIcons.paypal} alt="PayPal" />
-              <span>PayPal</span>
-            </div>
+        {/* Payment Information - stripe or Paypal*/}
+        {formData.paymentProcessing.card.paymentMethod === 'creditCard' && (
+          <div className="stripe-info-notice" style={{ padding: '16px', background: '#f7f7f7', borderRadius: '4px', marginTop: '16px' }}>
+            <p style={{ margin: 0, color: '#666' }}>
+              💳 You'll enter your card details securely on the next step using Stripe's secure payment form.
+            </p>
           </div>
-          {errors.paymentMethod && <div className="error-message">{errors.paymentMethod}</div>}
-          
-          {formData.paymentProcessing.card.paymentMethod === 'creditCard' && (
-            <>
-              <div className="form-group">
-                <label htmlFor="cardNumber">Card Number</label>
-                <input
-                  type="text"
-                  id="cardNumber"
-                  name="paymentProcessing.card.cardNumber"
-                  className={`form-control ${errors.cardNumber ? 'error' : ''}`}
-                  value={formData.paymentProcessing.card.cardNumber || '1234 5678 9012 3456'}
-                  onChange={onChange}
-                  placeholder="1234 5678 9012 3456"
-                  required
-                />
-                {errors.cardNumber && <div className="error-message">{errors.cardNumber}</div>}
-              </div>
-              
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="expiryDate">Expiry Date</label>
-                  <input
-                    type="text"
-                    id="expiryDate"
-                    name="paymentProcessing.card.expiryDate"
-                    className={`form-control ${errors.expiryDate ? 'error' : ''}`}
-                    value={formData.paymentProcessing.card.expiryDate || '12/25'}
-                    onChange={onChange}
-                    placeholder="MM/YY"
-                    required
-                  />
-                  {errors.expiryDate && <div className="error-message">{errors.expiryDate}</div>}
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="cvv">CVV</label>
-                  <input
-                    type="text"
-                    id="cvv"
-                    name="paymentProcessing.card.cvv"
-                    className={`form-control ${errors.cvv ? 'error' : ''}`}
-                    value={formData.paymentProcessing.card.cvv || '123'}
-                    onChange={onChange}
-                    placeholder="123"
-                    required
-                  />
-                  {errors.cvv && <div className="error-message">{errors.cvv}</div>}
-                </div>
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="nameOnCard">First Name on Card</label>
-                <input
-                  type="text"
-                  id="nameOnCard"
-                  name="paymentProcessing.card.contact.firstNameOnCard"
-                  className={`form-control ${errors.firstNameOnCard ? 'error' : ''}`}
-                  value={formData.paymentProcessing.card.contact.firstNameOnCard}
-                  onChange={onChange}
-                  placeholder="John Doe"
-                  required
-                />
-                {errors.firstNameOnCard && <div className="error-message">{errors.firstNameOnCard}</div>}
-              </div>
+        )}
 
-              <div className="form-group">
-                <label htmlFor="lastnameOnCard">Last Name on Card</label>
-                <input
-                  type="text"
-                  id="lastnameOnCard"
-                  name="paymentProcessing.card.contact.lastNameOnCard"
-                  className={`form-control ${errors.lastNameOnCard ? 'error' : ''}`}
-                  value={formData.paymentProcessing.card.contact.lastNameOnCard}
-                  onChange={onChange}
-                  placeholder="Doe"
-                  required
-                />
-                {errors.lastNameOnCard && <div className="error-message">{errors.lastNameOnCard}</div>}
-              </div>
-            </>
-          )}
-        </div>
+        {formData.paymentProcessing.card.paymentMethod === 'paypal' && (
+          <div className="paypal-info-notice" style={{ padding: '16px', background: '#fff8e6', borderRadius: '4px', marginTop: '16px' }}>
+            <p style={{ margin: 0, color: '#666' }}>
+              🅿️ You'll complete payment via PayPal on the next step.
+            </p>
+          </div>
+        )}
         
         {/* Display license agreement error message if present */}
         {errors.licenseAgreement && (
@@ -425,3 +451,108 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
 };
 
 export default CheckoutForm;
+
+
+  // <div className="checkout-form-section">
+  //         <h3 className="form-section-title">Payment Method</h3>
+          
+  //         <div className="payment-methods">
+  //           <div 
+  //             className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'creditCard' ? 'selected' : ''}`}
+  //             onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'creditCard' } })}
+  //           >
+  //             <img src={paymentIcons.creditCard} alt="Credit Card" />
+  //             <span>Credit Card</span>
+  //           </div>
+            
+  //           <div 
+  //             className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'paypal' ? 'selected' : ''}`}
+  //             onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'paypal' } })}
+  //           >
+  //             <img src={paymentIcons.paypal} alt="PayPal" />
+  //             <span>PayPal</span>
+  //           </div>
+  //         </div>
+  //         {errors.paymentMethod && <div className="error-message">{errors.paymentMethod}</div>}
+          
+  //         {formData.paymentProcessing.card.paymentMethod === 'creditCard' && (
+  //           <>
+  //             <div className="form-group">
+  //               <label htmlFor="cardNumber">Card Number</label>
+  //               <input
+  //                 type="text"
+  //                 id="cardNumber"
+  //                 name="paymentProcessing.card.cardNumber"
+  //                 className={`form-control ${errors.cardNumber ? 'error' : ''}`}
+  //                 value={formData.paymentProcessing.card.cardNumber || '1234 5678 9012 3456'}
+  //                 onChange={onChange}
+  //                 placeholder="1234 5678 9012 3456"
+  //                 required
+  //               />
+  //               {errors.cardNumber && <div className="error-message">{errors.cardNumber}</div>}
+  //             </div>
+              
+  //             <div className="form-row">
+  //               <div className="form-group">
+  //                 <label htmlFor="expiryDate">Expiry Date</label>
+  //                 <input
+  //                   type="text"
+  //                   id="expiryDate"
+  //                   name="paymentProcessing.card.expiryDate"
+  //                   className={`form-control ${errors.expiryDate ? 'error' : ''}`}
+  //                   value={formData.paymentProcessing.card.expiryDate || '12/25'}
+  //                   onChange={onChange}
+  //                   placeholder="MM/YY"
+  //                   required
+  //                 />
+  //                 {errors.expiryDate && <div className="error-message">{errors.expiryDate}</div>}
+  //               </div>
+                
+  //               <div className="form-group">
+  //                 <label htmlFor="cvv">CVV</label>
+  //                 <input
+  //                   type="text"
+  //                   id="cvv"
+  //                   name="paymentProcessing.card.cvv"
+  //                   className={`form-control ${errors.cvv ? 'error' : ''}`}
+  //                   value={formData.paymentProcessing.card.cvv || '123'}
+  //                   onChange={onChange}
+  //                   placeholder="123"
+  //                   required
+  //                 />
+  //                 {errors.cvv && <div className="error-message">{errors.cvv}</div>}
+  //               </div>
+  //             </div>
+              
+  //             <div className="form-group">
+  //               <label htmlFor="nameOnCard">First Name on Card</label>
+  //               <input
+  //                 type="text"
+  //                 id="nameOnCard"
+  //                 name="paymentProcessing.card.contact.firstNameOnCard"
+  //                 className={`form-control ${errors.firstNameOnCard ? 'error' : ''}`}
+  //                 value={formData.paymentProcessing.card.contact.firstNameOnCard}
+  //                 onChange={onChange}
+  //                 placeholder="John Doe"
+  //                 required
+  //               />
+  //               {errors.firstNameOnCard && <div className="error-message">{errors.firstNameOnCard}</div>}
+  //             </div>
+
+  //             <div className="form-group">
+  //               <label htmlFor="lastnameOnCard">Last Name on Card</label>
+  //               <input
+  //                 type="text"
+  //                 id="lastnameOnCard"
+  //                 name="paymentProcessing.card.contact.lastNameOnCard"
+  //                 className={`form-control ${errors.lastNameOnCard ? 'error' : ''}`}
+  //                 value={formData.paymentProcessing.card.contact.lastNameOnCard}
+  //                 onChange={onChange}
+  //                 placeholder="Doe"
+  //                 required
+  //               />
+  //               {errors.lastNameOnCard && <div className="error-message">{errors.lastNameOnCard}</div>}
+  //             </div>
+  //           </>
+  //         )}
+  //       </div>
