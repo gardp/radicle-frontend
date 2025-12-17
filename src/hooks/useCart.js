@@ -5,12 +5,13 @@ import {
   updateQuantityAndSaveThunk,
   clearCartAndStorageThunk,
   loadCartFromStorageThunk,
-  addTrackToCartAndSaveThunk
+  addTrackToCartAndSaveThunk,
+  selectIsTrackLicenseInCart,
 } from '../store/slices/cartSlice';
 
 const useCart = () => {
   const dispatch = useDispatch();
-  const { items, totalItems, subtotal, totalPrice, isLoading, error } = useSelector(state => state.cart);
+  const { items, totalItems, subtotal, taxRate, taxAmount, totalPrice, isLoading, error } = useSelector(state => state.cart);
   // const initItem = (item) => {
   //   if (item.type === 'track') {
   //     item.id = item.track_id + item.license_type_id;
@@ -28,14 +29,11 @@ const useCart = () => {
   // const loadCartFromStorage = () => dispatch(loadCartFromStorageThunk());
 
   //this will be for when I have merch on the website
-  const handleUpdateQuantity = (itemId, quantity) => 
-    dispatch(updateQuantityAndSaveThunk({ itemId, quantity })); 
+  const handleUpdateQuantity = (item, quantity) => 
+    dispatch(updateQuantityAndSaveThunk({ item, quantity })); 
   const handleClearCart = () => dispatch(clearCartAndStorageThunk());
-  
   // Helper functions (these don't need to change)
   const isInCart = (itemId) => items.some(item => item.id === itemId); //for items other than tracks
-  const isTrackLicenseInCart = (trackId, licenseId) => 
-    items.some(item => item.id === trackId && item.licenseId === licenseId); //for tracks
   const getItemById = (itemId) => items.find(item => item.id === itemId) || null;
   const getItemsByTrackId = (trackId) => items.filter(item => item.trackId === trackId);
   
@@ -44,6 +42,8 @@ const useCart = () => {
     items,
     totalItems,
     subtotal,
+    taxRate,
+    taxAmount,
     totalPrice,
     isLoading,
     error,
@@ -58,7 +58,6 @@ const useCart = () => {
     
     // Helpers
     isInCart,
-    isTrackLicenseInCart,
     getItemById,
     getItemsByTrackId,
   };

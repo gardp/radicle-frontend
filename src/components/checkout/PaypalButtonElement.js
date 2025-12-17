@@ -16,7 +16,9 @@ const PayPalButtonElement = ({
         createOrder={onCreateOrder}
         onApprove={onApprove}
         onError={onError}
-        onCancel={() => console.log('PayPal payment cancelled')}
+        onCancel={() => {console.log('PayPal payment cancelled'); 
+          onError('Payment was cancelled. Please try again.');
+        }}
       />
     </div>
   );

@@ -97,11 +97,15 @@ const Checkout = () => {
   const [orderedItems, setOrderedItems] = useState(null);
   const [paymentIntent, setPaymentIntent] = useState(null);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
-  const [checkoutPhase, setCheckoutPhase] = useState('');
+  const [checkoutPhase, setCheckoutPhase] = useState('info');
   const [clientSecret, setClientSecret] = useState(null);
-  
+  // storing reference number before handleSubmit to make sure it doesn't generate everytime handleSubmit runs...
+  // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
+  const [referenceNumber] = useState(() => 
+  `${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${String(Math.floor(Math.random()*100000)).padStart(5,'0')}`
+);
   // Get cart data from context to format orders and send to APi
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, subtotal, taxRate, taxAmount, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   
   // Check if all license agreements are acknowledged
@@ -312,17 +316,15 @@ const Checkout = () => {
     console.log('Processing order...', isProcessing);
     
     // 1) Create a per-submission idempotency base
-    // const checkoutId = (crypto?.randomUUID && crypto.randomUUID()) 
-    // || `CHK-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-    const referenceNumber = `${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${String(Math.floor(Math.random()*100000)).padStart(5,'0')}`;
+    // Using the reference number in state as the idempotency key 
     console.log('Reference Number:', referenceNumber);
-    // console.log('Checkout ID:', checkoutId);
     try {
       // Build payload once, reuse for API call and UI state
       const orderPayload = {
         //***REFERENCE NUMBER for the order***//
         referenceNumber: referenceNumber,
         //***CONTRIBUTOR INFO***//
+
         licenseeContact: {
           contact_type: 'INDIVIDUAL',
           first_name: formData.licenseeContact.firstName,
@@ -372,6 +374,12 @@ const Checkout = () => {
           price: item.price,
           quantity: item.quantity,
         })),
+        
+        //***PAYMENT***// Besides method and currency, everything else is being calculated on the server
+        payment: {
+          payment_method: formData.paymentProcessing.card.paymentMethod,
+          currency: "usd",
+        }
       };
 
       // ONE API CALL instead of many
@@ -393,13 +401,15 @@ const Checkout = () => {
 
       // ***BEGINNING OF PAYMENT INTENT RESPONSE*** //
       const paymentMethod = formData.paymentProcessing.card.paymentMethod;
+      console.log('Order status:', orderData?.status, 'Payment method:', paymentMethod);
       
-      if (orderData && orderData.status === "pending") {
+      if (orderData && orderData.status === "PENDING") {
+        console.log('Entering payment intent block...');
         try {
         const paymentIntentResponse = await paymentApi.paymentIntent({
         order_id: orderData.order_id,
         currency: "usd",
-        provider: paymentMethod==='creditCart' ? 'stripe' : 'paypal',
+        provider: paymentMethod==='creditCard' ? 'stripe' : 'paypal',
       }, {
         headers: {
           'Idempotency-Key': `PAY-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
@@ -417,6 +427,7 @@ const Checkout = () => {
         // For PayPal: store order info for PayPal buttons
         setPaymentIntent(paymentIntentResponse);
         setCheckoutPhase('payment');
+        console.log('Payment intent created:', paymentIntentResponse);
       }
         // *******If the payment doens't go through
     }   catch (paymentError) {
@@ -464,37 +475,35 @@ const Checkout = () => {
     if (paymentIntent?.paypal_order_id) {
       return paymentIntent.paypal_order_id;
     }
-        // Or create via actions if your backend returns approval_url instead
-    return actions.order.create({
-      purchase_units: [{
-        amount: {
-          value: totalPrice.toFixed(2),
-        },
-        reference_id: order?.reference_number,
-      }],
-    });
+      // If no paypal_order_id, something went wrong - don't create client-side
+    throw new Error('PayPal order not initialized. Please refresh and try again.');
   };
 
     // NEW: PayPal approve callback
   const handlePayPalApprove = async (data, actions) => {
     try {
-      // Option 1: Capture on frontend (simpler)
-      const details = await actions.order.capture();
-      console.log('PayPal payment captured:', details);
-      
-      // Option 2: Send to your backend to capture (more secure)
-      // await paymentApi.capturePayPalOrder({ paypal_order_id: data.orderID });
-      
-      setPaymentIntent(details);
+    // DON'T capture on frontend - let backend do it
+    // data.orderID is the PayPal order ID that was approved
+      const result = await paymentApi.capturePayPalOrder({ 
+      paypal_order_id: data.orderID,
+    });
+    
+    console.log('PayPal payment captured via backend:', result);
+    
+    // Backend returns: { status, order_id, reference_number }
+      if (result.status === 'success') {
       setPaymentProcessed(true);
       setOrderComplete(true);
       setCheckoutPhase('complete');
       clearCart();
-    } catch (error) {
-      console.error('PayPal capture error:', error);
-      handlePaymentError('PayPal payment failed. Please try again.');
+    } else {
+      throw new Error('Capture failed');
     }
-  };
+    } catch (error) {
+    console.error('PayPal capture error:', error);
+    handlePaymentError(error.response?.data?.error || 'PayPal payment failed. Please try again.');
+    }
+};
 
 
 
@@ -502,7 +511,7 @@ const Checkout = () => {
   if (orderComplete && order && paymentProcessed) {
     const payment = {
       amount: order.totalAmount,
-      processor: order.paymentMethod,
+      provider: order.paymentMethod,
     }
     return <OrderConfirmation order={order} purchasedItems={orderedItems} payment={payment} email={formData.licenseeContact.email}/>
   };
@@ -649,7 +658,7 @@ const Checkout = () => {
               <button
                 type="button"
                 onClick={() => setCheckoutPhase('info')}
-                style={{ marginTop: '20px', background: 'transparent', border: '1px solid #ccc', padding: '8px 16px', cursor: 'pointer' }}
+                style={{ marginTop: '20px', background: 'transparent', border: '1px solid #ccc', padding: '8px 16px', cursor: 'pointer', color: 'white' }}
               >
                 ← Back to Details
               </button>

@@ -22,8 +22,8 @@ const CartItem = ({ item }) => {
       </div>
       
       <div className="cart-item-details">
-        <h4 className="cart-item-name">{item.trackTitle}</h4>
-        <p className="cart-item-description">{item.trackDescription}</p>
+        <h4 className="cart-item-name">{item.title}</h4>
+        <p className="cart-item-description">{item.description}</p>
         <div className="cart-item-license">
           {item.type === 'track' && (
             <span className="license-badge">{item.trackLicenseOption.licenseType.licenseTypeName}</span>

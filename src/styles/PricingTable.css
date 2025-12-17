@@ -213,31 +213,46 @@
   font-weight: bold;
 }
 
+/* Custom Message Block (Contact option) */
+.custom-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.custom-message p {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
 /* Contact Button */
 .contact-button {
   background: rgba(255, 255, 255, 0.1);
   color: var(--pricing-text);
   border: 1px solid var(--pricing-border);
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 0.85rem; /* Reduced from 0.9rem */
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 12px; /* Reduced from 16px */
-  width: 100%;
-  position: relative;
-  z-index: 1;
+  white-space: nowrap;
 }
 
 .contact-button:hover {
   background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 /* Footer */
 .pricing-footer {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--pricing-border);
 }
 
 /* Add to Cart Button */
@@ -269,6 +284,10 @@
   cursor: not-allowed;
   opacity: 0.7;
   box-shadow: none;
+}
+
+.add-to-cart-button.disabled:hover {
+  transform: none;
 }
 
 /* Animations */

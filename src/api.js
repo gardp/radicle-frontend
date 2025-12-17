@@ -272,10 +272,10 @@ export const licenseTypeApi = {
       throw error;
     }),
     // Add this for PayPal capture
-    capturePayPalOrder: (data, config = {}) => api.post('/payments/capture_paypal_order/', data, config)
+    capturePayPalOrder: (data, config = {}) => api.post('/payments/execute_paypal_payment/', data, config)
     .then(response => response.data)
     .catch(error => {
-      console.error('Failed to capture PayPal order:', error);
+      console.error('Failed to execute PayPal payment:', error);
       throw error;
     }),
   };

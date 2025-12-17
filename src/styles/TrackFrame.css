@@ -59,7 +59,9 @@
     color: var(--haiti-gold);
 }
 
-.track-artist {
+/* .track-artist is now defined in Track.css with CSS variables */
+/* This rule is kept for reference but commented out to avoid conflicts */
+/* .track-artist {
     font-size: var(--track-artist-font-size);
     margin: 0;
     opacity: 0.8;
@@ -67,7 +69,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: rgba(255, 255, 255, 0.8);
-}
+} */
 
 
 /* Main track frame container */

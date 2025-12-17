@@ -35,6 +35,7 @@ const CustomNavbar = () => {
   
   const toggleCartPreview = () => {
     setCartPreviewOpen(prevState => !prevState);
+    console.log('checking total items in cart', totalItems);
   };
   
   const closeCartPreview = () => {

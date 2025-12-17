@@ -80,7 +80,7 @@ const LicenseAgreement = () => {
     }));
     console.log("agreed", isChecked)
     console.log("cartItem", cartItem)
-    console.log("licenseAgreementAcknowledged", cartItem?.licenseAgreementAcknowledged ?? false)
+    console.log("licenseAgreementAcknowledged-", cartItem?.licenseAgreementAcknowledged || true)
   };
   
   // const handleSubmit = () => {

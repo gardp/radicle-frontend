@@ -101,7 +101,13 @@ const CartPreview = ({ isOpen, onClose, position }) => {
               
               <div className="cart-items-list">
                 {items.map(item => (
-                  <CartItem key={item.id} item={item} />
+                  <CartItem     
+                  key={
+                    item.type === 'track'
+                      ? `${item.id}-${item.trackLicenseOption?.trackLicenseOptionId}`
+                      : `${item.id}`
+                  }
+                  item={item} />
                 ))}
               </div>
             </div>
@@ -109,7 +115,7 @@ const CartPreview = ({ isOpen, onClose, position }) => {
             <div className="cart-summary">
               <div className="cart-totals">
                 <span>Total:</span>
-                <span className="cart-total-price">${totalPrice}</span>
+                <span className="cart-total-price">${totalPrice.toFixed(2)}</span>
               </div>
               
               <div className="cart-actions">

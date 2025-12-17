@@ -7,6 +7,7 @@ import useCart from '../hooks/useCart.js';
 import { tracksData, licenseOptions } from './Tracks.js';
 import { useLicenseTypes } from '../hooks/useLicense.js';
 import { loadCartFromStorage } from '../store/cartStorage';
+import { isTrackLicenseInCartItems } from '../store/slices/cartSlice.js';
 
 // const PricingTable = ({ isOpen, onClose, track }) => {
 const TrackPricingTable = () => {
@@ -118,7 +119,7 @@ const TrackPricingTable = () => {
     // So the isTrackLicenseInCart will check the "track_id" against the "id" in the cart.items array
     const isSelectedLicenseInCart = () => {
       if (!selectedLicenseOption || !currentTrack) return false;
-      return isTrackLicenseInCart(currentTrack.trackId, selectedLicenseOption);
+      return isTrackLicenseInCartItems(items, currentTrack.trackId, selectedLicenseOption.trackLicenseOptionId);
     };
     
   const handleContactClick = () => {
@@ -173,18 +174,18 @@ const TrackPricingTable = () => {
         
         <div className="pricing-footer">
           <div className="custom-message">
-            <p>Need a custom license or have questions?</p>
-            <button className="contact-button" onClick={handleContactClick}>Contact Us</button>
+            <p>Need a custom license?</p>
+            <button className="contact-button" onClick={handleContactClick}>Request Custom Terms</button>
           </div>
           
           <button 
-            className={`add-to-cart-button ${!selectedLicenseOption ? 'disabled' : ''} ${isSelectedLicenseInCart() ? 'in-cart' : ''}`}
+            className={`add-to-cart-button ${!selectedLicenseOption || isSelectedLicenseInCart() ? 'disabled' : ''} ${isSelectedLicenseInCart() ? 'in-cart' : ''}`}
             disabled={!selectedLicenseOption || isSelectedLicenseInCart()}
             onClick={handleAddTrackToCart}
           >
             {isSelectedLicenseInCart() 
               ? 'Already In Cart' 
-              : `Add to Cart ${selectedLicenseOption && currentTrack.trackLicenseOptions.some(license => license === selectedLicenseOption) ? `- $${selectedLicenseOption.licenseType.price} selected` : ''}`} {/** this is from the pricingLicensingOption that's passed from the cartLibraryslice...so format it correctly */}
+              : 'Add to Cart'} {/** this is from the pricingLicensingOption that's passed from the cartLibraryslice...so format it correctly */}
           </button>
         </div>
       </div>

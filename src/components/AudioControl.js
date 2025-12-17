@@ -99,7 +99,7 @@ const AudioControls = ({
           value={trackProgress}
           step="0.1"
           min="0"
-          max={audioRef.current.duration}  // Use actual duration, fallback to 0 if not loaded
+          max={audioRef.current?.duration || 0}  // Use actual duration, fallback to 0 if not loaded
           className="progress"
           onChange={(e) => onScrub(e.target.value)}
           onMouseUp={onScrubEnd}

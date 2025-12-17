@@ -1,3 +1,11 @@
+/* ===== TRACK ARTIST - SINGLE SOURCE OF TRUTH ===== */
+:root {
+  --track-artist-font-size: calc(0.75rem * var(--track-base-size, 1));
+  --track-artist-font-size-large: calc(0.9rem * var(--track-base-size, 1));
+  --track-artist-font-size-small: 0.65rem;
+  --track-artist-color: rgba(255, 255, 255, 0.8);
+  --track-artist-color-active: rgba(255, 255, 255, 0.95);
+}
 
 .track-item {
   display: flex;
@@ -148,15 +156,8 @@
 
 /* Artist styling for larger track items */
 .track-info-line .track-artist {
-  font-size: calc(1.3rem * var(--track-base-size)); /* Larger font for increased track height */
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.8);
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%; /* Full width in stacked layout */
-  text-align: center; /* Center-aligned text */
+  font-size: var(--track-artist-font-size-large);
+  text-align: center;
 }
 
 .track-info-line .track-bpm {
@@ -429,10 +430,10 @@ a:has(.download-icon) .tooltip::after {
 }
 
 .track-artist {
-  font-size: calc(0.75rem * var(--track-base-size));
+  font-size: var(--track-artist-font-size);
   font-weight: 400;
   margin: 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--track-artist-color);
   text-align: left;
   width: 100%;
   white-space: nowrap;
@@ -446,7 +447,7 @@ a:has(.download-icon) .tooltip::after {
 }
 
 .track-item.active .track-artist {
-  color: rgba(255, 255, 255, 0.95); /* Brighter white for active track artist */
+  color: var(--track-artist-color-active);
 }
 
 /* Update thumb border color for active tracks */
@@ -513,10 +514,7 @@ a:has(.download-icon) .tooltip::after {
   }
   
   .track-info-line .track-artist {
-    font-size: 0.65rem;        /* Reduced from 0.75rem */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: var(--track-artist-font-size-small);
   }
   
   .track-icons {
@@ -584,10 +582,7 @@ a:has(.download-icon) .tooltip::after {
   }
   
   .track-info-line .track-artist {
-    font-size: 0.65rem;        /* Reduced from 0.75rem */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: var(--track-artist-font-size-small);
   }
   
   .track-icons {

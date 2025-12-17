@@ -1,5 +1,7 @@
 import React from 'react';
 import '../../styles/Checkout.css';
+import stripeIcon from '../../assets/images/icons8-stripe-96.png';
+import paypalIcon from '../../assets/images/icons8-paypal-96.png';
 
 /**
  * CheckoutForm component handles collecting customer information and payment details
@@ -7,8 +9,8 @@ import '../../styles/Checkout.css';
 const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSubmitDisabled }) => {
   // Payment method icons
   const paymentIcons = {
-    creditCard: `${process.env.PUBLIC_URL}/assets/images/credit-card-icon.png`,
-    paypal: `${process.env.PUBLIC_URL}/assets/images/paypal-icon.png`,
+    creditCard: stripeIcon,
+    paypal: paypalIcon,
   };
   
   return (
@@ -407,21 +409,24 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
         )}
         
         {/* Payment Information - stripe or Paypal*/}
-        {formData.paymentProcessing.card.paymentMethod === 'creditCard' && (
-          <div className="stripe-info-notice" style={{ padding: '16px', background: '#f7f7f7', borderRadius: '4px', marginTop: '16px' }}>
-            <p style={{ margin: 0, color: '#666' }}>
-              💳 You'll enter your card details securely on the next step using Stripe's secure payment form.
-            </p>
+          <div className="payment-methods">
+            <div 
+              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'creditCard' ? 'selected' : ''}`}
+              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'creditCard' } })}
+            >
+              <img src={paymentIcons.creditCard} alt="Credit Card" />
+              <span>Stripe</span>
+            </div>
+            
+            <div 
+              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'paypal' ? 'selected' : ''}`}
+              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'paypal' } })}
+           >
+              <img src={paymentIcons.paypal} alt="PayPal" />
+              <span>PayPal</span>
+            </div>
           </div>
-        )}
-
-        {formData.paymentProcessing.card.paymentMethod === 'paypal' && (
-          <div className="paypal-info-notice" style={{ padding: '16px', background: '#fff8e6', borderRadius: '4px', marginTop: '16px' }}>
-            <p style={{ margin: 0, color: '#666' }}>
-              🅿️ You'll complete payment via PayPal on the next step.
-            </p>
-          </div>
-        )}
+          {errors.paymentMethod && <div className="error-message">{errors.paymentMethod}</div>}
         
         {/* Display license agreement error message if present */}
         {errors.licenseAgreement && (
@@ -453,106 +458,4 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
 export default CheckoutForm;
 
 
-  // <div className="checkout-form-section">
-  //         <h3 className="form-section-title">Payment Method</h3>
-          
-  //         <div className="payment-methods">
-  //           <div 
-  //             className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'creditCard' ? 'selected' : ''}`}
-  //             onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'creditCard' } })}
-  //           >
-  //             <img src={paymentIcons.creditCard} alt="Credit Card" />
-  //             <span>Credit Card</span>
-  //           </div>
-            
-  //           <div 
-  //             className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'paypal' ? 'selected' : ''}`}
-  //             onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'paypal' } })}
-  //           >
-  //             <img src={paymentIcons.paypal} alt="PayPal" />
-  //             <span>PayPal</span>
-  //           </div>
-  //         </div>
-  //         {errors.paymentMethod && <div className="error-message">{errors.paymentMethod}</div>}
-          
-  //         {formData.paymentProcessing.card.paymentMethod === 'creditCard' && (
-  //           <>
-  //             <div className="form-group">
-  //               <label htmlFor="cardNumber">Card Number</label>
-  //               <input
-  //                 type="text"
-  //                 id="cardNumber"
-  //                 name="paymentProcessing.card.cardNumber"
-  //                 className={`form-control ${errors.cardNumber ? 'error' : ''}`}
-  //                 value={formData.paymentProcessing.card.cardNumber || '1234 5678 9012 3456'}
-  //                 onChange={onChange}
-  //                 placeholder="1234 5678 9012 3456"
-  //                 required
-  //               />
-  //               {errors.cardNumber && <div className="error-message">{errors.cardNumber}</div>}
-  //             </div>
-              
-  //             <div className="form-row">
-  //               <div className="form-group">
-  //                 <label htmlFor="expiryDate">Expiry Date</label>
-  //                 <input
-  //                   type="text"
-  //                   id="expiryDate"
-  //                   name="paymentProcessing.card.expiryDate"
-  //                   className={`form-control ${errors.expiryDate ? 'error' : ''}`}
-  //                   value={formData.paymentProcessing.card.expiryDate || '12/25'}
-  //                   onChange={onChange}
-  //                   placeholder="MM/YY"
-  //                   required
-  //                 />
-  //                 {errors.expiryDate && <div className="error-message">{errors.expiryDate}</div>}
-  //               </div>
-                
-  //               <div className="form-group">
-  //                 <label htmlFor="cvv">CVV</label>
-  //                 <input
-  //                   type="text"
-  //                   id="cvv"
-  //                   name="paymentProcessing.card.cvv"
-  //                   className={`form-control ${errors.cvv ? 'error' : ''}`}
-  //                   value={formData.paymentProcessing.card.cvv || '123'}
-  //                   onChange={onChange}
-  //                   placeholder="123"
-  //                   required
-  //                 />
-  //                 {errors.cvv && <div className="error-message">{errors.cvv}</div>}
-  //               </div>
-  //             </div>
-              
-  //             <div className="form-group">
-  //               <label htmlFor="nameOnCard">First Name on Card</label>
-  //               <input
-  //                 type="text"
-  //                 id="nameOnCard"
-  //                 name="paymentProcessing.card.contact.firstNameOnCard"
-  //                 className={`form-control ${errors.firstNameOnCard ? 'error' : ''}`}
-  //                 value={formData.paymentProcessing.card.contact.firstNameOnCard}
-  //                 onChange={onChange}
-  //                 placeholder="John Doe"
-  //                 required
-  //               />
-  //               {errors.firstNameOnCard && <div className="error-message">{errors.firstNameOnCard}</div>}
-  //             </div>
-
-  //             <div className="form-group">
-  //               <label htmlFor="lastnameOnCard">Last Name on Card</label>
-  //               <input
-  //                 type="text"
-  //                 id="lastnameOnCard"
-  //                 name="paymentProcessing.card.contact.lastNameOnCard"
-  //                 className={`form-control ${errors.lastNameOnCard ? 'error' : ''}`}
-  //                 value={formData.paymentProcessing.card.contact.lastNameOnCard}
-  //                 onChange={onChange}
-  //                 placeholder="Doe"
-  //                 required
-  //               />
-  //               {errors.lastNameOnCard && <div className="error-message">{errors.lastNameOnCard}</div>}
-  //             </div>
-  //           </>
-  //         )}
-  //       </div>
+  

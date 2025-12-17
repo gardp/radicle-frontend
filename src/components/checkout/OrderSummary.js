@@ -9,6 +9,7 @@ import useCart from '../../hooks/useCart';
 const OrderSummary = () => {
   const dispatch = useDispatch();
   const { items, subtotal, taxRate, taxAmount, totalPrice } = useCart();
+
   
   // Handle opening the license agreement modal
   const handleOpenLicenseAgreement = (item) => {
@@ -23,8 +24,8 @@ const OrderSummary = () => {
       <h2 className="order-summary-header">Order Summary</h2>
       
       <div className="order-items">
-        {items.map((item) => (
-          <div key={item.trackId} className="order-item">
+        {items.map((item, index) => (
+          <div key={index} className="order-item">
             <div className="order-item-image">
               <img src={item.vinylThumbnail} alt={item.title} />
             </div>
@@ -32,7 +33,7 @@ const OrderSummary = () => {
               <div className="order-item-name">{item.title}</div>
               <div className="order-item-license">{item.trackLicenseOption?.licenseType?.licenseTypeName} License</div>
               <div className="order-item-price">
-                ${item.trackLicenseOption?.licenseType?.price} × {item.quantity}
+                ${item.trackLicenseOption?.licenseType?.price} × {item.quantity}  = ${item.trackLicenseOption?.licenseType?.price * item.quantity}
               </div>
               <div
                 className={`license-agreement-link ${item.licenseAgreementAcknowledged ? 'acknowledged' : 'pending alert-pulse'}`}
