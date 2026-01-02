@@ -32,6 +32,7 @@ const Checkout = () => {
       sudoName: '',
       companyName: '',
       phoneNumber: '',
+      emailListSubscription: true,
     },
     mailingRegistrationAddress:{
       addressType: 'Registration',
@@ -382,7 +383,7 @@ const Checkout = () => {
         }
       };
 
-      // ONE API CALL instead of many
+      // ONE API CALL instead of many to send the order to the server
       const orderData = await orderApi.checkoutOrder(
         orderPayload,
         {
@@ -450,7 +451,8 @@ const Checkout = () => {
     finally {
         setIsProcessing(false);
       }
-  }; // closing bracket for handleSubmit
+      
+  }; // CLOSING BRACKET FOR handleSubmit
 
   //NOW HANDLE SUCCESSFUL STRIPE PAYMENT
     const handleStripePaymentSuccess = (paymentIntent) => {
@@ -507,7 +509,7 @@ const Checkout = () => {
 
 
 
-      // If order is complete, show confirmation
+      // If order is complete, show confirmation ***ADD MORE DATA TO IT INCLUDING DOWNLOAD LINKS***!!!!
   if (orderComplete && order && paymentProcessed) {
     const payment = {
       amount: order.totalAmount,
@@ -521,12 +523,13 @@ const Checkout = () => {
   const testData = {
     licenseeContact:{
       contactType: 'INDIVIDUAL',
-      email: 'test@example.com',
+      email: 'gardly.philoctete@gmail.com',
       firstName: 'John',
       lastName: 'Doe',
       sudoName: 'Johnyyy Doe',
       companyName: 'Test Company',
       phoneNumber: '123-456-7890',
+      emailListSubscription: true,
     },
     mailingRegistrationAddress:{
       addressType: 'mailing',
@@ -535,7 +538,7 @@ const Checkout = () => {
       city: 'Testville',
       state: 'TS',
       zipCode: '12345',
-      country: 'United States',
+      country: 'US',
     },
     musicProfessional:{
       refCode: '123456',
@@ -546,7 +549,7 @@ const Checkout = () => {
     },
     buyerContact:{
       buyerType: 'INDIVIDUAL',
-      email: 'test@example.com',
+      email: 'gardly.philoctete@gmail.com',
       firstName: 'John',
       lastName: 'Doe',
       sudoName: 'Johnyyy Doe',
@@ -558,7 +561,7 @@ const Checkout = () => {
         contact:{
           firstNameOnCard: 'John',
           lastNameOnCard: 'Doe',
-          email: 'test@example.com',
+          email: 'gardly.philoctete@gmail.com',
         },
         BillingSameAddressAsMailing: true,
         billingAddress:{
@@ -568,7 +571,7 @@ const Checkout = () => {
           city: 'Testville',
           state: 'TS',
           zipCode: '12345',
-          country: 'United States',
+          country: 'US',
         },
         paymentMethod: 'creditCard',
         cardNumber: '4111 1111 1111 1111',
@@ -581,6 +584,20 @@ const Checkout = () => {
       },
     },
   };
+
+  // Build billingDetails object for Stripe (add this before the return statement in the payment phase)
+const billingDetails = {
+  name: `${formData.paymentProcessing.card.contact.firstNameOnCard} ${formData.paymentProcessing.card.contact.lastNameOnCard}`,
+  email: formData.paymentProcessing.card.contact.email || formData.licenseeContact.email,
+  address: {
+    line1: formData.paymentProcessing.card.billingAddress.addressLine1,
+    line2: formData.paymentProcessing.card.billingAddress.addressLine2 || undefined,
+    city: formData.paymentProcessing.card.billingAddress.city,
+    state: formData.paymentProcessing.card.billingAddress.state,
+    postal_code: formData.paymentProcessing.card.billingAddress.zipCode,
+    country: formData.paymentProcessing.card.billingAddress.country,
+  },
+};
 
   // Function to fill form with test data
   const fillTestData = () => {
@@ -653,6 +670,7 @@ const Checkout = () => {
                 onPayPalCreateOrder={handlePayPalCreateOrder}
                 onPayPalApprove={handlePayPalApprove}
                 disabled={isProcessing}
+                billingDetails={billingDetails}
               />
               
               <button

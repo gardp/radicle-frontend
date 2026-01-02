@@ -34,6 +34,18 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             />
             { errors.email && <div className="error-message">{errors.email}</div>}
           </div>
+
+          <div className="form-group">
+            <label className="email-list-checkbox-container">
+              <input
+                type="checkbox"
+                name="licenseeContact.emailListSubscription"
+                checked={formData.licenseeContact.emailListSubscription || false}
+                onChange={onChange}
+              />
+              <span className="checkbox-text">Add me to the email list for updates on new track releases, licenses, and features</span>
+            </label>
+          </div>
           
           <div className="form-row">
             <div className="form-group">

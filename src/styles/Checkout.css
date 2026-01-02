@@ -3,6 +3,7 @@
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1.5rem;
+  padding-top: 60px;
   color: var(--body-text-color);
 }
 
@@ -65,6 +66,71 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+}
+
+/* Email list checkbox - enhanced styling to make it stand out */
+.email-list-checkbox-container {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(74, 71, 214, 0.08));
+  box-shadow: 0 4px 16px rgba(0, 212, 255, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.email-list-checkbox-container:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(74, 71, 214, 0.12));
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.email-list-checkbox-container input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  cursor: pointer;
+  accent-color: #00d4ff;
+  opacity: 1;
+  position: relative;
+}
+
+.email-list-checkbox-container input[type="checkbox"]:checked {
+  animation: checkboxPulse 0.3s ease;
+}
+
+.email-list-checkbox-container .checkbox-text {
+  font-weight: 600;
+  color: var(--primary-text-color);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.email-list-checkbox-container label {
+  margin-bottom: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+@keyframes checkboxPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Responsive layout */
@@ -217,11 +283,13 @@
 }
 
 .payment-method span {
-  font-size: 1.15rem; /* try 1.1rem if you want larger */
+  font-size: 1.15rem;
+  /* try 1.1rem if you want larger */
   font-weight: 600;
   letter-spacing: 0.2px;
   color: var(--primary-text-color);
 }
+
 /* Order summary styling */
 .order-summary {
   background: rgba(15, 15, 20, 0.7);
@@ -250,6 +318,10 @@
   max-height: 300px;
   overflow-y: auto;
   padding-right: 0.5rem;
+}
+
+.order-items::-webkit-scrollbar-thumb {
+  background-color: rgba(230, 181, 76, 0.9);
 }
 
 .order-item {
@@ -391,13 +463,15 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Order confirmation page */
 .order-confirmation {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 75px 1rem 3rem 1rem;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -524,8 +598,15 @@
 
 /* Animation for order completion */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .order-confirmation {

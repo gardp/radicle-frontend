@@ -97,7 +97,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
             libraryName: library.library_name,
             tracks: [],
           };
-      // if library has tracks, fetch track details from the track_id array of the library
+          // if library has tracks, fetch track details from the track_id array of the library
           if (library.tracks && library.tracks.length > 0) {
             trackLibrary.tracks = await Promise.all(
               library.tracks.map(async (trackId) => {
@@ -124,15 +124,15 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   }));
                   console.log('✅ Fetched track license options:', trackLicenseOptions);
                   // Find the Sample license option (use .find() not .filter())
-                  const sampleLicenseOption = licensingOptions.find(option => 
+                  const sampleLicenseOption = licensingOptions.find(option =>
                     option.track_storage_file?.file_format?.name === "Sample"
                   );
-                  
+
                   // Get the track_storage_file from the sampleLicenseOption
                   const sampleStorageFile = sampleLicenseOption?.track_storage_file;
-                  
+
                   console.log(`Fetched trackDetail+LicensingOptions+SampleFile ${trackId}:`, trackDetail, licensingOptions, sampleStorageFile);
-                  
+
                   // Transform the trackDetail to our track structure
                   const track = {
                     trackId: trackDetail.track_id || "",
@@ -168,7 +168,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackStorageFileFormatBitDepth: sampleStorageFile?.file_format?.bit_depth || "",
                     trackStorageFileFormatSampleRate: sampleStorageFile?.file_format?.sample_rate || "",
                   };
-                  
+
                   return track;
                 } catch (error) {
                   console.error(`Failed to fetch track ${trackId}:`, error);
@@ -176,21 +176,21 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                 }
               })
             );
-            
+
             // Filter out failed fetches
             trackLibrary.tracks = trackLibrary.tracks.filter(t => t !== null);
           }
-          
+
           return trackLibrary;
         })
       );
-      
+
       return enrichedLibraries;
     } catch (error) {
       console.error('Failed to fetch libraries:', error);
       return rejectWithValue(error.message);
     }
-  }); 
+  });
 
 // ========================================
 // SLICE
@@ -244,3 +244,8 @@ export const selectAllTracks = (state) => {
 };
 
 export default trackLibrarySlice.reducer;
+
+
+// Rule of Thumb
+// Need to fetch from API? → Use createAsyncThunk + extraReducers
+// Simple state update? → Use reducers

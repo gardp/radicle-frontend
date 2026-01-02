@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import { newsletterApi } from "../api";
 import "../styles/NewsletterSub.css";
 
 const NewsletterSub = () => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -15,11 +17,18 @@ const NewsletterSub = () => {
       return;
     }
 
-    // Here you would typically send this to your backend or newsletter service
-    console.log("Subscribing email:", email);
-    setStatus("Thank you for subscribing!");
-    setEmail("");
-
+    setStatus("Subscribing...");
+    try {
+      const response = await newsletterApi.subscribe({ email: email, source: "FOOTER" });
+      // Here you would typically send this to your backend or newsletter service
+      console.log("Subscribing email:", email);
+      setStatus(response.message);
+      setEmail("");
+      setIsSubmitting(false);
+    } catch (error) {
+      setStatus("Something went wrong. Please try again.");
+      setIsSubmitting(false);
+    }
     // TODO: Integrate with your newsletter service
     // Example with a backend API call:
     // fetch('/api/subscribe', {
@@ -37,7 +46,7 @@ const NewsletterSub = () => {
       <div className="newsletter-content">
         <h2>Subscribe to Our Newsletter</h2>
         <p>Stay updated with our latest releases and upcoming events!</p>
-        
+
         <form onSubmit={handleSubmit} className="newsletter-form">
           <div className="input-group">
             <input
@@ -47,7 +56,7 @@ const NewsletterSub = () => {
               placeholder="Enter your email address"
               required
             />
-            <button type="submit">Subscribe</button>
+            <button type="submit" disabled={isSubmitting}>Subscribe</button>
           </div>
           {status && <p className="status-message">{status}</p>}
         </form>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
-const StripePaymentElement = ({ onPaymentSuccess, onPaymentError, isProcessing, setIsProcessing }) => {
+const StripePaymentElement = ({ onPaymentSuccess, onPaymentError, isProcessing, setIsProcessing, billingDetails }) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -18,6 +18,9 @@ const StripePaymentElement = ({ onPaymentSuccess, onPaymentError, isProcessing, 
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/order-confirmation`,
+        payment_method_data: {
+          billing_details: billingDetails, // PASS BILLING DETAILS HERE
+        },
       },
       redirect: 'if_required', // Only redirect if required (e.g., 3D Secure)
     });

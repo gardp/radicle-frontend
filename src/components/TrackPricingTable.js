@@ -20,7 +20,7 @@ const TrackPricingTable = () => {
   const { addTrackToCart, isTrackLicenseInCart, items } = useCart(); //importing the useCart hook and destructuring the addToCartfunction
   // const { data: license_types } = useLicenseTypes();
   console.log("pricing table current track", currentTrack);
-
+  console.log("pricing table selected license option", selectedLicenseOption);
   
   // // printing the cart state
   // const { items = [] } = useSelector((state) => state.cart.items || []);
@@ -64,6 +64,14 @@ const TrackPricingTable = () => {
     };
   }, [isOpen]);
   
+
+// Reset license selection when modal closes- this will reset the selectedLicenseOption to null when the modal is closed 
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedLicenseOption(null);
+    }
+  }, [isOpen]);
+
   // Handle outside click to close modal
   const handleBackdropClick = (e) => {
     if (e.target.classList.contains('pricing-modal-backdrop')) {
