@@ -316,12 +316,46 @@
 .order-items {
   margin-bottom: 1.5rem;
   max-height: 300px;
-  overflow-y: auto;
+  overflow-y: scroll;
   padding-right: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(230, 181, 76, 0.95) rgba(255, 255, 255, 0.05);
+}
+
+/* Enhanced scrollbar styling for order summary - always visible and prominent */
+.order-items::-webkit-scrollbar {
+  width: 12px;
+  display: block;
+}
+
+.order-items::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .order-items::-webkit-scrollbar-thumb {
-  background-color: rgba(230, 181, 76, 0.9);
+  background: linear-gradient(180deg, rgba(230, 181, 76, 0.95), rgba(255, 215, 0, 0.9));
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-height: 40px;
+  box-shadow: 0 2px 8px rgba(230, 181, 76, 0.3);
+}
+
+.order-items::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.95), rgba(230, 181, 76, 0.9));
+  box-shadow: 0 2px 12px rgba(230, 181, 76, 0.4);
+}
+
+.order-items::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, rgba(255, 215, 0, 1), rgba(230, 181, 76, 0.95));
+  box-shadow: 0 1px 6px rgba(230, 181, 76, 0.5);
+}
+
+/* Firefox scrollbar styling */
+.order-items {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(230, 181, 76, 0.95) rgba(255, 255, 255, 0.08);
 }
 
 .order-item {

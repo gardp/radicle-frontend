@@ -7,7 +7,7 @@ import CheckoutForm from './CheckoutForm';
 import OrderSummary from './OrderSummary';
 import OrderConfirmation from './OrderConfirmation';
 import PaymentWrapper from './PaymentWrapper';
-import { contactApi } from '../../api';
+import { contactApi, newsletterApi } from '../../api';
 import { buyerApi } from '../../api';
 import { orderApi } from '../../api';
 import { addressApi } from '../../api';
@@ -32,8 +32,8 @@ const Checkout = () => {
       sudoName: '',
       companyName: '',
       phoneNumber: '',
-      emailListSubscription: true,
     },
+    emailListSubscription: true,
     mailingRegistrationAddress:{
       addressType: 'Registration',
       addressLine1: '',
@@ -324,8 +324,8 @@ const Checkout = () => {
       const orderPayload = {
         //***REFERENCE NUMBER for the order***//
         referenceNumber: referenceNumber,
+        
         //***CONTRIBUTOR INFO***//
-
         licenseeContact: {
           contact_type: 'INDIVIDUAL',
           first_name: formData.licenseeContact.firstName,
@@ -382,6 +382,19 @@ const Checkout = () => {
           currency: "usd",
         }
       };
+      
+      // Subscribe licensee to newsletter if subscription button is check
+      if (formData.emailListSubscription) {
+        try {
+          const licenseeEmailSubscription = await newsletterApi.subscribe({ email: formData.licenseeContact.email, source: 'CHECKOUT' });
+          console.log('Licensee subscribed to newsletter:', licenseeEmailSubscription);
+        } catch (error) {
+          console.error('Failed to subscribe licensee to newsletter:', error);
+          // Don't fail the entire order if newsletter subscription fails
+          // Continue with order processing
+          // Optionally show a message to the user about the subscription failure
+        }
+      }
 
       // ONE API CALL instead of many to send the order to the server
       const orderData = await orderApi.checkoutOrder(
@@ -529,8 +542,8 @@ const Checkout = () => {
       sudoName: 'Johnyyy Doe',
       companyName: 'Test Company',
       phoneNumber: '123-456-7890',
-      emailListSubscription: true,
     },
+    emailListSubscription: true,
     mailingRegistrationAddress:{
       addressType: 'mailing',
       addressLine1: '123 Test Street',

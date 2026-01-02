@@ -40,7 +40,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               <input
                 type="checkbox"
                 name="licenseeContact.emailListSubscription"
-                checked={formData.licenseeContact.emailListSubscription || false}
+                checked={formData.licenseeContact.emailListSubscription || true}
                 onChange={onChange}
               />
               <span className="checkbox-text">Add me to the email list for updates on new track releases, licenses, and features</span>

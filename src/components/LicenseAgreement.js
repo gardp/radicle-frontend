@@ -136,7 +136,6 @@ const LicenseAgreement = () => {
                 checked={agreed} 
                 onChange={handleAgreeChange}
               />
-              <span className="checkmark"></span>
               <span>I acknowledge that I have read, understood, and agree to the terms of this license agreement</span>
             </label>
           </div>
