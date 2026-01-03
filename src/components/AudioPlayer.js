@@ -5,8 +5,8 @@ import SearchBar from "./SearchBar"; // Import the SearchBar component
 import "../styles/AudioPlayer.css";
 import { API_BASE_URL } from "../api";
 
-
-const AudioPlayer = ({ libraries, playerTitle }) => {
+// const AudioPlayer = ({ libraries, playerTitle }) => {
+const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // console.log("AudioPlayer received libraries:", libraries); // Debug log
   // desctructure tracks from libraries
   // State
@@ -230,6 +230,13 @@ const AudioPlayer = ({ libraries, playerTitle }) => {
     audioRef.current = new Audio(fullAudioUrl);
     setTrackProgress(0);
   }, [fullAudioUrl]);
+
+  // Effect to notify parent when current track changes
+  useEffect(() => {
+    if (onTrackChange && currentTrack) {
+      onTrackChange(currentTrack);
+    }
+  }, [currentTrack, onTrackChange]);
 
   // player change
   useEffect(() => {

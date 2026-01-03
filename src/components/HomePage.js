@@ -12,9 +12,12 @@ const HomePage = () => {
   //when executing the useAllLibrariesWithTracks hook, it will automatically execute the fetchLibrariesWithTracks,....(see next line)
   // so you don't need the function in the component, you just need the state objects extracted using the selectors!!!
 
+  //now extract the right libraries for the home page musicContainer/AudioPlayer
+  const previewLibraries = librariesWithTracks?.filter(lib => lib.libraryName == "New Features" || lib.libraryName == "New Beats") || [];
   console.log('HomePage', librariesWithTracks);
   console.log('HomePage Loading', isLoading);
   console.log('HomePage Error', error);
+  console.log('HomePage previewLibraries', previewLibraries);
 
   return (
     <div className="page-wrapper">
@@ -33,9 +36,9 @@ const HomePage = () => {
         <Section title="Latest Releases">
           {isLoading && <p>Loading music...</p>}
           {error && <p>Error fetching music. Please try again later.</p>}
-          {librariesWithTracks && (
+          {previewLibraries && previewLibraries.length > 0 && (
             <MusicContainer 
-              libraries={librariesWithTracks} 
+              libraries={previewLibraries} 
               trackCount={3}
               playerTitle="New Features" 
               scale={0.5} /* Scale from 0.5 to 1, where 1 is 100% (default) */

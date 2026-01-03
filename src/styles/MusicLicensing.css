@@ -1,0 +1,223 @@
+.licensing-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--haiti-dark) 0%, rgba(26, 26, 26, 0.95) 100%);
+}
+
+/* Banner Styles */
+.licensing-banner {
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.banner-background {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  transition: background-image 0.6s ease-in-out;
+}
+
+.banner-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 60, 120, 0.8) 0%,
+    rgba(196, 18, 48, 0.6) 50%,
+    rgba(26, 26, 26, 0.9) 100%
+  );
+  z-index: 1;
+}
+
+.banner-overlay {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.banner-content {
+  justify-content: center;
+  text-align: center;
+}
+
+.banner-text {
+  color: var(--white);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.banner-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(45deg, var(--haiti-gold), var(--white));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.banner-subtitle {
+  font-size: 1.25rem;
+  font-weight: 300;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+/* Content Area */
+.licensing-content {
+  padding: 2rem 0 4rem 0;
+  max-width: 1400px;
+}
+
+.licensing-music-container {
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Loading and Error States */
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: var(--white);
+}
+
+.error-message {
+  color: var(--haiti-red);
+}
+
+/* Responsive Design */
+@media (max-width: 1199.98px) {
+  .licensing-banner {
+    height: 50vh;
+    min-height: 350px;
+  }
+  
+  .banner-title {
+    font-size: 3rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .licensing-banner {
+    height: 45vh;
+    min-height: 300px;
+  }
+  
+  .banner-title {
+    font-size: 2.5rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .licensing-banner {
+    height: 40vh;
+    min-height: 280px;
+    margin-bottom: 1rem;
+  }
+  
+  .banner-title {
+    font-size: 2rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+  }
+  
+  .licensing-content {
+    padding: 1rem 0 2rem 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .licensing-banner {
+    height: 35vh;
+    min-height: 250px;
+  }
+  
+  .banner-title {
+    font-size: 1.75rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+/* Banner Animation */
+.banner-background {
+  animation: bannerFadeIn 1s ease-out;
+}
+
+@keyframes bannerFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Text Animation */
+.banner-text {
+  animation: textSlideUp 0.8s ease-out 0.3s both;
+}
+
+@keyframes textSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Music Container Integration */
+.licensing-page .music-container {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+/* Ensure proper spacing with the existing MusicContainer styles */
+.licensing-page .music-container::before {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Custom scrollbar for banner area */
+.licensing-banner::-webkit-scrollbar {
+  display: none;
+}
+
+.licensing-banner {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
