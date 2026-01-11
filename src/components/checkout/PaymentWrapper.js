@@ -38,7 +38,7 @@ const PaymentWrapper = ({
     intent: 'capture',
   };
 
-  if (paymentMethod === 'creditCard' && clientSecret) {
+  if (paymentMethod === 'stripe' && clientSecret) {
     return (
       <Elements stripe={stripePromise} options={stripeOptions}>
         <StripePaymentElement

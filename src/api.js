@@ -247,15 +247,6 @@ export const licenseApi = {
       console.error('Failed to get license:', error);
       throw error;
     }),
-  // Now the endpoint to generate the license agreement pdf and get the url
-  // generateGetAgreementApi: (id) => api.get(`/licenses/${id}/generate-agreement/`)
-  // .then(response => {
-  //   return response.data;
-  // })
-  // .catch(error => {
-  //   console.error('Failed to generate license agreement:', error);
-  //   throw error;
-  // }),
 };
 
 //now export orderApi for the checkout to submit order before payment
@@ -266,6 +257,15 @@ export const orderApi = {
     })
     .catch(error => {
       console.error('Failed to checkout order:', error);
+      throw error;
+    }),
+    // retrieve the license by reference number (safer) for the user after payment
+  getLicenseByReferenceNumber: (ReferenceNumber) => api.get(`/orders/${ReferenceNumber}/licenses/`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Failed to get payment status:', error);
       throw error;
     }),
 };
@@ -298,6 +298,18 @@ export const newsletterApi = {
     .catch(error => {
       console.error('Failed to subscribe to newsletter:', error);
       console.error('Response data:', error.response?.data);
+      throw error;
+    }),
+};
+
+//Contact Us endpoint for the Contact us form
+export const contactUsApi = {
+  submit: (data) => api.post('/contact-us/', data)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Failed to submit contact form:', error);
       throw error;
     }),
 };

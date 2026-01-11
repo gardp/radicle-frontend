@@ -143,8 +143,8 @@ const TrackPricingTable = () => {
         <button className="close-button" onClick={() => dispatch(closePricingModal())}>×</button>
         
         <div className="pricing-header">
-          <h2>License Options for "{currentTrack ? currentTrack.title : 'Track'}"</h2>
-          <p>Select the license that best fits your needs</p>
+          <h2>License Options for "{currentTrack ? currentTrack.trackTitle : 'Track'}"</h2>
+          <p>Choose the perfect license for your project</p>
         </div>
         
         <div className="pricing-options-container">
@@ -156,15 +156,15 @@ const TrackPricingTable = () => {
               onClick={() => handleOptionSelect(trackLicenseOption)}
             >
               {/* {option.recommended && <div className="recommended-badge">Recommended</div>} */}
-              <h3>{trackLicenseOption.licenseTypeName} License</h3>
+              <h3>{trackLicenseOption.licenseType.licenseTypeName}</h3>
               {/* {console.log(typeof("id type", currentTrack.trackId))}; */}
-              <div className="price">${trackLicenseOption.price}</div>
+              <div className="price">${trackLicenseOption.licenseType.price}</div>
               <ul className="features">
                 <li>{trackLicenseOption?.licenseType?.licenseTypeName}</li>
                 <li>{trackLicenseOption?.licenseType?.licenseTerm}</li>
-                {/* <li>{trackLicenseOption?.licenseType?.file_format?.name}</li> ******fix this later***** */}
-                <li>{trackLicenseOption?.licenseType?.downloadLimit}</li>
-                <li>{trackLicenseOption?.licenseType?.streamingLimit}</li>
+                <li>{trackLicenseOption?.licenseType?.fileFormatName}</li>
+                <li>{trackLicenseOption?.licenseType?.downloadLimit} Downloads</li>
+                <li>{trackLicenseOption?.licenseType?.streamingLimit} Streams</li>
                 <li>No Refunds</li>
               </ul>
               <button 

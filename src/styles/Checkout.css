@@ -519,17 +519,17 @@
 .confirmation-title {
   font-size: 2.2rem;
   margin-bottom: 1rem;
-  color: #333;
+  color: #f8f9fa;;
 }
 
 .confirmation-message {
   font-size: 1.1rem;
-  color: #666;
+  color: #f8f9fa;
   margin-bottom: 2rem;
 }
 
 .order-details {
-  background: rgba(255, 255, 255, 0.6);
+  background: #1f2937;
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -578,6 +578,74 @@
   transition: all 0.3s ease;
 }
 
+.download-item-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.download-item-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.download-item-meta {
+  margin-top: 0.75rem;
+  text-align: left;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.download-meta-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.download-meta-label {
+  color: #000000;
+}
+
+.download-meta-value {
+  color: #000000;
+}
+
+.download-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.download-button.secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.download-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.download-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  text-align: center; 
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.08);
+  color: #000000;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.download-badge.active {
+  border-color: rgba(0,174,176,0.6);
+  color: #00aeb0;
+}
+
 .download-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -586,6 +654,7 @@
 .download-item-title {
   font-weight: 600;
   margin-bottom: 0.5rem;
+  /* color: #000000; */
 }
 
 .download-item-license {
@@ -598,7 +667,7 @@
   display: inline-block;
   padding: 0.75rem 1.25rem;
   background: linear-gradient(45deg, #00aeb0, #00c2b8);
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 6px;
   font-weight: 500;

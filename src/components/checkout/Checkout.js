@@ -76,7 +76,7 @@ const Checkout = () => {
           postalCode: '',
           country: '',
         },
-        paymentMethod: 'creditCard',
+        paymentMethod: 'stripe',
         cardNumber: '',
         expiryDate: '',
         cvv: '',
@@ -92,14 +92,17 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
   
   // State for order processing
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
-  const [order, setOrder] = useState(null);
-  const [orderedItems, setOrderedItems] = useState(null);
-  const [paymentIntent, setPaymentIntent] = useState(null);
-  const [paymentProcessed, setPaymentProcessed] = useState(false);
-  const [checkoutPhase, setCheckoutPhase] = useState('info');
-  const [clientSecret, setClientSecret] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false); // for loading spinner
+  const [orderComplete, setOrderComplete] = useState(false); // for order confirmation check
+  const [order, setOrder] = useState(null); // for saving order to use outside of handleSubmit
+  const [paymentIntent, setPaymentIntent] = useState(null); // paymentintent received from stripe or paypal to use for payment processing
+  const [paymentProcessed, setPaymentProcessed] = useState(false); // for payment processing check
+  const [checkoutPhase, setCheckoutPhase] = useState('info'); // for determining the phase of the checkout process to use for conditional rendering for payment process
+  const [clientSecret, setClientSecret] = useState(null); // client secret received from stripe's payment intent to use for payment processing
+  const [orderedItems, setOrderedItems] = useState(null); // for saving ordered each other items
+  const [licensesReqLoading, setLicensesReqLoading] = useState(false); // for loading spinner
+  const [licensesReqError, setLicensesReqError] = useState(null); // for error message
+  const [licenseFiles, setLicenseFiles] = useState(null); // for saving licenses to use outside of handleSubmit
   // storing reference number before handleSubmit to make sure it doesn't generate everytime handleSubmit runs...
   // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
   const [referenceNumber] = useState(() => 
@@ -202,6 +205,50 @@ const Checkout = () => {
     console.log("addressLine1", formData.paymentProcessing.card.billingAddress.addressLine1);
   }, [formData.paymentProcessing.card.BillingSameAddressAsMailing, formData.mailingRegistrationAddress]); 
   
+  // USE EFFECT TO FETCH LICENSES WHEN PAYMENT IS SUCCESSFUL
+  useEffect(() => {
+  console.log("USE EFFECT referenceNumber", referenceNumber);
+  console.log("USE EFFECT orderstatus", order?.status);
+
+  const fetchLicensesWithRetry = async (retries = 0, maxRetries = 5) => {
+    if (retries >= maxRetries) {
+      setLicensesReqError(new Error('License not ready after multiple attempts'));
+      setLicensesReqLoading(false);
+      return;
+    }
+
+    if (!orderComplete || !order || !paymentProcessed) return;
+    if (!order.reference_number) return;
+
+    try {
+      const purchasedLicenses = await orderApi.getLicenseByReferenceNumber(referenceNumber);
+      // this returns the following object to deconstruct for OrderConfirmation:
+      // {
+      //   "order_reference_number": str(order.reference_number),
+      //   "status": order.status,
+      //   "licenses": licenses
+      // }
+      setLicenseFiles(purchasedLicenses);
+      setLicensesReqLoading(false);
+      setLicensesReqError(null);
+      console.log("YESS ALL WORKED OUT", purchasedLicenses);
+    } catch (error) {
+      
+      // If backend says "not ready", retry with exponential backoff
+      if (error.response?.status === 403 || error.response?.status === 404 || error.response?.data?.status === 'pending') {
+        const delay = Math.min(1000 * Math.pow(2, retries), 10000); // 1s, 2s, 4s, 8s, max 10s
+        setTimeout(() => fetchLicensesWithRetry(retries + 1, maxRetries), delay);
+      } else {
+        setLicensesReqError(error);
+        setLicensesReqLoading(false);
+      }
+    }
+  };
+
+  // Start the retry process
+  fetchLicensesWithRetry();
+}, [paymentProcessed, referenceNumber, orderComplete, order?.reference_number]);
+  
   // Validate form data
   const validateForm = () => {
     const newErrors = {};
@@ -273,7 +320,7 @@ const Checkout = () => {
       newErrors.paymentMethod = 'Please select a payment method';
     }
     
-    if (formData.paymentProcessing.card.paymentMethod === 'creditCard') {
+    if (formData.paymentProcessing.card.paymentMethod === 'stripe') {
       if (!formData.paymentProcessing.card.cardNumber || !/^[0-9]{16}$/.test(formData.paymentProcessing.card.cardNumber.replace(/\s/g, ''))) {
         newErrors.cardNumber = 'Valid card number is required';
       }
@@ -423,7 +470,7 @@ const Checkout = () => {
         const paymentIntentResponse = await paymentApi.paymentIntent({
         order_id: orderData.order_id,
         currency: "usd",
-        provider: paymentMethod==='creditCard' ? 'stripe' : 'paypal',
+        provider: paymentMethod==='stripe' ? 'stripe' : 'paypal',
       }, {
         headers: {
           'Idempotency-Key': `PAY-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
@@ -433,7 +480,7 @@ const Checkout = () => {
       // ***END OF PAYMENT INTENT RESPONSE***
 
       // ***NOW EXTRACTING SERVER CLIENT SECRET 
-      if (paymentMethod === 'creditCard') {
+      if (paymentMethod === 'stripe') {
         // For Stripe: store client_secret and move to payment phase
         setClientSecret(paymentIntentResponse.client_secret);
         setCheckoutPhase('payment');
@@ -508,6 +555,7 @@ const Checkout = () => {
     // Backend returns: { status, order_id, reference_number }
       if (result.status === 'success') {
       setPaymentProcessed(true);
+      console.log('Payment processed:', paymentProcessed);
       setOrderComplete(true);
       setCheckoutPhase('complete');
       clearCart();
@@ -524,11 +572,21 @@ const Checkout = () => {
 
       // If order is complete, show confirmation ***ADD MORE DATA TO IT INCLUDING DOWNLOAD LINKS***!!!!
   if (orderComplete && order && paymentProcessed) {
-    const payment = {
-      amount: order.totalAmount,
-      provider: order.paymentMethod,
+    // retrieve the license by reference number (safer) for the user after payment
+    const paymentData = {
+      amount: order.total_amount,
+      provider: formData.paymentProcessing.card.paymentMethod,
     }
-    return <OrderConfirmation order={order} purchasedItems={orderedItems} payment={payment} email={formData.licenseeContact.email}/>
+
+    // retrieve the license by reference number (safer) for the order confirmationafter payment
+ 
+    return <OrderConfirmation 
+    order={order} 
+    purchasedItems={orderedItems} 
+    payment={paymentData} 
+    licenses={{licenseFiles:licenseFiles?.licenses, licensesReqError:licensesReqError, licensesReqLoading:licensesReqLoading}} 
+    email={formData.licenseeContact.email} 
+    />;
   };
   
   // ******Test data for quick form filling during development
@@ -586,7 +644,7 @@ const Checkout = () => {
           zipCode: '12345',
           country: 'US',
         },
-        paymentMethod: 'creditCard',
+        paymentMethod: 'stripe',
         cardNumber: '4111 1111 1111 1111',
         expiryDate: '12/25',
         cvv: '123',

@@ -38,8 +38,8 @@
   /* Added for top-left frame accent */
   width: 20px; /* Adjusted size */
   height: 20px; /* Adjusted size */
-  border-top: 2px solid rgba(196, 18, 48, 0.8); /* Crimson */
-  border-left: 2px solid rgba(196, 18, 48, 0.8);
+  /* border-top: 2px solid rgba(196, 18, 48, 0.8); Crimson */
+  /* border-left: 2px solid rgba(196, 18, 48, 0.8); */
   border-top-left-radius: 8px;
   /* Ensure only top-left corner has these border properties */
   border-right: none;
@@ -58,8 +58,8 @@
   z-index: 1; /* Ensure it's above the background but potentially below other content if needed */
   bottom: 0;
   right: 0;
-  border-bottom: 2px solid rgba(15, 60, 120, 0.8); /* Blue */
-  border-right: 2px solid rgba(15, 60, 120, 0.8);
+  /* border-bottom: 2px solid rgba(15, 60, 120, 0.8); /* Blue */
+  /* border-right: 2px solid rgba(15, 60, 120, 0.8); */
   border-bottom-right-radius: 8px;
 }
   /* gemini */

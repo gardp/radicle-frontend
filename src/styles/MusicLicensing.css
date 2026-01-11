@@ -1,16 +1,55 @@
 .licensing-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--haiti-dark) 0%, rgba(26, 26, 26, 0.95) 100%);
+  /* Remove the background gradient to let App.css background show through */
 }
 
-/* Banner Styles */
-.licensing-banner {
-  width: 100%;
-  height: 60vh;
-  min-height: 400px;
+/* Unified Frame Container */
+.licensing-unified-frame {
+  max-width: 1400px;
+  margin: 100px auto 3rem; /* Add 80px top margin for navbar clearance */
+  padding: 30px;
+  border-radius: 15px;
+  background: rgba(26, 26, 26, 0.2); /* More transparent to show background */
+  border: 5px solid rgba(230, 181, 76, 50); /* Thick, more opaque gold border */
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 3px rgba(230, 181, 76, 0.15);
   position: relative;
   overflow: hidden;
-  margin-bottom: 2rem;
+}
+
+/* Frame corner accents */
+.licensing-unified-frame::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 25px;
+  height: 25px;
+  border-top-left-radius: 10px;
+  z-index: 1;
+}
+
+.licensing-unified-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  width: 25px;
+  height: 25px;
+  border-bottom-right-radius: 10px;
+  z-index: 1;
+}
+
+/* Banner Styles - Updated for unified frame */
+.licensing-banner {
+  width: 100%;
+  height: 280px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  margin-top: 0; /* Remove top margin since frame handles spacing */
 }
 
 .banner-background {
@@ -45,6 +84,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  padding-top: 20px; /* Shift text down */
 }
 
 .banner-content {
@@ -59,9 +99,9 @@
 }
 
 .banner-title {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   background: linear-gradient(45deg, var(--haiti-gold), var(--white));
   -webkit-background-clip: text;
@@ -80,13 +120,13 @@
 
 /* Content Area */
 .licensing-content {
-  padding: 2rem 0 4rem 0;
+  padding: 0;
   max-width: 1400px;
 }
 
 .licensing-music-container {
   justify-content: center;
-  margin-bottom: 2rem;
+  margin: 0;
 }
 
 /* Loading and Error States */
@@ -104,13 +144,17 @@
 
 /* Responsive Design */
 @media (max-width: 1199.98px) {
+  .licensing-unified-frame {
+    padding: 25px;
+    margin: 80px auto 2rem; /* Maintain navbar clearance */
+  }
+  
   .licensing-banner {
-    height: 50vh;
-    min-height: 350px;
+    height: 260px;
   }
   
   .banner-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
   
   .banner-subtitle {
@@ -119,13 +163,17 @@
 }
 
 @media (max-width: 991.98px) {
+  .licensing-unified-frame {
+    padding: 20px;
+    margin: 80px auto 2rem; /* Maintain navbar clearance */
+  }
+  
   .licensing-banner {
-    height: 45vh;
-    min-height: 300px;
+    height: 240px;
   }
   
   .banner-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
   }
   
   .banner-subtitle {
@@ -134,14 +182,17 @@
 }
 
 @media (max-width: 767.98px) {
+  .licensing-unified-frame {
+    padding: 15px;
+    margin: 70px auto 1.5rem; /* Reduce navbar clearance for mobile */
+  }
+  
   .licensing-banner {
-    height: 40vh;
-    min-height: 280px;
-    margin-bottom: 1rem;
+    height: 220px;
   }
   
   .banner-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   
   .banner-subtitle {
@@ -150,22 +201,58 @@
   }
   
   .licensing-content {
-    padding: 1rem 0 2rem 0;
+    padding: 0;
+  }
+  
+  .banner-overlay {
+    padding-top: 15px;
+  }
+  
+  /* Reduce frame accent size on mobile */
+  .licensing-unified-frame::before,
+  .licensing-unified-frame::after {
+    width: 20px;
+    height: 20px;
+    top: 10px;
+    left: 10px;
+  }
+  
+  .licensing-unified-frame::after {
+    top: auto;
+    bottom: 10px;
+    left: auto;
+    right: 10px;
   }
 }
 
 @media (max-width: 575.98px) {
+  .licensing-unified-frame {
+    padding: 10px;
+    margin: 60px auto 1rem; /* Further reduce navbar clearance for small mobile */
+  }
+  
   .licensing-banner {
-    height: 35vh;
-    min-height: 250px;
+    height: 200px;
   }
   
   .banner-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
   
   .banner-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+  }
+  
+  .banner-overlay {
+    padding-top: 10px;
+  }
+  
+  /* Further reduce frame accent size on small mobile */
+  .licensing-unified-frame::before,
+  .licensing-unified-frame::after {
+    width: 15px;
+    height: 15px;
+    border-width: 2px;
   }
 }
 
@@ -201,10 +288,17 @@
   }
 }
 
-/* Music Container Integration */
+/* Music Container Integration - Updated for unified frame */
 .licensing-page .music-container {
-  margin-top: 0;
-  margin-bottom: 2rem;
+  margin: 0;
+  border-radius: 0 0 12px 12px;
+  border-top: 1px solid rgba(230, 181, 76, 0.2);
+  box-shadow: none; /* Remove individual shadow since frame provides it */
+}
+
+/* Remove the previous unified container rule since we're using the frame */
+.licensing-page .licensing-banner + .licensing-content .music-container {
+  border-top: 1px solid rgba(230, 181, 76, 0.2);
 }
 
 /* Ensure proper spacing with the existing MusicContainer styles */

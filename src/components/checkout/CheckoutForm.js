@@ -9,7 +9,7 @@ import paypalIcon from '../../assets/images/icons8-paypal-96.png';
 const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSubmitDisabled }) => {
   // Payment method icons
   const paymentIcons = {
-    creditCard: stripeIcon,
+    stripe: stripeIcon,
     paypal: paypalIcon,
   };
   
@@ -39,8 +39,8 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             <label className="email-list-checkbox-container">
               <input
                 type="checkbox"
-                name="licenseeContact.emailListSubscription"
-                checked={formData.licenseeContact.emailListSubscription || true}
+                name="emailListSubscription"
+                checked={formData.emailListSubscription}
                 onChange={onChange}
               />
               <span className="checkbox-text">Add me to the email list for updates on new track releases, licenses, and features</span>
@@ -412,6 +412,15 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                   <option value="FR">France</option>
                   <option value="DE">Germany</option>
                   <option value="JP">Japan</option>
+                  <option value="IN">India</option>
+                  <option value="BR">Brazil</option>
+                  <option value="MX">Mexico</option>
+                  <option value="ZA">South Africa</option>
+                  <option value="NG">Nigeria</option>
+                  <option value="EG">Egypt</option>
+                  <option value="KE">Kenya</option>
+                  <option value="GH">Ghana</option>
+                    
                   {/* Add more countries as needed */}
                 </select>
                 {errors.country && <div className="error-message">{errors.country}</div>}
@@ -423,10 +432,10 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
         {/* Payment Information - stripe or Paypal*/}
           <div className="payment-methods">
             <div 
-              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'creditCard' ? 'selected' : ''}`}
-              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'creditCard' } })}
+              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'stripe' ? 'selected' : ''}`}
+              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'stripe' } })}
             >
-              <img src={paymentIcons.creditCard} alt="Credit Card" />
+              <img src={paymentIcons.stripe} alt="stripe" />
               <span>Stripe</span>
             </div>
             

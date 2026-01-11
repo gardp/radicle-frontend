@@ -1,4 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { libraryApi, trackApi, trackLicenseOptionApi } from '../../api';
 
 // ========================================
@@ -115,6 +116,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                       licenseTypeName: option.license_type.license_type_name,
                       licenseTerm: option.license_type.license_term,
                       licenseTemplate: option.license_type.license_template,
+                      fileFormatName: option.track_storage_file.file_format.name,
                       downloadLimit: option.license_type.download_limit,
                       streamingLimit: option.license_type.streaming_limit,
                       monetizedRadioPlays: option.license_type.monetized_radio_plays,
@@ -238,10 +240,17 @@ export const selectIsLoading = (state) => state.trackLibrary.isLoading;
 export const selectError = (state) => state.trackLibrary.error;
 export const selectLastFetched = (state) => state.trackLibrary.lastFetched;
 
+// Selector to get all tracks from all libraries flattened (memoized)
 // Selector to get all tracks from all libraries flattened
-export const selectAllTracks = (state) => {
-  return state.trackLibrary.libraries.flatMap(library => library.tracks || []);
-};
+// export const selectAllTracks = (state) => {
+//   return state.trackLibrary.libraries.flatMap(library => library.tracks || []);
+// };
+export const selectAllTracks = createSelector(
+  [selectLibraries],
+  (libraries) => {
+    return libraries.flatMap(library => library.tracks || []);
+  }
+);
 
 export default trackLibrarySlice.reducer;
 

@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
+import { contactUsApi } from '../api';
 import '../styles/Contact.css';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const Contact = () => {
+  const [recaptchaToken, setRecaptchaToken] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     socialMediaLink1: '',
     socialMediaLink2: '',
-    services: {
+    servicesRequired: {
       production: false,
       recording: false,
       mixing: false,
       mastering: false,
       other: false
     },
-    otherService: '',
+    servicesRequiredOther: '',
     file: null,
     additionalInfo: ''
   });
@@ -29,8 +32,8 @@ const Contact = () => {
     if (type === 'checkbox') {
       setFormData(prev => ({
         ...prev,
-        services: {
-          ...prev.services,
+        servicesRequired: {
+          ...prev.servicesRequired,
           [name]: checked
         }
       }));
@@ -60,8 +63,12 @@ const Contact = () => {
       newErrors.email = 'Please enter a valid email';
     }
 
-    if (!Object.values(formData.services).some(value => value)) {
-      newErrors.services = 'Please select at least one service';
+    if (!Object.values(formData.servicesRequired).some(value => value)) {
+      newErrors.servicesRequired = 'Please select at least one service';
+    }
+
+    if (!recaptchaToken) {
+      newErrors.recaptcha = 'Please complete the reCAPTCHA';
     }
 
     setErrors(newErrors);
@@ -74,15 +81,16 @@ const Contact = () => {
     if (validateForm()) {
       // Here you would typically send the form data to your backend
       console.log('Form data:', formData);
-      setSuccessMessage('Thank you for your message! We will get back to you soon.');
-      
-      // Reset form
-      setFormData({
+      try {
+        contactUsApi.submit(formData);
+        setSuccessMessage('Thank you for your message! We will get back to you soon.');
+        // Reset form
+        setFormData({
         name: '',
         email: '',
         socialMediaLink1: '',
         socialMediaLink2: '',
-        services: {
+        servicesRequired: {
           production: false,
           recording: false,
           mixing: false,
@@ -93,6 +101,11 @@ const Contact = () => {
         file: null,
         additionalInfo: ''
       });
+      setRecaptchaToken('');
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setSuccessMessage('There was an error submitting your message. Please try again.');
+      }
     }
   };
 
@@ -159,7 +172,7 @@ const Contact = () => {
                   type="checkbox"
                   id="production"
                   name="production"
-                  checked={formData.services.production}
+                  checked={formData.servicesRequired.production}
                   onChange={handleInputChange}
                 />
                 <label htmlFor="production">Production</label>
@@ -169,7 +182,7 @@ const Contact = () => {
                   type="checkbox"
                   id="recording"
                   name="recording"
-                  checked={formData.services.recording}
+                  checked={formData.servicesRequired.recording}
                   onChange={handleInputChange}
                 />
                 <label htmlFor="recording">Recording</label>
@@ -179,7 +192,7 @@ const Contact = () => {
                   type="checkbox"
                   id="mixing"
                   name="mixing"
-                  checked={formData.services.mixing}
+                  checked={formData.servicesRequired.mixing}
                   onChange={handleInputChange}
                 />
                 <label htmlFor="mixing">Mixing</label>
@@ -189,7 +202,7 @@ const Contact = () => {
                   type="checkbox"
                   id="mastering"
                   name="mastering"
-                  checked={formData.services.mastering}
+                  checked={formData.servicesRequired.mastering}
                   onChange={handleInputChange}
                 />
                 <label htmlFor="mastering">Mastering</label>
@@ -199,7 +212,7 @@ const Contact = () => {
                   type="checkbox"
                   id="other"
                   name="other"
-                  checked={formData.services.other}
+                  checked={formData.servicesRequired.other}
                   onChange={handleInputChange}
                 />
                 <label htmlFor="other">Other</label>
@@ -208,7 +221,7 @@ const Contact = () => {
             {errors.services && <div className="error-message">{errors.services}</div>}
           </div>
 
-          {formData.services.other && (
+          {formData.servicesRequiredOther && (
             <div className="form-group">
               <label htmlFor="otherService">Please specify other service</label>
               <input

@@ -4,6 +4,7 @@ import '../styles/AudioPlayer.css';
 import '../styles/MusicContainer.css';
 import React from 'react';
 
+// const MusicContainer = ({ libraries, trackCount, playerTitle, scale = 1 }) => {
 const MusicContainer = ({ libraries, trackCount, playerTitle, scale = 1, onTrackChange }) => {
   // Props for customization have been simplified
   // console.log("MusicContainer received library", libraries); // Debug log
