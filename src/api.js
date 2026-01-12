@@ -303,15 +303,29 @@ export const newsletterApi = {
 };
 
 //Contact Us endpoint for the Contact us form
-export const contactUsApi = {
-  submit: (data) => api.post('/contact-us/', data)
-    .then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      console.error('Failed to submit contact form:', error);
-      throw error;
-    }),
+// export const contactUsApi = {
+//   submit: (data) => api.post('/contact-us/', data)
+//     .then(response => {
+//       return response.data;
+//     })
+//     .catch(error => {
+//       console.error('Failed to submit contact form:', error);
+//       throw error;
+//     }),
+// };
+
+export const contactApi = {
+  submit: (data) => {
+    const config = data instanceof FormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+    return api.post('/contact-us/', data, config)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.error('Failed to submit contact form:', error);
+        throw error;
+      });
+  }
 };
 
 

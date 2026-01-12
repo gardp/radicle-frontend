@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { contactUsApi } from '../api';
+import { contactApi } from '../api';
 import '../styles/Contact.css';
 import ReCAPTCHA from 'react-google-recaptcha';
+
 
 const Contact = () => {
   const [recaptchaToken, setRecaptchaToken] = useState('');
@@ -75,14 +76,27 @@ const Contact = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
       // Here you would typically send the form data to your backend
       console.log('Form data:', formData);
+      const submissionData = new FormData(); //doing this because of the recaptcha
       try {
-        contactUsApi.submit(formData);
+        submissionData.append('name', formData.name);
+        submissionData.append('email', formData.email);
+        submissionData.append('socialMediaLink1', formData.socialMediaLink1);
+        submissionData.append('socialMediaLink2', formData.socialMediaLink2);
+        submissionData.append('servicesRequired', JSON.stringify(formData.servicesRequired));
+        submissionData.append('servicesRequiredOther', formData.servicesRequiredOther);
+        submissionData.append('recaptchaToken', recaptchaToken);
+        if (formData.file) {
+          submissionData.append('file', formData.file);
+        }
+        submissionData.append('additionalInfo', formData.additionalInfo);
+        const result = await contactApi.submit(submissionData);
+        console.log('Submission result:', result);
         setSuccessMessage('Thank you for your message! We will get back to you soon.');
         // Reset form
         setFormData({
@@ -97,7 +111,7 @@ const Contact = () => {
           mastering: false,
           other: false
         },
-        otherService: '',
+        servicesRequiredOther: '',
         file: null,
         additionalInfo: ''
       });
@@ -114,6 +128,7 @@ const Contact = () => {
       <div className="contact-form-container">
         <h2>Get in Touch</h2>
         <form onSubmit={handleSubmit}>
+          {console.log('Site key:', process.env.REACT_APP_RECAPTCHA_SITE_KEY)}
           <div className="form-group">
             <label htmlFor="name">Name</label>
             <input
@@ -218,7 +233,7 @@ const Contact = () => {
                 <label htmlFor="other">Other</label>
               </div>
             </div>
-            {errors.services && <div className="error-message">{errors.services}</div>}
+            {errors.servicesRequired && <div className="error-message">{errors.servicesRequired}</div>}
           </div>
 
           {formData.servicesRequiredOther && (
@@ -229,7 +244,7 @@ const Contact = () => {
                 id="otherService"
                 name="otherService"
                 className="form-control"
-                value={formData.otherService}
+                value={formData.servicesRequiredOther}
                 onChange={handleInputChange}
               />
             </div>
@@ -262,6 +277,15 @@ const Contact = () => {
               rows="4"
             />
           </div>
+          <div className="form-group">
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} 
+            onChange={(token) => setRecaptchaToken(token)}
+            onExpired={() => setRecaptchaToken('')}
+          />
+          {/* ADD THIS - error display */}
+          {errors.recaptcha && <div className="error-message">{errors.recaptcha}</div>}
+        </div>
 
           <button type="submit" className="submit-btn">
             Send Message
