@@ -16,6 +16,7 @@
     "axios": "^1.10.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "html-react-parser": "^5.2.11",
     "mediaelement": "^7.0.7",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.6",

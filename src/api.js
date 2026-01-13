@@ -317,7 +317,7 @@ export const newsletterApi = {
 export const contactApi = {
   submit: (data) => {
     const config = data instanceof FormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
-    return api.post('/contact-us/', data, config)
+    return api.post('/contact/', data, config)
       .then(response => {
         return response.data;
       })

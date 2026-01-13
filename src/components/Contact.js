@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { contactApi } from '../api';
 import '../styles/Contact.css';
-import ReCAPTCHA from 'react-google-recaptcha';
+// import ReCAPTCHA from 'react-google-recaptcha';
 
 
 const Contact = () => {
@@ -26,6 +26,27 @@ const Contact = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+
+    // Add global callback
+    window.recaptchaCallback = (token) => {
+      setRecaptchaToken(token);
+    };
+
+    document.head.appendChild(script);
+
+    return () => {
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+      delete window.recaptchaCallback;
+    };
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -278,14 +299,14 @@ const Contact = () => {
             />
           </div>
           <div className="form-group">
-          <ReCAPTCHA
-            sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} 
-            onChange={(token) => setRecaptchaToken(token)}
-            onExpired={() => setRecaptchaToken('')}
-          />
-          {/* ADD THIS - error display */}
-          {errors.recaptcha && <div className="error-message">{errors.recaptcha}</div>}
-        </div>
+            <div 
+              className="g-recaptcha" 
+              data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+              data-callback="recaptchaCallback"
+            ></div>
+            {/* ADD THIS - error display */}
+            {errors.recaptcha && <div className="error-message">{errors.recaptcha}</div>}
+          </div>
 
           <button type="submit" className="submit-btn">
             Send Message
