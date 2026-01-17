@@ -37,7 +37,9 @@ const Contact = () => {
     window.recaptchaCallback = (token) => {
       setRecaptchaToken(token);
     };
-
+    window.recaptchaError = () => {
+    setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA failed to load. Please refresh the page.' }));
+  };
     document.head.appendChild(script);
 
     return () => {
@@ -45,6 +47,7 @@ const Contact = () => {
         document.head.removeChild(script);
       }
       delete window.recaptchaCallback;
+      delete window.recaptchaError;
     };
   }, []);
 
@@ -303,6 +306,7 @@ const Contact = () => {
               className="g-recaptcha" 
               data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
               data-callback="recaptchaCallback"
+              data-error-callback="recaptchaError"
             ></div>
             {/* ADD THIS - error display */}
             {errors.recaptcha && <div className="error-message">{errors.recaptcha}</div>}

@@ -14,6 +14,7 @@ import TrackPricingTable from './components/TrackPricingTable';
 import LicenseAgreement from './components/LicenseAgreement';
 import OrderConfirmation from './components/checkout/OrderConfirmation';
 import MusicLicensing from './components/MusicLicensing';
+import NotFound from './components/NotFound';
 
 function App() {
   const dispatch = useDispatch();
@@ -38,8 +39,7 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/licensing" element={<MusicLicensing/>} />
-
-                {/* ADD this <Route path="*" element={<NotFound />} /> */}
+              <Route path="*" element={<NotFound />} />
                 {/* Always start with the most specific routes first then move to the more general ones... */}
                 {/* Add more routes as needed */}
               </Routes>

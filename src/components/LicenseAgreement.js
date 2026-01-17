@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { closeLicenseModal, selectLicenseModalState, selectLicenseModalItem } from '../store/slices/licenseAgreementSlice';
 import { toggleLicenseAgreementAndSaveThunk } from '../store/slices/cartSlice';
 import { selectTrackAndLicense } from '../store/slices/cartSlice';
+import parse from 'html-react-parser';
 import { selectItemById,  } from '../store/slices/cartSlice';
 import '../styles/LicenseAgreement.css';
 import { useLicenseTypes } from '../hooks/useLicense';
@@ -107,11 +108,33 @@ const LicenseAgreement = () => {
     if (error) return "Error loading license agreement with track. Please try again later.";
     const licenseOption = cartItem?.trackLicenseOption?.licenseType;
     if (!cartItem || !licenseOption) return "License template not found for this item.";
+    let template = cartItem.trackLicenseOption.licenseType.licenseTemplate;
 
-    return `
-    ## ${cartItem.title} - ${cartItem.trackLicenseOption.licenseType.licenseTypeName} 
-    ${cartItem.trackLicenseOption.licenseType.licenseTemplate}
-    `;
+  //   template = template.replace(
+  //   /body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }/,
+  //   'body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; background: white; }'
+  // );
+
+     // Replace template variables with actual data
+    template = template.replace(/{{\s*license_type_name\s*\|[^}]*}}/g, licenseOption.licenseTypeName || 'Non-Exclusive Beat Lease Agreement');
+    template = template.replace(/{{\s*track_title\s*\|[^}]*}}/g, cartItem.title || '____________');
+    template = template.replace(/{{\s*licensor_name\s*\|[^}]*}}/g, 'Your Company Name');
+    template = template.replace(/{{\s*licensee_name\s*\|[^}]*}}/g, 'Licensee Name');
+    template = template.replace(/{{\s*price\s*\|[^}]*}}/g, licenseOption.price || '______');
+    template = template.replace(/{{\s*currency\s*\|[^}]*}}/g, '$');
+    template = template.replace(/{{\s*effective_date[^}]*}}/g, new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+  // Handle conditional logic
+    template = template.replace(/{%\s*if\s+video_rights\s*%}.*?{%\s*else\s*%}.*?{%\s*endif\s*%}/g, 
+      licenseOption.videoRights ? 'one (1)' : 'zero (0)');
+    
+    template = template.replace(/{%\s*if\s+monetized_radio_plays\s*%}.*?{%\s*else\s*%}.*?{%\s*endif\s*%}/g, 
+      licenseOption.monetizedRadioPlays ? 'an unlimited number' : 'a limited number');
+    
+    // Remove any remaining template tags
+    template = template.replace(/{{[^}]*}}/g, '____________');
+    template = template.replace(/{%[^%]*%}/g, '');
+    
+    return template;
   };
   
   return (
@@ -126,8 +149,9 @@ const LicenseAgreement = () => {
         
         <div className="license-agreement-content">
           <div className="license-text">
-            <pre>{getLicenseAgreementText()}</pre>
+            {parse(getLicenseAgreementText())}
           </div>
+          {console.log("LICENSE TEMPLATE (final)", getLicenseAgreementText())}
           
           <div className="license-acknowledgment">
             <label className="checkbox-container">
