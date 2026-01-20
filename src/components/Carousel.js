@@ -43,7 +43,7 @@ const CustomCarousel = () => {
 //             >
 //                 <Carousel.Item>
 //                     <img 
-//                         src={process.env.PUBLIC_URL + '/assets/images/carousel-image-option.png'} 
+//                         src={carouselImage1} 
 //                         alt="Music Production" 
 //                         className="carouselImage" 
 //                     />
@@ -54,7 +54,7 @@ const CustomCarousel = () => {
 //                 </Carousel.Item>
 //                 {/* <Carousel.Item>
 //                     <img 
-//                         src={process.env.PUBLIC_URL + '/assets/images/carousel-image-bg.png'} 
+//                         src={carouselImage2} 
 //                         alt="Music Licensing" 
 //                         className="carouselImage" 
 //                     />

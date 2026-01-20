@@ -152,7 +152,7 @@ const Contact = () => {
       <div className="contact-form-container">
         <h2>Get in Touch</h2>
         <form onSubmit={handleSubmit}>
-          {console.log('Site key:', process.env.REACT_APP_RECAPTCHA_SITE_KEY)}
+          {console.log('Site key:', import.meta.env.VITE_RECAPTCHA_SITE_KEY)}
           <div className="form-group">
             <label htmlFor="name">Name</label>
             <input
@@ -304,7 +304,7 @@ const Contact = () => {
           <div className="form-group">
             <div 
               className="g-recaptcha" 
-              data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+              data-sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               data-callback="recaptchaCallback"
               data-error-callback="recaptchaError"
             ></div>

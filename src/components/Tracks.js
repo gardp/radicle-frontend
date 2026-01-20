@@ -3,9 +3,7 @@ import '../styles/Tracks.css';
 import redVinyl from '../assets/images/vinyl-red.png';
 import avatar from '../assets/images/radicleavatar.jpg';
 import babyRadicle from '../assets/images/baby-radicle.png';
-// For files in the public folder, we use process.env.PUBLIC_URL
-const Big = process.env.PUBLIC_URL + '/assets/music/01 Big (feat. Gunna).mp3';
-const Dreams = process.env.PUBLIC_URL + '/assets/music/GardlyRadicle-GardlyRadicle-Bad Dreams Remix.mp3';
+
 
 // License options data with structured information
 const licenseOptions = [
@@ -71,7 +69,7 @@ const tracksData = [
     id: 1,
     title: "Big",
     artist: "Gunna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[0],
@@ -89,7 +87,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[1],
@@ -107,7 +105,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[1],
@@ -125,7 +123,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[1],
@@ -143,7 +141,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[1],
@@ -161,7 +159,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[1],
@@ -179,7 +177,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[1],
@@ -197,7 +195,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     licenseOption: licenseOptions[1],
@@ -215,26 +213,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
-    vinylImage: redVinyl,
-    thumbImage: babyRadicle,
-    image: babyRadicle,
-    licenseOption: licenseOptions[1],
-    links:{
-      streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
-      buyLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
-      // downloadLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c"
-    },
-    color: "#00aeb0",
-    musicType: "Featured",
-    genre: "Rap",
-    bpm: 120,
-  },
-  {
-    id: 2,
-    title: "Bad Dreams",
-    artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     image: babyRadicle,
@@ -253,7 +232,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     image: babyRadicle,
@@ -272,7 +251,7 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     image: babyRadicle,
@@ -291,7 +270,26 @@ const tracksData = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
+    vinylImage: redVinyl,
+    thumbImage: babyRadicle,
+    image: babyRadicle,
+    licenseOption: licenseOptions[1],
+    links:{
+      streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
+      buyLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
+      // downloadLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c"
+    },
+    color: "#00aeb0",
+    musicType: "Featured",
+    genre: "Rap",
+    bpm: 120,
+  },
+  {
+    id: 2,
+    title: "Bad Dreams",
+    artist: "GardlyRadicle",
+    audioSrc: "",
     vinylImage: redVinyl,
     thumbImage: babyRadicle,
     image: babyRadicle,
@@ -315,7 +313,7 @@ const tracksData2 = [
     id: 1,
     title: "Big",
     artist: "Gunna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
@@ -331,7 +329,7 @@ const tracksData2 = [
     id: 2,
     title: "Bad Dreams",
     artist: "GardlyRadicle",
-    audioSrc: Dreams,
+    audioSrc: "",
     vinylImage: redVinyl,  
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
@@ -347,7 +345,7 @@ const tracksData2 = [
     id: 3,
     title: "Bidffgg",   
     artist: "Gudfgfdgnna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
@@ -363,7 +361,7 @@ const tracksData2 = [
     id: 4,
     title: "Bidffgg",
     artist: "Gudfgfdgnna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
@@ -379,7 +377,7 @@ const tracksData2 = [
     id: 5,
     title: "Bidffgg",
     artist: "Gudfgfdgnna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
@@ -396,7 +394,7 @@ const tracksData2 = [
     id: 6,
     title: "Bidffgg",     
     artist: "Gudfgfdgnna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
@@ -412,7 +410,7 @@ const tracksData2 = [
     id: 7,
     title: "Bidffgg",
     artist: "Gudfgfdgnna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",
@@ -428,7 +426,7 @@ const tracksData2 = [
     id: 8,
     title: "Bidffgg",
     artist: "Gudfgfdgnna",
-    audioSrc: Big,
+    audioSrc: "",
     vinylImage: redVinyl,
     links:{
       streamLink: "https://www.youtube.com/watch?v=ZBTb_xJBh5c",

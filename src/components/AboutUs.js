@@ -12,7 +12,7 @@ const AboutUs = () => {
                     <div className="about-content"> 
                         <div className="about-image">
                             <img 
-                                src={process.env.PUBLIC_URL + '/favicon.ico'} 
+                                src={'/favicon.ico'} 
                                 alt="Radicle Favicon"
                             />
                         </div>

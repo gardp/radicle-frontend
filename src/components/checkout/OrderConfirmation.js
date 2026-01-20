@@ -13,7 +13,14 @@ const OrderConfirmation = ({ order, purchasedItems, payment, email, licenses}) =
 
   
   return (
+    
     <div className="order-confirmation">
+      <div className="download-warning-banner">
+        <span className="download-warning-icon">⚠️</span>
+        <div className="download-warning-text">
+          <strong>Important:</strong> Download your bundle now! Do not close or refresh this window before downloading.
+        </div>
+      </div>
       <div className="confirmation-icon">✓</div>
       <h1 className="confirmation-title">Order Confirmed!</h1>
       <p className="confirmation-message">
@@ -86,49 +93,22 @@ const OrderConfirmation = ({ order, purchasedItems, payment, email, licenses}) =
                       <span className="download-meta-value">{lic.track_description || '—'}</span>
                     </div>
                   </div>
-              
                   <div className="download-actions">
-                    {lic.bundle_download_url ? (
-                      <a
-                        href={lic.bundle_download_url}
-                        className="download-button"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Download Bundle (ZIP)
-                      </a>
-                    ) : null}
-
-                    {lic.track_download_url ? (
-                      <a
-                        href={lic.track_download_url}
-                        className="download-button"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Download Track
-                      </a>
-                    ) : (
-                      <button className="download-button disabled" disabled>
-                        Track not available
-                      </button>
-                    )}
-
-                    {lic.license_download_url ? (
-                      <a
-                        href={lic.license_download_url}
-                        className="download-button secondary"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Download License (PDF)
-                      </a>
-                    ) : (
-                      <button className="download-button secondary disabled" disabled>
-                        License not available
-                      </button>
-                    )}
-                  </div>
+                  {lic.zip_download_url ? (
+                    <a
+                      href={lic.zip_download_url}
+                      className="download-button"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Download ZIP Bundle (Track + License)
+                    </a>
+                  ) : (
+                    <button className="download-button disabled" disabled>
+                      Bundle not available
+                    </button>
+                  )}
+                </div>
                 </div>
               ))
             )}

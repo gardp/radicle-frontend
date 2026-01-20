@@ -6,7 +6,6 @@ import {
   clearCartAndStorageThunk,
   loadCartFromStorageThunk,
   addTrackToCartAndSaveThunk,
-  selectIsTrackLicenseInCart,
 } from '../store/slices/cartSlice';
 
 const useCart = () => {

@@ -27,7 +27,7 @@ const Media = () => {
         },
         {
             type: 'image',
-            src: process.env.PUBLIC_URL + '/assets/images/sample-image-1.jpg',
+            src: '/assets/images/sample-image-1.jpg',
             title: 'Studio Session',
             description: 'Behind the scenes at the studio'
         },
@@ -39,7 +39,7 @@ const Media = () => {
         },
         {
             type: 'image',
-            src: process.env.PUBLIC_URL + '/assets/images/sample-image-2.jpg',
+            src: '/assets/images/sample-image-2.jpg',
             title: 'Album Cover',
             description: 'New album dropping soon'
         },
@@ -51,7 +51,7 @@ const Media = () => {
         },
         {
             type: 'video',
-            src: process.env.PUBLIC_URL + '/assets/videos/sample-video.mp4',
+            src: '/assets/videos/sample-video.mp4',
             title: 'Acoustic Session',
             description: 'Unplugged version of our new single'
         }

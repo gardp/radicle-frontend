@@ -6,7 +6,7 @@ import StripePaymentElement from './StripeCardElement';
 import PayPalButtonElement from './PaypalButtonElement';
 
 // Load Stripe outside component to avoid recreating on every render
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const PaymentWrapper = ({
   paymentMethod,
@@ -33,7 +33,7 @@ const PaymentWrapper = ({
 
   // PayPal options
   const paypalOptions = {
-    'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
+    'client-id': import.meta.env.VITE_PAYPAL_CLIENT_ID,
     currency: 'USD',
     intent: 'capture',
   };
