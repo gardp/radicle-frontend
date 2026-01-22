@@ -186,16 +186,16 @@ const Checkout = () => {
   // make building address the same as shipping or on its own depending on user choice on sameAddressAsShipping checkbox
   useEffect(() => {
     if (formData.paymentProcessing.card.BillingSameAddressAsMailing) {
-      setFormData({
-        ...formData,
+      setFormData(currentFormData => ({
+        ...currentFormData,
         paymentProcessing: {
-          ...formData.paymentProcessing,
+          ...currentFormData.paymentProcessing,
           card: {
-            ...formData.paymentProcessing.card,
-            billingAddress: formData.mailingRegistrationAddress,
+            ...currentFormData.paymentProcessing.card,
+            billingAddress: currentFormData.mailingRegistrationAddress,
           },
         },
-      });
+      }));
     }
     console.log("addressLine1", formData.paymentProcessing.card.billingAddress.addressLine1);
   }, [formData.paymentProcessing.card.BillingSameAddressAsMailing, formData.mailingRegistrationAddress]); 
