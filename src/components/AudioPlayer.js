@@ -41,6 +41,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // Refs
   // const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
   const audioRef = useRef(new Audio(fullAudioUrl));
+  console.log("This is the full audio url", fullAudioUrl)
   const intervalRef = useRef();
   const isReady = useRef(false);
 

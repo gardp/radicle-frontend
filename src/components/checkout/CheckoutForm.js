@@ -27,7 +27,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               id="email"
               name="licenseeContact.email"
               className={`form-control ${errors.email ? 'error' : ''}`}
-              value={formData.licenseeContact.email || 'your@email.com'}
+              value={formData.licenseeContact.email}
               onChange={onChange}
               placeholder="your@email.com"
               required
@@ -55,7 +55,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="firstName"
                 name="licenseeContact.firstName"
                 className={`form-control ${errors.firstName ? 'error' : ''}`}
-                value={formData.licenseeContact.firstName || 'John'}
+                value={formData.licenseeContact.firstName}
                 onChange={onChange}
                 placeholder="John"
                 required
@@ -70,7 +70,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="lastName"
                 name="licenseeContact.lastName"
                 className={`form-control ${errors.lastName ? 'error' : ''}`}
-                value={formData.licenseeContact.lastName || 'Doe'}
+                value={formData.licenseeContact.lastName}
                 onChange={onChange}
                 placeholder="Doe"
                 required
@@ -87,7 +87,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="sudoName"
                 name="licenseeContact.sudoName"
                 className="form-control"
-                value={formData.licenseeContact.sudoName || ''}
+                value={formData.licenseeContact.sudoName}
                 onChange={onChange}
                 placeholder="Your artist name"
               />
@@ -100,7 +100,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="companyName"
                 name="licenseeContact.companyName"
                 className="form-control"
-                value={formData.licenseeContact.companyName || ''}
+                value={formData.licenseeContact.companyName}
                 onChange={onChange}
                 placeholder="Your company or label"
               />
@@ -114,7 +114,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               id="phoneNumber"
               name="licenseeContact.phoneNumber"
               className="form-control"
-              value={formData.licenseeContact.phoneNumber || ''}
+              value={formData.licenseeContact.phoneNumber}
               onChange={onChange}
               placeholder="+1 (555) 123-4567"
             />
@@ -133,7 +133,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                   id="proAffiliation"
                   name="musicProfessional.proAffiliation"
                   className="form-control"
-                  value={formData.musicProfessional?.proAffiliation || ''}
+                  value={formData.musicProfessional?.proAffiliation}
                   onChange={onChange}
                   placeholder="e.g., ASCAP, BMI, SESAC"
                 />
@@ -146,7 +146,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                   id="ipiNumber"
                   name="musicProfessional.ipiNumber"
                   className="form-control"
-                  value={formData.musicProfessional?.ipiNumber || ''}
+                  value={formData.musicProfessional?.ipiNumber}
                   onChange={onChange}
                   placeholder="Your IPI/CAE number"
                 />
@@ -160,7 +160,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="refCode"
                 name="musicProfessional.refCode"
                 className="form-control"
-                value={formData.musicProfessional?.refCode || ''}
+                value={formData.musicProfessional?.refCode}
                 onChange={onChange}
                 placeholder="Enter referral code if you have one"
               />
@@ -173,7 +173,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="snsLink1"
                 name="musicProfessional.snsLink1"
                 className="form-control"
-                value={formData.musicProfessional?.snsLink1 || ''}
+                value={formData.musicProfessional?.snsLink1}
                 onChange={onChange}
                 placeholder="https://instagram.com/yourprofile"
               />
@@ -186,7 +186,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="snsLink2"
                 name="musicProfessional.snsLink2"
                 className="form-control"
-                value={formData.musicProfessional?.snsLink2 || ''}
+                value={formData.musicProfessional?.snsLink2}
                 onChange={onChange}
                 placeholder="https://soundcloud.com/yourprofile"
               />
@@ -205,7 +205,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               id="address"
               name="mailingRegistrationAddress.addressLine1"
               className={`form-control ${errors.addressLine1 ? 'error' : ''}`}
-              value={formData.mailingRegistrationAddress.addressLine1 || '123 Main St'}
+              value={formData.mailingRegistrationAddress.addressLine1}
               onChange={onChange}
               placeholder="123 Main St"
               required
@@ -220,7 +220,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               id="address_line_2"
               name="mailingRegistrationAddress.addressLine2"
               className={`form-control`}
-              value={formData.mailingRegistrationAddress.addressLine2 || '123 Main St'}
+              value={formData.mailingRegistrationAddress.addressLine2}
               onChange={onChange}
               placeholder="123 Main St"
             />
@@ -234,7 +234,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="city"
                 name="mailingRegistrationAddress.city"
                 className={`form-control ${errors.city ? 'error' : ''}`}
-                value={formData.mailingRegistrationAddress.city || 'New York'}
+                value={formData.mailingRegistrationAddress.city}
                 onChange={onChange}
                 placeholder="New York"
                 required
@@ -249,7 +249,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="state"
                 name="mailingRegistrationAddress.state"
                 className={`form-control ${errors.state ? 'error' : ''}`}
-                value={formData.mailingRegistrationAddress.state || 'NY'}
+                value={formData.mailingRegistrationAddress.state}
                 onChange={onChange}
                 placeholder="NY"
                 required
@@ -266,7 +266,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="zipCode"
                 name="mailingRegistrationAddress.zipCode"
                 className={`form-control ${errors.zipCode ? 'error' : ''}`}
-                value={formData.mailingRegistrationAddress.zipCode || '10001'}
+                value={formData.mailingRegistrationAddress.zipCode}
                 onChange={onChange}
                 placeholder="10001"
                 required
@@ -280,7 +280,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 id="country"
                 name="mailingRegistrationAddress.country"
                 className={`form-control ${errors.country ? 'error' : ''}`}
-                value={formData.mailingRegistrationAddress.country || 'US'}
+                value={formData.mailingRegistrationAddress.country}
                 onChange={onChange}
                 required
               >
