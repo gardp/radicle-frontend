@@ -734,7 +734,6 @@ const Checkout = () => {
                 onPayPalCreateOrder={handlePayPalCreateOrder}
                 onPayPalApprove={handlePayPalApprove}
                 disabled={isProcessing}
-                billingDetails={billingDetails}
               />
               
               <button
