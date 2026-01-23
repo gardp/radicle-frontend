@@ -21,7 +21,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
           <h3 className="form-section-title">Licensee Contact Information</h3>
           
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label htmlFor="email">Email Address *</label>
             <input
               type="email"
               id="email"
@@ -49,7 +49,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
           
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="firstName">First Name</label>
+              <label htmlFor="firstName">First Name *</label>
               <input
                 type="text"
                 id="firstName"
@@ -64,7 +64,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             </div>
             
             <div className="form-group">
-              <label htmlFor="lastName">Last Name</label>
+              <label htmlFor="lastName">Last Name *</label>
               <input
                 type="text"
                 id="lastName"
@@ -154,7 +154,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             </div>
 
             <div className="form-group">
-              <label htmlFor="refCode">Referral Code</label>
+              <label htmlFor="refCode">Reference Code (ex: ISNI)</label>
               <input
                 type="text"
                 id="refCode"
@@ -162,7 +162,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 className="form-control"
                 value={formData.musicProfessional?.refCode}
                 onChange={onChange}
-                placeholder="Enter referral code if you have one"
+                placeholder="Enter reference code if you have one"
               />
             </div>
 
@@ -199,7 +199,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
           <h3 className="form-section-title">Mailing-Registration Address</h3>
           
           <div className="form-group">
-            <label htmlFor="address">Street Address</label>
+            <label htmlFor="address">Street Address *</label>
             <input
               type="text"
               id="address"
@@ -228,7 +228,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="city">City</label>
+              <label htmlFor="city">City *</label>
               <input
                 type="text"
                 id="city"
@@ -243,7 +243,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             </div>
             
             <div className="form-group">
-              <label htmlFor="state">State/Province</label>
+              <label htmlFor="state">State/Province *</label>
               <input
                 type="text"
                 id="state"
@@ -260,7 +260,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
           
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="zipCode">Zip/Postal Code</label>
+              <label htmlFor="zipCode">Zip/Postal Code *</label>
               <input
                 type="text"
                 id="zipCode"
@@ -275,7 +275,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             </div>
             
             <div className="form-group">
-              <label htmlFor="country">Country</label>
+              <label htmlFor="country">Country *</label>
               <select
                 id="country"
                 name="mailingRegistrationAddress.country"
@@ -285,13 +285,21 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 required
               >
                 <option value="">Select a country</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="GB">United Kingdom</option>
-                <option value="AU">Australia</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
-                <option value="JP">Japan</option>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="AU">Australia</option>
+                  <option value="FR">France</option>
+                  <option value="DE">Germany</option>
+                  <option value="JP">Japan</option>
+                  <option value="IN">India</option>
+                  <option value="BR">Brazil</option>
+                  <option value="MX">Mexico</option>
+                  <option value="ZA">South Africa</option>
+                  <option value="NG">Nigeria</option>
+                  <option value="EG">Egypt</option>
+                  <option value="KE">Kenya</option>
+                  <option value="GH">Ghana</option>
                 {/* Add more countries as needed */}
               </select>
               {errors.country && <div className="error-message">{errors.country}</div>}
@@ -300,7 +308,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
         </div>
           <br />
           
-          <div className="form-group">
+          {/* <div className="form-group">
             <label className="checkbox-container">
               <input
                 type="checkbox"
@@ -310,16 +318,16 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               />
               <span>Same Address as mailing address</span>
             </label>
-          </div>
+          </div> */}
           
 
         {/* billing Address */}
-        {!formData.paymentProcessing.card.BillingSameAddressAsMailing && (
+        {/* {!formData.paymentProcessing.card.BillingSameAddressAsMailing && (
           <div className="checkout-form-section">
             <h3 className="form-section-title">Billing Address</h3>
             
             <div className="form-group">
-              <label htmlFor="address">Street Address</label>
+              <label htmlFor="address">Street Address *</label>
               <input
                 type="text"
                 id="address"
@@ -348,7 +356,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="city">City</label>
+                <label htmlFor="city">City *</label>
                 <input
                   type="text"
                   id="city"
@@ -363,7 +371,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               </div>
               
               <div className="form-group">
-                <label htmlFor="state">State/Province</label>
+                <label htmlFor="state">State/Province *</label>
                 <input
                   type="text"
                   id="state"
@@ -380,7 +388,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="zipCode">Zip/Postal Code</label>
+                <label htmlFor="zipCode">Zip/Postal Code *</label>
                 <input
                   type="text"
                   id="zipCode"
@@ -395,7 +403,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               </div>
               
               <div className="form-group">
-                <label htmlFor="country">Country</label>
+                <label htmlFor="country">Country *</label>
                 <select
                   id="country"
                   name="paymentProcessing.card.billingAddress.country"
@@ -422,12 +430,12 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                   <option value="GH">Ghana</option>
                     
                   {/* Add more countries as needed */}
-                </select>
+                {/* </select>
                 {errors.country && <div className="error-message">{errors.country}</div>}
               </div>
             </div>
           </div>
-        )}
+        )} */} 
         
         {/* Payment Information - stripe or Paypal*/}
           <div className="payment-methods">

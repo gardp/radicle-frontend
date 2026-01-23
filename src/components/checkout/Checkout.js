@@ -45,32 +45,8 @@ const Checkout = () => {
       snsLink1: '',
       snsLink2: '',
     },
-    buyerContact:{
-      contactType: 'INDIVIDUAL',
-      email: '',
-      firstName: '',
-      lastName: '',
-      sudoName: '',
-      companyName: '',
-      phoneNumber: '',
-    },
     paymentProcessing:{
       card:{
-        contact:{
-          firstNameOnCard: '',
-          lastNameOnCard: '',
-          email: '',
-        },
-        BillingSameAddressAsMailing: true,
-        billingAddress:{
-          addressType: 'BILLING',
-          addressLine1: '',
-          addressLine2: '',
-          city: '',
-          stateProvince: '',
-          postalCode: '',
-          country: '',
-        },
         paymentMethod: 'stripe',
         cardNumber: '',
         expiryDate: '',
@@ -80,6 +56,30 @@ const Checkout = () => {
         paymentMethod: 'paypal',
         // PayPal specific fields
       },
+    // buyerContact:{
+    //   contactType: 'INDIVIDUAL',
+    //   email: '',
+    //   firstName: '',
+    //   lastName: '',
+    //   sudoName: '',
+    //   companyName: '',
+    //   phoneNumber: '',
+    // },
+    //     contact:{
+    //       firstNameOnCard: '',
+    //       lastNameOnCard: '',
+    //       email: '',
+    //     },
+    //     BillingSameAddressAsMailing: true,
+    //     billingAddress:{
+    //       addressType: 'BILLING',
+    //       addressLine1: '',
+    //       addressLine2: '',
+    //       city: '',
+    //       stateProvince: '',
+    //       postalCode: '',
+    //       country: '',
+    //     },  
     },
   });
   
@@ -142,9 +142,9 @@ const Checkout = () => {
     // Check if the "Same Address as shipping" checkbox is checked
     // Check if the field being changed is part of the billing address
     // Completely ignore the change attempt if both conditions are true
-    if (formData.paymentProcessing.card.BillingSameAddressAsMailing && name.startsWith('paymentProcessing.card.billingAddress')) {
-      return;
-    }
+    // if (formData.paymentProcessing.card.BillingSameAddressAsMailing && name.startsWith('paymentProcessing.card.billingAddress')) {
+    //   return;
+    // }
     
     // spread error to extract name and Clear error when field is edited. 
     // Clear any validation error for this field
@@ -184,21 +184,21 @@ const Checkout = () => {
   };
   
   // make building address the same as shipping or on its own depending on user choice on sameAddressAsShipping checkbox
-  useEffect(() => {
-    if (formData.paymentProcessing.card.BillingSameAddressAsMailing) {
-      setFormData(currentFormData => ({
-        ...currentFormData,
-        paymentProcessing: {
-          ...currentFormData.paymentProcessing,
-          card: {
-            ...currentFormData.paymentProcessing.card,
-            billingAddress: currentFormData.mailingRegistrationAddress,
-          },
-        },
-      }));
-    }
-    console.log("addressLine1", formData.paymentProcessing.card.billingAddress.addressLine1);
-  }, [formData.paymentProcessing.card.BillingSameAddressAsMailing, formData.mailingRegistrationAddress]); 
+  // useEffect(() => {
+  //   if (formData.paymentProcessing.card.BillingSameAddressAsMailing) {
+  //     setFormData(currentFormData => ({
+  //       ...currentFormData,
+  //       paymentProcessing: {
+  //         ...currentFormData.paymentProcessing,
+  //         card: {
+  //           ...currentFormData.paymentProcessing.card,
+  //           billingAddress: currentFormData.mailingRegistrationAddress,
+  //         },
+  //       },
+  //     }));
+  //   }
+  //   console.log("addressLine1", formData.paymentProcessing.card.billingAddress.addressLine1);
+  // }, [formData.paymentProcessing.card.BillingSameAddressAsMailing, formData.mailingRegistrationAddress]); 
   
   // USE EFFECT TO FETCH LICENSES WHEN PAYMENT IS SUCCESSFUL
   useEffect(() => {
@@ -290,53 +290,51 @@ const Checkout = () => {
     }
 
     // Billing Address validation
-    if (!formData.paymentProcessing.card.billingAddress.addressLine1 || formData.paymentProcessing.card.billingAddress.addressLine1.length < 5) {
-      newErrors.addressLine1 = 'Valid street address is required';
-    }
+    // if (!formData.paymentProcessing.card.billingAddress.addressLine1 || formData.paymentProcessing.card.billingAddress.addressLine1.length < 5) {
+    //   newErrors.addressLine1 = 'Valid street address is required';
+    // }
     
-    if (!formData.paymentProcessing.card.billingAddress.city) {
-      newErrors.city = 'City is required';
-    }
+    // if (!formData.paymentProcessing.card.billingAddress.city) {
+    //   newErrors.city = 'City is required';
+    // }
     
-    if (!formData.paymentProcessing.card.billingAddress.state) {
-      newErrors.state = 'State/Province is required';
-    }
+    // if (!formData.paymentProcessing.card.billingAddress.state) {
+    //   newErrors.state = 'State/Province is required';
+    // }
     
-    if (!formData.paymentProcessing.card.billingAddress.zipCode || !/^[0-9]{5}(-[0-9]{4})?$/.test(formData.paymentProcessing.card.billingAddress.zipCode)) {
-      newErrors.zipCode = 'Valid zip code is required (e.g., 12345 or 12345-6789)';
-    }
+    // if (!formData.paymentProcessing.card.billingAddress.zipCode || !/^[0-9]{5}(-[0-9]{4})?$/.test(formData.paymentProcessing.card.billingAddress.zipCode)) {
+    //   newErrors.zipCode = 'Valid zip code is required (e.g., 12345 or 12345-6789)';
+    // }
     
-    if (!formData.paymentProcessing.card.billingAddress.country) {
-      newErrors.country = 'Country is required';
-    }
+    // if (!formData.paymentProcessing.card.billingAddress.country) {
+    //   newErrors.country = 'Country is required';
+    // }
     
-    // Payment validation- to uncomment
-    if (!formData.paymentProcessing.card.paymentMethod) {
-      newErrors.paymentMethod = 'Please select a payment method';
-    }
+    // // Payment validation- to uncomment
+    // if (!formData.paymentProcessing.card.paymentMethod) {
+    //   newErrors.paymentMethod = 'Please select a payment method';
+    // }
     
-    if (formData.paymentProcessing.card.paymentMethod === 'stripe') {
-      if (!formData.paymentProcessing.card.cardNumber || !/^[0-9]{16}$/.test(formData.paymentProcessing.card.cardNumber.replace(/\s/g, ''))) {
-        newErrors.cardNumber = 'Valid card number is required';
-      }
+    // if (formData.paymentProcessing.card.paymentMethod === 'stripe') {
+    //   if (!formData.paymentProcessing.card.cardNumber || !/^[0-9]{16}$/.test(formData.paymentProcessing.card.cardNumber.replace(/\s/g, ''))) {
+    //     newErrors.cardNumber = 'Valid card number is required';
+    //   }
       
-      if (!formData.paymentProcessing.card.expiryDate || !/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(formData.paymentProcessing.card.expiryDate)) {
-        newErrors.expiryDate = 'Valid expiry date is required (MM/YY)';
-      }
+    //   if (!formData.paymentProcessing.card.expiryDate || !/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(formData.paymentProcessing.card.expiryDate)) {
+    //     newErrors.expiryDate = 'Valid expiry date is required (MM/YY)';
+    //   }
       
-      if (!formData.paymentProcessing.card.cvv || !/^[0-9]{3,4}$/.test(formData.paymentProcessing.card.cvv)) {
-        newErrors.cvv = 'Valid CVV is required';
-      }
+    //   if (!formData.paymentProcessing.card.cvv || !/^[0-9]{3,4}$/.test(formData.paymentProcessing.card.cvv)) {
+    //     newErrors.cvv = 'Valid CVV is required';
+    //   }
 
-      if (!formData.paymentProcessing.card.contact.firstNameOnCard) {
-        newErrors.firstNameOnCard = 'First name on card is required';
-      } 
+    //   if (!formData.paymentProcessing.card.contact.firstNameOnCard) {
+    //     newErrors.firstNameOnCard = 'First name on card is required';
+    //   } 
       
-      if (!formData.paymentProcessing.card.contact.lastNameOnCard) {
-        newErrors.lastNameOnCard = 'Last name on card is required';
-      }
-    }
-    
+    //   if (!formData.paymentProcessing.card.contact.lastNameOnCard) {
+    //     newErrors.lastNameOnCard = 'Last name on card is required';
+    //   }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -394,21 +392,21 @@ const Checkout = () => {
           url: [formData.musicProfessional.snsLink1, formData.musicProfessional.snsLink2],
         },
           
-        //***BUYER INFO***//
+        //***BUYER INFO*** as placeholder for payment in case I have to lose something other than stripe//
         buyerContact: {
-          first_name: formData.paymentProcessing.card.contact.firstNameOnCard,
-          last_name: formData.paymentProcessing.card.contact.lastNameOnCard,
-          email: formData.paymentProcessing.card.contact.email,
-          company_name: formData.paymentProcessing.card.contact.companyName,
-          phone_number: formData.paymentProcessing.card.contact.phoneNumber,
+          first_name: formData.licenseeContact.firstName,
+          last_name: formData.licenseeContact.lastName,
+          email: formData.licenseeContact.email,
+          company_name: formData.licenseeContact.companyName,
+          phone_number: formData.licenseeContact.phoneNumber,
         },
         billingAddress: {
-          address_line_1: formData.paymentProcessing.card.billingAddress.addressLine1,
-          address_line_2: formData.paymentProcessing.card.billingAddress.addressLine2,
-          city: formData.paymentProcessing.card.billingAddress.city,
-          state_province: formData.paymentProcessing.card.billingAddress.state,
-          postal_code: formData.paymentProcessing.card.billingAddress.zipCode,
-          country: formData.paymentProcessing.card.billingAddress.country,
+          address_line_1: formData.mailingRegistrationAddress.addressLine1,
+          address_line_2: formData.mailingRegistrationAddress.addressLine2,
+          city: formData.mailingRegistrationAddress.city,
+          state_province: formData.mailingRegistrationAddress.state,
+          postal_code: formData.mailingRegistrationAddress.zipCode,
+          country: formData.mailingRegistrationAddress.country,
         },
         //***ITEMS-TRACKS***//
         items: items.filter(item => item.type === 'track').map(item => ({
@@ -423,8 +421,7 @@ const Checkout = () => {
           payment_method: formData.paymentProcessing.card.paymentMethod,
           currency: "usd",
         }
-      };
-      
+      }
       // Subscribe licensee to newsletter if subscription button is check
       if (formData.emailListSubscription) {
         try {
@@ -613,32 +610,9 @@ const Checkout = () => {
       snsLink1: 'https://www.facebook.com/test',
       snsLink2: 'https://www.instagram.com/test',
     },
-    buyerContact:{
-      buyerType: 'INDIVIDUAL',
-      email: 'gardly.philoctete@gmail.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      sudoName: 'Johnyyy Doe',
-      companyName: 'Test Company',
-      phoneNumber: '123-456-7890',
-    },
+
     paymentProcessing:{
       card:{
-        contact:{
-          firstNameOnCard: 'John',
-          lastNameOnCard: 'Doe',
-          email: 'gardly.philoctete@gmail.com',
-        },
-        BillingSameAddressAsMailing: true,
-        billingAddress:{
-          addressType: 'billing',
-          addressLine1: '123 Test Street',
-          addressLine2: 'Apt 456',
-          city: 'Testville',
-          state: 'TS',
-          zipCode: '12345',
-          country: 'US',
-        },
         paymentMethod: 'stripe',
         cardNumber: '4111 1111 1111 1111',
         expiryDate: '12/25',
@@ -648,22 +622,46 @@ const Checkout = () => {
         paymentMethod: 'paypal',
         // PayPal specific fields
       },
+    // buyerContact:{
+    //   buyerType: 'INDIVIDUAL',
+    //   email: 'gardly.philoctete@gmail.com',
+    //   firstName: 'John',
+    //   lastName: 'Doe',
+    //   sudoName: 'Johnyyy Doe',
+    //   companyName: 'Test Company',
+    //   phoneNumber: '123-456-7890',
+    // },
+        // contact:{
+        //   firstNameOnCard: 'John',
+        //   lastNameOnCard: 'Doe',
+        //   email: 'gardly.philoctete@gmail.com',
+        // },
+        // BillingSameAddressAsMailing: true,
+        // billingAddress:{
+        //   addressType: 'billing',
+        //   addressLine1: '123 Test Street',
+        //   addressLine2: 'Apt 456',
+        //   city: 'Testville',
+        //   state: 'TS',
+        //   zipCode: '12345',
+        //   country: 'US',
+        // },
     },
   };
 
   // Build billingDetails object for Stripe (add this before the return statement in the payment phase)
-const billingDetails = {
-  name: `${formData.paymentProcessing.card.contact.firstNameOnCard} ${formData.paymentProcessing.card.contact.lastNameOnCard}`,
-  email: formData.paymentProcessing.card.contact.email || formData.licenseeContact.email,
-  address: {
-    line1: formData.paymentProcessing.card.billingAddress.addressLine1,
-    line2: formData.paymentProcessing.card.billingAddress.addressLine2 || undefined,
-    city: formData.paymentProcessing.card.billingAddress.city,
-    state: formData.paymentProcessing.card.billingAddress.state,
-    postal_code: formData.paymentProcessing.card.billingAddress.zipCode,
-    country: formData.paymentProcessing.card.billingAddress.country,
-  },
-};
+// const billingDetails = {
+//   name: `${formData.paymentProcessing.card.contact.firstNameOnCard} ${formData.paymentProcessing.card.contact.lastNameOnCard}`,
+//   email: formData.paymentProcessing.card.contact.email || formData.licenseeContact.email,
+//   address: {
+//     line1: formData.paymentProcessing.card.billingAddress.addressLine1,
+//     line2: formData.paymentProcessing.card.billingAddress.addressLine2 || undefined,
+//     city: formData.paymentProcessing.card.billingAddress.city,
+//     state: formData.paymentProcessing.card.billingAddress.state,
+//     postal_code: formData.paymentProcessing.card.billingAddress.zipCode,
+//     country: formData.paymentProcessing.card.billingAddress.country,
+//   },
+// };
 
   // Function to fill form with test data
   const fillTestData = () => {
