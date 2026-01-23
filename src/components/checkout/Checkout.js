@@ -726,7 +726,7 @@ const Checkout = () => {
               <PaymentWrapper
                 paymentMethod={formData.paymentProcessing.card.paymentMethod}
                 clientSecret={clientSecret}
-                orderId={order?.id}
+                orderId={order?.order_id}
                 onPaymentSuccess={handleStripePaymentSuccess}
                 onPaymentError={handlePaymentError}
                 isProcessing={isProcessing}
