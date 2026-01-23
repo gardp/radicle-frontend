@@ -205,7 +205,7 @@ const Checkout = () => {
   console.log("USE EFFECT referenceNumber", referenceNumber);
   console.log("USE EFFECT orderstatus", order?.status);
 
-  const fetchLicensesWithRetry = async (retries = 0, maxRetries = 45) => {
+  const fetchLicensesWithRetry = async (retries = 0, maxRetries = 10) => {
     if (retries >= maxRetries) {
       setLicensesReqError(new Error('License not ready after multiple attempts'));
       setLicensesReqLoading(false);
@@ -216,7 +216,7 @@ const Checkout = () => {
     if (!order.reference_number) return;
 
     try {
-      const purchasedLicenses = await orderApi.getLicenseByReferenceNumber(referenceNumber);
+      const purchasedLicenses = await orderApi.getLicenseByReferenceNumber(referenceNumber); //you don't get the license until order is complete in the backend
       // this returns the following object to deconstruct for OrderConfirmation:
       // {
       //   "order_reference_number": str(order.reference_number),

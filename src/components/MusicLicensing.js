@@ -52,7 +52,7 @@ const MusicLicensing = () => {
                       <h1 className="banner-title">License Your Sound</h1>
                       <p className="banner-subtitle">
                         {currentTrack 
-                          ? `Now Playing: ${currentTrack.trackTitle} - ${currentTrack.trackArtist}`
+                          ? `Now Playing: ${currentTrack.trackTitle} - ${currentTrack.trackArtistFeaturesLine}`
                           : 'Discover and license premium beats for your next project'
                         }
                       </p>
