@@ -44,14 +44,17 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // Refs
   // const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
   // const audioRef = useRef(new Audio(fullAudioUrl));
+  // Refs
+  
   console.log("This is the full audio url", fullAudioUrl)
+  const audioRef = useRef(null);
   const intervalRef = useRef();
   const isReady = useRef(false);
 
   // const currentTrackProgress = audioRef.current.duration
   //   ? `${trackProgress}%`
   //   : "0%";
-  const duration = audioRef.current.duration || 0;
+  const duration = audioRef.current?.duration || 0;
 
   const currentTrackPercent = duration
     ? (trackProgress / duration) * 100  // 0–100
@@ -63,18 +66,19 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   const startTimer = () => { 
     // Clear any timers already running
     clearInterval(intervalRef.current);
+    if(audioRef.current) {
     console.log('timer audio object:', audioRef.current);
     console.log('timer audio src:', audioRef.current.src);
     console.log('timer currentTime', audioRef.current.currentTime);
+    }
     intervalRef.current = setInterval(() => {
-      if (audioRef.current.ended) {
+      if (audioRef.current?.ended) {
         setTrackProgress(audioRef.current.duration); 
         handlePause();
         console.log('Audio currentTime:', audioRef.current.currentTime);
         console.log('Audio duration:', audioRef.current.duration);
         console.log('trackprogress:', trackProgress);
         console.log('currentPercentage:', currentTrackPercent);
-
         // clearInterval(intervalRef.current);
       } else {
         // const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
@@ -91,17 +95,20 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
     console.log('raw value from range:', value, 'type:', typeof value);
     console.log('numericValue:', numericValue, 'isNaN:', Number.isNaN(numericValue));
     // Check if audio duration is ready
-    const duration = audioRef.current.duration;
-    console.log('Audio state', audioRef.current.readyState)
+    const duration = audioRef.current?.duration;
+    console.log('Audio state', audioRef.current?.readyState)
     console.log('Audio duration in onScrub:', duration);
     if (!duration || Number.isNaN(duration)) {
       console.log('Audio duration not ready');
       setTrackProgress(numericValue);
       return;
     }
+    if (audioRef.current) {
     console.log('scrub audio object:', audioRef.current);
     console.log('scrub audio src:', audioRef.current.src);
     console.log('seekable.length:', audioRef.current.seekable.length);
+    }
+    if (audioRef.current?.seekable) {
     for (let i = 0; i < audioRef.current.seekable.length; i++) {
       console.log(
         `seekable[${i}]:`,
@@ -110,49 +117,19 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
         audioRef.current.seekable.end(i)
       );
     }
-
+  }
     try {
+    if (audioRef.current) {
     audioRef.current.currentTime = numericValue;
     console.log('scrub currentTime after assignment', audioRef.current.currentTime);
     const rejectChecker = numericValue;
     console.log('rejectChecker', rejectChecker);
-    // setTimeout(() => {
-    //   audioRef.current.currentTime = numericValue;
-    //   console.log('50ms later currentTime:', audioRef.current.currentTime);
-    // }, 500);
     setTrackProgress(audioRef.current.currentTime);
+    }
     } catch (error) {
       console.error('Error scrubbing audio:', error);
     }
   };
-//   const onScrub = (value) => {
-//   clearInterval(intervalRef.current);
-
-//   if (!audioRef.current.readyState) {
-//     console.log('Audio not ready yet');
-//     return;
-//   }
-
-//   const timeValue = (value * audioRef.current.duration) / 100;
-//   console.log('Input value:', value);
-//   console.log('Audio duration:', audioRef.current.duration);
-
-//   try {
-//     // Set the time directly
-//     audioRef.current.currentTime = timeValue;
-    
-//     // Update progress immediately
-//     const newProgress = (timeValue / audioRef.current.duration) * 100;
-//     setTrackProgress(newProgress);
-    
-//     // Restart timer if playing
-//     if (isPlaying) {
-//       startTimer();
-//     }
-//   } catch (error) {
-//     console.error('Error setting time:', error);
-//   }
-// };
 
   const onScrubEnd = () => {
     const duration = audioRef.current.duration;
@@ -230,7 +207,6 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // Handles cleanup and setup when changing tracks
   // This hook now ONLY loads the new audio source. It does not play it.
   useEffect(() => {
-    const audioRef = useRef(null);
     // Only update if we have a valid track
     if (trackStorageFilePath) {
       audioRef.current.pause();
