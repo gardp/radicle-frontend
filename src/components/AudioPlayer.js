@@ -14,14 +14,14 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   const [trackProgress, setTrackProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   // console.log("Initial render - isPlaying:", isPlaying, "isActive:", isActive);
-  const [currentLibTrackIndex, setCurrentLibTrackIndex] = useState({libraryIndex: 0, trackIndex: 0}); //I don't need to have a separate state for the library index as it is already set in TrackFrame based on the active library.
+  const [currentLibTrackIndex, setCurrentLibTrackIndex] = useState({ libraryIndex: 0, trackIndex: 0 }); //I don't need to have a separate state for the library index as it is already set in TrackFrame based on the active library.
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
   // Filter tracks based on search term in the pertaining library
   const filteredLibraries = libraries.map(lib => ({
     ...lib,
-    tracks: lib.tracks?.filter(track => 
-      track.trackTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    tracks: lib.tracks?.filter(track =>
+      track.trackTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
       track.trackArtist.toLowerCase().includes(searchTerm.toLowerCase()) ||
       track.trackBpm.toLowerCase().includes(searchTerm.toLowerCase()) ||
       track.trackDescription.toLowerCase().includes(searchTerm.toLowerCase())
@@ -36,8 +36,8 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   const currentLibrary = libraries[currentLibTrackIndex.libraryIndex]; //the current library by default
   // console.log('This is the current library', currentLibrary)
   const tracks = currentLibrary?.tracks || [];
-  const currentTrack = tracks[currentLibTrackIndex.trackIndex]; 
-  const { trackTitle, trackArtist, trackStorageFilePath, vinylThumbnail} = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
+  const currentTrack = tracks[currentLibTrackIndex.trackIndex];
+  const { trackTitle, trackArtist, trackStorageFilePath, vinylThumbnail } = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
   // Construct the full, playable URL. The browser automatically adds/resolves the base host url automatically...so don't add in development phase
   const fullAudioUrl = trackStorageFilePath ? `${trackStorageFilePath}` : ''; // extracting the audioFile from currentTrack above
   // const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : '';
@@ -45,7 +45,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
   // const audioRef = useRef(new Audio(fullAudioUrl));
   // Refs
-  
+
   console.log("This is the full audio url", fullAudioUrl)
   const audioRef = useRef(null);
   const intervalRef = useRef();
@@ -59,62 +59,62 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   const currentTrackPercent = duration
     ? (trackProgress / duration) * 100  // 0–100
     : 0;
-    const trackStyling = `
+  const trackStyling = `
       -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentTrackPercent}%, #fff), color-stop(${currentTrackPercent}%, #777))
     `;
 
-  // const startTimer = () => { 
+  const startTimer = () => {
+    // Clear any timers already running
+    clearInterval(intervalRef.current);
+    if (audioRef.current) {
+      console.log('timer audio object:', audioRef.current);
+      console.log('timer audio src:', audioRef.current.src);
+      console.log('timer currentTime', audioRef.current.currentTime);
+    }
+    intervalRef.current = setInterval(() => {
+      if (audioRef.current?.ended) {
+        setTrackProgress(audioRef.current.duration);
+        handlePause();
+        console.log('Audio currentTime:', audioRef.current.currentTime);
+        console.log('Audio duration:', audioRef.current.duration);
+        console.log('trackprogress:', trackProgress);
+        console.log('currentPercentage:', currentTrackPercent);
+        // clearInterval(intervalRef.current);
+      } else if (audioRef.current) {
+        // const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+        setTrackProgress(audioRef.current.currentTime); // Update progress
+      }
+      console.log('timer currentTime', audioRef.current.currentTime);
+    }, 1000);
+  };
+  //   const startTimer = () => { 
   //   // Clear any timers already running
   //   clearInterval(intervalRef.current);
   //   if(audioRef.current) {
-  //   console.log('timer audio object:', audioRef.current);
-  //   console.log('timer audio src:', audioRef.current.src);
-  //   console.log('timer currentTime', audioRef.current.currentTime);
+  //     console.log('timer audio object:', audioRef.current);
+  //     console.log('timer audio src:', audioRef.current.src);
+  //     console.log('timer currentTime', audioRef.current.currentTime);
   //   }
   //   intervalRef.current = setInterval(() => {
   //     if (audioRef.current?.ended) {
-  //       setTrackProgress(audioRef.current.duration); 
+  //       if (audioRef.current) {
+  //         setTrackProgress(audioRef.current.duration); 
+  //         console.log('Audio currentTime:', audioRef.current.currentTime);
+  //         console.log('Audio duration:', audioRef.current.duration);
+  //       }
   //       handlePause();
-  //       console.log('Audio currentTime:', audioRef.current.currentTime);
-  //       console.log('Audio duration:', audioRef.current.duration);
   //       console.log('trackprogress:', trackProgress);
   //       console.log('currentPercentage:', currentTrackPercent);
-  //       // clearInterval(intervalRef.current);
   //     } else {
-  //       // const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-  //       setTrackProgress(audioRef.current.currentTime); // Update progress
+  //       if (audioRef.current) {
+  //         setTrackProgress(audioRef.current.currentTime); // Update progress
+  //       }
   //     }
-  //     console.log('timer currentTime', audioRef.current.currentTime);
+  //     if (audioRef.current) {
+  //       console.log('timer currentTime', audioRef.current.currentTime);
+  //     }
   //   }, 1000);
   // };
-    const startTimer = () => { 
-  // Clear any timers already running
-  clearInterval(intervalRef.current);
-  if(audioRef.current) {
-    console.log('timer audio object:', audioRef.current);
-    console.log('timer audio src:', audioRef.current.src);
-    console.log('timer currentTime', audioRef.current.currentTime);
-  }
-  intervalRef.current = setInterval(() => {
-    if (audioRef.current?.ended) {
-      if (audioRef.current) {
-        setTrackProgress(audioRef.current.duration); 
-        console.log('Audio currentTime:', audioRef.current.currentTime);
-        console.log('Audio duration:', audioRef.current.duration);
-      }
-      handlePause();
-      console.log('trackprogress:', trackProgress);
-      console.log('currentPercentage:', currentTrackPercent);
-    } else {
-      if (audioRef.current) {
-        setTrackProgress(audioRef.current.currentTime); // Update progress
-      }
-    }
-    if (audioRef.current) {
-      console.log('timer currentTime', audioRef.current.currentTime);
-    }
-  }, 1000);
-};
 
   const onScrub = (value) => {
     // Clear any timers already running and move to new location
@@ -132,28 +132,28 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
       return;
     }
     if (audioRef.current) {
-    console.log('scrub audio object:', audioRef.current);
-    console.log('scrub audio src:', audioRef.current.src);
-    console.log('seekable.length:', audioRef.current.seekable.length);
+      console.log('scrub audio object:', audioRef.current);
+      console.log('scrub audio src:', audioRef.current.src);
+      console.log('seekable.length:', audioRef.current.seekable.length);
     }
     if (audioRef.current?.seekable) {
-    for (let i = 0; i < audioRef.current.seekable.length; i++) {
-      console.log(
-        `seekable[${i}]:`,
-        audioRef.current.seekable.start(i),
-        '→',
-        audioRef.current.seekable.end(i)
-      );
+      for (let i = 0; i < audioRef.current.seekable.length; i++) {
+        console.log(
+          `seekable[${i}]:`,
+          audioRef.current.seekable.start(i),
+          '→',
+          audioRef.current.seekable.end(i)
+        );
+      }
     }
-  }
     try {
-    if (audioRef.current) {
-    audioRef.current.currentTime = numericValue;
-    console.log('scrub currentTime after assignment', audioRef.current.currentTime);
-    const rejectChecker = numericValue;
-    console.log('rejectChecker', rejectChecker);
-    setTrackProgress(audioRef.current.currentTime);
-    }
+      if (audioRef.current) {
+        audioRef.current.currentTime = numericValue;
+        console.log('scrub currentTime after assignment', audioRef.current.currentTime);
+        const rejectChecker = numericValue;
+        console.log('rejectChecker', rejectChecker);
+        setTrackProgress(audioRef.current.currentTime);
+      }
     } catch (error) {
       console.error('Error scrubbing audio:', error);
     }
@@ -172,7 +172,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
     startTimer();
   };
 
-  const handlePlay = () => { 
+  const handlePlay = () => {
     if (!hasUserInteracted) {
       setHasUserInteracted(true);
     }
@@ -188,9 +188,9 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
       setHasUserInteracted(true);
     }
     if (currentLibTrackIndex.trackIndex - 1 < 0) {
-      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: tracks.length - 1});
+      setCurrentLibTrackIndex({ libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: tracks.length - 1 });
     } else {
-      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: currentLibTrackIndex.trackIndex - 1});
+      setCurrentLibTrackIndex({ libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: currentLibTrackIndex.trackIndex - 1 });
     }
   };
 
@@ -199,18 +199,18 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
       setHasUserInteracted(true);
     }
     if (currentLibTrackIndex.trackIndex < tracks.length - 1) {
-      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: currentLibTrackIndex.trackIndex + 1});
+      setCurrentLibTrackIndex({ libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: currentLibTrackIndex.trackIndex + 1 });
     } else {
-      setCurrentLibTrackIndex({libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: 0});
+      setCurrentLibTrackIndex({ libraryIndex: currentLibTrackIndex.libraryIndex, trackIndex: 0 });
     }
   };
 
   // Effect for handling play/pause
   // useEffect(() => {
-    // Ensure player is paused when not active or when the track changes
-    //add to the trackframe parameters and check here isActive = {CurrentTrackIndex === index}
-    //OR map through tracks and check if index === currentTrackIndex. And instead of isActive, use currentTrackIndex in the dependency array
-    // tracks.map((track, index) => 
+  // Ensure player is paused when not active or when the track changes
+  //add to the trackframe parameters and check here isActive = {CurrentTrackIndex === index}
+  //OR map through tracks and check if index === currentTrackIndex. And instead of isActive, use currentTrackIndex in the dependency array
+  // tracks.map((track, index) => 
   //   if (!audioRef.current.paused){
   //       setIsPlaying(false);
   //       audioRef.current.pause();
@@ -224,10 +224,10 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // side effect that plays the audio.
   useEffect(() => {
     if (isPlaying && hasUserInteracted) {
-      audioRef.current.play();
+      audioRef.current?.play();
       startTimer();
     } else {
-      audioRef.current.pause();
+      audioRef.current?.pause();
       clearInterval(intervalRef.current);
     }
   }, [isPlaying, hasUserInteracted]);
@@ -237,7 +237,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   useEffect(() => {
     // Only update if we have a valid track
     if (trackStorageFilePath) {
-      audioRef.current.pause();
+      audioRef.current?.pause();
       audioRef.current = new Audio(fullAudioUrl); //rememeber the new fullAudioUrl comes from the new assignment above when the page rerenders
       setTrackProgress(0);
       handlePlay(); //Play track immediately upon changing
@@ -258,9 +258,11 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   useEffect(() => {
     // Pause and clean up on unmount
     return () => {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-    //   audioRef.current = null;
+      audioRef.current?.pause();
+      if (audioRef.current) {
+        audioRef.current.src = '';
+      }
+      //   audioRef.current = null;
       clearInterval(intervalRef.current);
     };
   }, []);
@@ -294,10 +296,10 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
           {searchTerm && filteredLibraries[currentLibTrackIndex.libraryIndex]?.tracks?.length === 0 && (
             <div className="no-results">No tracks found matching "{searchTerm}"</div>
           )} {/* If search bar return no result */}
-          <TrackFrame 
+          <TrackFrame
             libraries={filteredLibraries}
-          //put isActive here instead of the MusicContainer
-          //add to the trackframe parameters and check here isActive = {CurrentTrackIndex === index}
+            //put isActive here instead of the MusicContainer
+            //add to the trackframe parameters and check here isActive = {CurrentTrackIndex === index}
             currentLibTrackIndex={currentLibTrackIndex}
             onTrackSelect={handleTrackSelect}
           />
@@ -312,8 +314,8 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
           onScrubEnd={onScrubEnd}
           trackStyling={trackStyling}
           audioRef={audioRef}
-          track={currentTrack?currentTrack: null}
-          // controlsSize prop removed
+          track={currentTrack ? currentTrack : null}
+        // controlsSize prop removed
         />
       </div>
     </div>

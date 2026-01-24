@@ -67,15 +67,15 @@ const AudioControls = ({
       )}
       <h1 className="now-playing-title">Now Playing</h1>
       <div className="now-playing-container">
-              {/* New div for stream and buy icons */}
-      <div className="audio-actions-bar">
-        <div className="stream-icon-container">
-          <img src={streamIcon} alt="Stream Track" className="action-icon" />
+        {/* New div for stream and buy icons */}
+        <div className="audio-actions-bar">
+          <div className="stream-icon-container">
+            <img src={streamIcon} alt="Stream Track" className="action-icon" />
+          </div>
+          <div className="buy-icon-container">
+            <img src={buyIcon} alt="Buy Track" className="action-icon" />
+          </div>
         </div>
-        <div className="buy-icon-container">
-          <img src={buyIcon} alt="Buy Track" className="action-icon" />
-        </div>
-      </div>
         {/* Vinyl artwork for mobile - inside now-playing-container */}
         {!isDesktop && (
           <div className={`vinyl-artwork-container ${isPlaying ? 'is-playing' : ''}`}>
@@ -86,14 +86,14 @@ const AudioControls = ({
             />
           </div>
         )}
-        
+
         <div className="track-info-frame">
           <div className="track-info">
             <h2 className="title">{track.trackTitle}</h2>
             <h3 className="artist">{track.trackArtistFeaturesLine}</h3>
           </div>
         </div>
-        
+
         <input
           type="range"
           value={trackProgress}
@@ -105,9 +105,9 @@ const AudioControls = ({
           onMouseUp={onScrubEnd}
           onKeyUp={onScrubEnd}
           style={{ background: trackStyling }}
-          disabled={!audioRef.current.duration} //disable the progress bar if the audio is not loaded i.e. no duration
+          disabled={!audioRef.current?.duration} //disable the progress bar if the audio is not loaded i.e. no duration
         />
-        
+
         <div className="controls-frame">
           <div className="audio-controls">
             <button
@@ -116,10 +116,10 @@ const AudioControls = ({
               aria-label="Previous"
               onClick={onPrevClick}
             >
-              <img 
-                src={isDesktop ? prevIconYellow : prevIcon} 
-                alt="Previous Track" 
-                className="control-button-img" 
+              <img
+                src={isDesktop ? prevIconYellow : prevIcon}
+                alt="Previous Track"
+                className="control-button-img"
               />
             </button>
             {isPlaying ? (
@@ -129,10 +129,10 @@ const AudioControls = ({
                 onClick={() => onPlayPauseClick()}
                 aria-label="Pause"
               >
-                <img 
-                  src={isDesktop ? pauseIconYellow: pauseIcon} 
-                  alt="Pause" 
-                  className="control-button-img" 
+                <img
+                  src={isDesktop ? pauseIconYellow : pauseIcon}
+                  alt="Pause"
+                  className="control-button-img"
                 />
               </button>
             ) : (
@@ -142,10 +142,10 @@ const AudioControls = ({
                 onClick={() => onPlayPauseClick()}
                 aria-label="Play"
               >
-                <img 
-                  src={isDesktop ? playIconYellow : playIcon} 
-                  alt="Play" 
-                  className="control-button-img" 
+                <img
+                  src={isDesktop ? playIconYellow : playIcon}
+                  alt="Play"
+                  className="control-button-img"
                 />
               </button>
             )}
@@ -155,10 +155,10 @@ const AudioControls = ({
               aria-label="Next"
               onClick={onNextClick}
             >
-              <img 
-                src={isDesktop ? nextIconYellow : nextIcon} 
-                alt="Next Track" 
-                className="control-button-img" 
+              <img
+                src={isDesktop ? nextIconYellow : nextIcon}
+                alt="Next Track"
+                className="control-button-img"
               />
             </button>
           </div>
