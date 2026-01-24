@@ -132,7 +132,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   };
 
   const onScrubEnd = () => {
-    const duration = audioRef.current.duration;
+    const duration = audioRef.current?.duration;
     if (!duration || Number.isNaN(duration)) {
       console.log('Audio duration not ready');
       return;
