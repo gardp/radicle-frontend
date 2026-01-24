@@ -129,7 +129,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   const sampleLicenseOption = licensingOptions.find(option =>
                     option.track_storage_file?.file_format?.name === "Sample"
                   );
-                  console.log('✅ Fetched track license SAMPLE option:', sampleLicenseOption);
+                  console.log('✅ Fetched track LICENSE SAMPLE option and track:', sampleLicenseOption.track_storage_file.description, sampleLicenseOption.track_storage_file.file_path);
 
                   // Get the track_storage_file from the sampleLicenseOption
                   const sampleStorageFile = sampleLicenseOption?.track_storage_file;
