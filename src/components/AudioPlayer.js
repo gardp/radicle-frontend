@@ -21,10 +21,10 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   const filteredLibraries = libraries.map(lib => ({
     ...lib,
     tracks: lib.tracks?.filter(track =>
-      track.trackTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      track.trackArtist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      track.trackBpm.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      track.trackDescription.toLowerCase().includes(searchTerm.toLowerCase())
+      (track.trackTitle || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (track.trackArtist || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (track.trackBpm || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (track.trackDescription || "").toLowerCase().includes(searchTerm.toLowerCase())
     ) || []
   }));
 
@@ -274,7 +274,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   };
   // Handle track selection from filtered list. So as the index of the tracks change with filter,...(next line)
   // we need to find the track in th filtered index, then find it's index in the original array
-  const handleTrackSelect = (libraryIndex, trackIndex) => {
+  const handleTrackSelect = ({ libraryIndex, trackIndex }) => {
     // Find the actual track in the original array
     const filteredTrack = filteredLibraries[libraryIndex].tracks[trackIndex];
     const originalTrackIndex = libraries[libraryIndex].tracks.findIndex(
