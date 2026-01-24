@@ -58,9 +58,12 @@ const OrderConfirmation = ({ order, purchasedItems, payment, email, licenses}) =
             {licenses?.licensesReqLoading ? (
               <p>Preparing your licenses...</p>
             ) : licenses?.licensesReqError ? (
-              <p>We couldn’t load your downloads yet. Please refresh in a moment.</p>
+              <p>Please wait while we process your downloads. It may take a few minutes...</p>
             ) : licenses?.licenseFiles?.length === 0 ? (
-              <p>No downloads found for this order yet.</p>
+              <div>
+                <p>Sorry we haven't found any downloads for this order yet...</p>
+                <p>Please <Link to="/contact">contact us</Link> if you are experience any issues.</p>
+              </div>
             ) : (
               licenses?.licenseFiles?.map((lic) => (
                 <div key={lic.license_id} className="download-item">

@@ -18,12 +18,15 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
   // Filter tracks based on search term in the pertaining library
-  const filteredTracks = libraries[currentLibTrackIndex.libraryIndex]?.tracks?.filter(track => 
-    track.trackTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    track.trackArtist.toLowerCase().includes(searchTerm.toLowerCase())
-    || track.trackBpm.toLowerCase().includes(searchTerm.toLowerCase())
-    || track.trackDescription.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredLibraries = libraries.map(lib => ({
+    ...lib,
+    tracks: lib.tracks?.filter(track => 
+      track.trackTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      track.trackArtist.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      track.trackBpm.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      track.trackDescription.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || []
+  }));
 
   // Use filteredTracks for display, but manage currentTrackIndex based on the original tracks array
   // This assumes currentTrackIndex refers to the index in the *original* `tracks` prop.
@@ -40,7 +43,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : '';
   // Refs
   // const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
-  const audioRef = useRef(new Audio(fullAudioUrl));
+  // const audioRef = useRef(new Audio(fullAudioUrl));
   console.log("This is the full audio url", fullAudioUrl)
   const intervalRef = useRef();
   const isReady = useRef(false);
@@ -82,7 +85,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   };
 
   const onScrub = (value) => {
-    // Clear any timers already running
+    // Clear any timers already running and move to new location
     clearInterval(intervalRef.current);
     const numericValue = parseFloat(value); // slider in seconds
     console.log('raw value from range:', value, 'type:', typeof value);
@@ -198,16 +201,16 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   };
 
   // Effect for handling play/pause
-  useEffect(() => {
+  // useEffect(() => {
     // Ensure player is paused when not active or when the track changes
     //add to the trackframe parameters and check here isActive = {CurrentTrackIndex === index}
     //OR map through tracks and check if index === currentTrackIndex. And instead of isActive, use currentTrackIndex in the dependency array
     // tracks.map((track, index) => 
-      if (!audioRef.current.paused){
-          setIsPlaying(false);
-          audioRef.current.pause();
-      }
-    },[currentLibTrackIndex]);
+  //   if (!audioRef.current.paused){
+  //       setIsPlaying(false);
+  //       audioRef.current.pause();
+  //   }
+  // },[currentLibTrackIndex]);
 
   // Ahh got it- when HandlePlay sets isPlaying to true,
   //HandlePlay is receives onPlay which is a parameter that receives
@@ -227,10 +230,18 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // Handles cleanup and setup when changing tracks
   // This hook now ONLY loads the new audio source. It does not play it.
   useEffect(() => {
-    audioRef.current.pause();
-    audioRef.current = new Audio(fullAudioUrl);
-    setTrackProgress(0);
-  }, [fullAudioUrl]);
+    const audioRef = useRef(null);
+    // Only update if we have a valid track
+    if (trackStorageFilePath) {
+      audioRef.current.pause();
+      audioRef.current = new Audio(fullAudioUrl); //rememeber the new fullAudioUrl comes from the new assignment above when the page rerenders
+      setTrackProgress(0);
+      handlePlay(); //Play track immediately upon changing
+    }
+  }, [trackStorageFilePath, fullAudioUrl]); // Depend on the raw data, not computed value
+  // trackStorageFilePath: Triggers when the track file changes
+  // fullAudioUrl: Ensures you have the latest URL value inside the effect.
+  //fullAudioUrl comes from trackStorage so you want to make sure the fullAudioUrl is already loaded by the time the useEffect triggers
 
   // Effect to notify parent when current track changes
   useEffect(() => {
@@ -255,6 +266,19 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
     // Potentially reset currentTrackIndex or adjust playback if the current track is filtered out
     // For now, we'll just filter the list displayed in TrackFrame
   };
+  // Handle track selection from filtered list. So as the index of the tracks change with filter,...(next line)
+  // we need to find the track in th filtered index, then find it's index in the original array
+  const handleTrackSelect = (libraryIndex, trackIndex) => {
+    // Find the actual track in the original array
+    const filteredTrack = filteredLibraries[libraryIndex].tracks[trackIndex];
+    const originalTrackIndex = libraries[libraryIndex].tracks.findIndex(
+      track => track.trackId === filteredTrack.trackId
+    );
+    setCurrentLibTrackIndex({
+      libraryIndex,
+      trackIndex: originalTrackIndex
+    });
+  };
 
   return (
     <div className="audio-player">
@@ -262,12 +286,16 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
       <div className="player-grid">
         <div className="track-frame-container">
           <SearchBar onSearch={handleSearch} /> {/* Add SearchBar here */}
+
+          {searchTerm && filteredLibraries[currentLibTrackIndex.libraryIndex]?.tracks?.length === 0 && (
+            <div className="no-results">No tracks found matching "{searchTerm}"</div>
+          )} {/* If search bar return no result */}
           <TrackFrame 
-            libraries={libraries}
+            libraries={filteredLibraries}
           //put isActive here instead of the MusicContainer
           //add to the trackframe parameters and check here isActive = {CurrentTrackIndex === index}
             currentLibTrackIndex={currentLibTrackIndex}
-            onTrackSelect={setCurrentLibTrackIndex}
+            onTrackSelect={handleTrackSelect}
           />
         </div>
         <AudioControls
