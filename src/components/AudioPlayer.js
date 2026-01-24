@@ -235,12 +235,25 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // Handles cleanup and setup when changing tracks
   // This hook now ONLY loads the new audio source. It does not play it.
   useEffect(() => {
-    // Only update if we have a valid track
+    // 1. Always pause the current audio to stop previous track
+    audioRef.current?.pause();
+
+    // 2. If valid new track, load it
     if (trackStorageFilePath) {
-      audioRef.current?.pause();
-      audioRef.current = new Audio(fullAudioUrl); //rememeber the new fullAudioUrl comes from the new assignment above when the page rerenders
+      audioRef.current = new Audio(fullAudioUrl);
       setTrackProgress(0);
-      // handlePlay(); //Play track immediately upon changing
+
+      // 3. If player was already playing, resume playback with new track
+      if (isPlaying) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => startTimer())
+            .catch(error => console.error("Playback failed:", error));
+        } else {
+          startTimer();
+        }
+      }
     }
   }, [trackStorageFilePath, fullAudioUrl]); // Depend on the raw data, not computed value
   // trackStorageFilePath: Triggers when the track file changes
