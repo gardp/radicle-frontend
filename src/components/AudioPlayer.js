@@ -240,7 +240,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
       audioRef.current?.pause();
       audioRef.current = new Audio(fullAudioUrl); //rememeber the new fullAudioUrl comes from the new assignment above when the page rerenders
       setTrackProgress(0);
-      handlePlay(); //Play track immediately upon changing
+      // handlePlay(); //Play track immediately upon changing
     }
   }, [trackStorageFilePath, fullAudioUrl]); // Depend on the raw data, not computed value
   // trackStorageFilePath: Triggers when the track file changes
