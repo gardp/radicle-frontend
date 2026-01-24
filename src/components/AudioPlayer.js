@@ -63,30 +63,58 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
       -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentTrackPercent}%, #fff), color-stop(${currentTrackPercent}%, #777))
     `;
 
-  const startTimer = () => { 
-    // Clear any timers already running
-    clearInterval(intervalRef.current);
-    if(audioRef.current) {
+  // const startTimer = () => { 
+  //   // Clear any timers already running
+  //   clearInterval(intervalRef.current);
+  //   if(audioRef.current) {
+  //   console.log('timer audio object:', audioRef.current);
+  //   console.log('timer audio src:', audioRef.current.src);
+  //   console.log('timer currentTime', audioRef.current.currentTime);
+  //   }
+  //   intervalRef.current = setInterval(() => {
+  //     if (audioRef.current?.ended) {
+  //       setTrackProgress(audioRef.current.duration); 
+  //       handlePause();
+  //       console.log('Audio currentTime:', audioRef.current.currentTime);
+  //       console.log('Audio duration:', audioRef.current.duration);
+  //       console.log('trackprogress:', trackProgress);
+  //       console.log('currentPercentage:', currentTrackPercent);
+  //       // clearInterval(intervalRef.current);
+  //     } else {
+  //       // const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+  //       setTrackProgress(audioRef.current.currentTime); // Update progress
+  //     }
+  //     console.log('timer currentTime', audioRef.current.currentTime);
+  //   }, 1000);
+  // };
+    const startTimer = () => { 
+  // Clear any timers already running
+  clearInterval(intervalRef.current);
+  if(audioRef.current) {
     console.log('timer audio object:', audioRef.current);
     console.log('timer audio src:', audioRef.current.src);
     console.log('timer currentTime', audioRef.current.currentTime);
-    }
-    intervalRef.current = setInterval(() => {
-      if (audioRef.current?.ended) {
+  }
+  intervalRef.current = setInterval(() => {
+    if (audioRef.current?.ended) {
+      if (audioRef.current) {
         setTrackProgress(audioRef.current.duration); 
-        handlePause();
         console.log('Audio currentTime:', audioRef.current.currentTime);
         console.log('Audio duration:', audioRef.current.duration);
-        console.log('trackprogress:', trackProgress);
-        console.log('currentPercentage:', currentTrackPercent);
-        // clearInterval(intervalRef.current);
-      } else {
-        // const newPercentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+      }
+      handlePause();
+      console.log('trackprogress:', trackProgress);
+      console.log('currentPercentage:', currentTrackPercent);
+    } else {
+      if (audioRef.current) {
         setTrackProgress(audioRef.current.currentTime); // Update progress
       }
+    }
+    if (audioRef.current) {
       console.log('timer currentTime', audioRef.current.currentTime);
-    }, 1000);
-  };
+    }
+  }, 1000);
+};
 
   const onScrub = (value) => {
     // Clear any timers already running and move to new location
