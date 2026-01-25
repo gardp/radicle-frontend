@@ -415,13 +415,13 @@ const Checkout = () => {
           price: item.price,
           quantity: item.quantity,
         })),
-        
         //***PAYMENT***// Besides method and currency, everything else is being calculated on the server
         payment: {
           payment_method: formData.paymentProcessing.card.paymentMethod,
           currency: "usd",
         }
       }
+      console.log("ALL THE ITEMS", items);
       // Subscribe licensee to newsletter if subscription button is check
       if (formData.emailListSubscription) {
         try {
