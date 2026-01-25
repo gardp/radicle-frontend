@@ -21,10 +21,10 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   const filteredLibraries = libraries.map(lib => ({
     ...lib,
     tracks: lib.tracks?.filter(track =>
-      (track.trackTitle || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (track.trackArtist || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (track.trackBpm || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (track.trackDescription || "").toLowerCase().includes(searchTerm.toLowerCase())
+      String(track.trackTitle || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(track.trackArtist || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(track.trackBpm || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(track.trackDescription || "").toLowerCase().includes(searchTerm.toLowerCase())
     ) || []
   }));
 
@@ -246,7 +246,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
       // 3. If player was already playing, resume playback with new track
       if (isPlaying) {
         const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
+        if (playPromise !== undefined) {//So undefined here does not mean "failed"—it just means "this browser doesn't support the Promise-based API for audio."
           playPromise
             .then(() => startTimer())
             .catch(error => console.error("Playback failed:", error));
