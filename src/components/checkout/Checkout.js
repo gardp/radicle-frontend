@@ -205,7 +205,8 @@ const Checkout = () => {
   console.log("USE EFFECT referenceNumber", referenceNumber);
   console.log("USE EFFECT orderstatus", order?.status);
 
-  const fetchLicensesWithRetry = async (retries = 0, maxRetries = 10) => {
+  const fetchLicensesWithRetry = async (retries = 0, maxRetries = 5) => {
+      setLicensesReqLoading(true);
     if (retries >= maxRetries) {
       setLicensesReqError(new Error('License not ready after multiple attempts'));
       setLicensesReqLoading(false);

@@ -12,14 +12,14 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
     stripe: stripeIcon,
     paypal: paypalIcon,
   };
-  
+
   return (
     <div className="checkout-form-container">
       <form onSubmit={onSubmit}>
         {/* Contact Information */}
         <div className="checkout-form-section">
           <h3 className="form-section-title">Licensee Contact Information</h3>
-          
+
           <div className="form-group">
             <label htmlFor="email">Email Address *</label>
             <input
@@ -32,7 +32,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               placeholder="your@email.com"
               required
             />
-            { errors.email && <div className="error-message">{errors.email}</div>}
+            {errors.email && <div className="error-message">{errors.email}</div>}
           </div>
 
           <div className="form-group">
@@ -46,7 +46,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               <span className="checkbox-text">Add me to the email list for updates on new track releases, licenses, and features</span>
             </label>
           </div>
-          
+
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="firstName">First Name *</label>
@@ -62,7 +62,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               />
               {errors.firstName && <div className="error-message">{errors.firstName}</div>}
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="lastName">Last Name *</label>
               <input
@@ -92,7 +92,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 placeholder="Your artist name"
               />
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="companyName">Company / Label Name</label>
               <input
@@ -124,7 +124,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
           <div className="form-subsection">
             <h4 className="form-subsection-title">Music Professional Details</h4>
             <p className="form-subsection-description">Optional information for registered music professionals</p>
-            
+
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="proAffiliation">PRO Affiliation</label>
@@ -138,7 +138,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                   placeholder="e.g., ASCAP, BMI, SESAC"
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="ipiNumber">IPI/CAE Number</label>
                 <input
@@ -197,7 +197,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
         {/* shipping Address */}
         <div className="checkout-form-section">
           <h3 className="form-section-title">Mailing-Registration Address</h3>
-          
+
           <div className="form-group">
             <label htmlFor="address">Street Address *</label>
             <input
@@ -212,7 +212,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             />
             {errors.addressLine1 && <div className="error-message">{errors.addressLine1}</div>}
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="address">Address Line 2</label>
             <input
@@ -241,7 +241,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               />
               {errors.city && <div className="error-message">{errors.city}</div>}
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="state">State/Province *</label>
               <input
@@ -257,7 +257,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               {errors.state && <div className="error-message">{errors.state}</div>}
             </div>
           </div>
-          
+
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="zipCode">Zip/Postal Code *</label>
@@ -273,7 +273,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               />
               {errors.zipCode && <div className="error-message">{errors.zipCode}</div>}
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="country">Country *</label>
               <select
@@ -285,30 +285,35 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 required
               >
                 <option value="">Select a country</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                  <option value="GB">United Kingdom</option>
-                  <option value="AU">Australia</option>
-                  <option value="FR">France</option>
-                  <option value="DE">Germany</option>
-                  <option value="JP">Japan</option>
-                  <option value="IN">India</option>
-                  <option value="BR">Brazil</option>
-                  <option value="MX">Mexico</option>
-                  <option value="ZA">South Africa</option>
-                  <option value="NG">Nigeria</option>
-                  <option value="EG">Egypt</option>
-                  <option value="KE">Kenya</option>
-                  <option value="GH">Ghana</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+                <option value="ES">Spain</option>
+                <option value="JP">Japan</option>
+                <option value="IN">India</option>
+                <option value="BR">Brazil</option>
+                <option value="MX">Mexico</option>
+                <option value="IT">Italy</option>
+                <option value="PT">Portugal</option>
+                <option value="CH">Switzerland</option>
+                <option value="TR">Turkey</option>
+                <option value="ZA">South Africa</option>
+                <option value="NG">Nigeria</option>
+                <option value="EG">Egypt</option>
+                <option value="KE">Kenya</option>
+                <option value="GH">Ghana</option>
                 {/* Add more countries as needed */}
               </select>
               {errors.country && <div className="error-message">{errors.country}</div>}
             </div>
           </div>
         </div>
-          <br />
-          
-          {/* <div className="form-group">
+        <br />
+
+        {/* <div className="form-group">
             <label className="checkbox-container">
               <input
                 type="checkbox"
@@ -319,7 +324,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               <span>Same Address as mailing address</span>
             </label>
           </div> */}
-          
+
 
         {/* billing Address */}
         {/* {!formData.paymentProcessing.card.BillingSameAddressAsMailing && (
@@ -430,42 +435,42 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                   <option value="GH">Ghana</option>
                     
                   {/* Add more countries as needed */}
-                {/* </select>
+        {/* </select>
                 {errors.country && <div className="error-message">{errors.country}</div>}
               </div>
             </div>
           </div>
-        )} */} 
-        
+        )} */}
+
         {/* Payment Information - stripe or Paypal*/}
-          <div className="payment-methods">
-            <div 
-              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'stripe' ? 'selected' : ''}`}
-              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'stripe' } })}
-            >
-              <img src={paymentIcons.stripe} alt="stripe" />
-              <span>Stripe</span>
-            </div>
-            
-            <div 
-              className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'paypal' ? 'selected' : ''}`}
-              onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'paypal' } })}
-           >
-              <img src={paymentIcons.paypal} alt="PayPal" />
-              <span>PayPal</span>
-            </div>
+        <div className="payment-methods">
+          <div
+            className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'stripe' ? 'selected' : ''}`}
+            onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'stripe' } })}
+          >
+            <img src={paymentIcons.stripe} alt="stripe" />
+            <span>Stripe</span>
           </div>
-          {errors.paymentMethod && <div className="error-message">{errors.paymentMethod}</div>}
-        
+
+          <div
+            className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'paypal' ? 'selected' : ''}`}
+            onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'paypal' } })}
+          >
+            <img src={paymentIcons.paypal} alt="PayPal" />
+            <span>PayPal</span>
+          </div>
+        </div>
+        {errors.paymentMethod && <div className="error-message">{errors.paymentMethod}</div>}
+
         {/* Display license agreement error message if present */}
         {errors.licenseAgreement && (
           <div className="checkout-error-message">
             {errors.licenseAgreement}
           </div>
         )}
-        
-        <button 
-          type="submit" 
+
+        <button
+          type="submit"
           className={`checkout-button ${isSubmitDisabled ? 'disabled' : ''}`}
           disabled={isProcessing || isSubmitDisabled}
         >
@@ -487,4 +492,3 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
 export default CheckoutForm;
 
 
-  
