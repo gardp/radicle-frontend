@@ -1,33 +1,39 @@
-import { createSlice, createAsyncThunk  } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { loadCartFromStorage, saveCartToStorage, clearCartFromStorage } from '../cartStorage';
 
 // remember user can't buy the songs directly on the platform, they have to go to DSP platforms for that. But they can buy the beat
 export const createCartItemFromTrack = (track, trackLicenseOption) => { //the tracklicenseOption passed from the trackPricingTable handleAddTrackToCart function as the selectedLicenseOption state in line 88
-    return {
-      id: track.trackId,
-      title: `${track.trackTitle}`,
-      description: `${track.trackStorageFileDescription}`,
-      duration: track.duration_seconds,
-      producer: track.trackArtistFeaturesLine,
-      vinylThumbnail: track.trackVinylThumbnail, //Make sure the thumbnail is a blank vinyl for license purchases track being uploaded!!!
-      trackLicenseOption: {
-        trackLicenseOptionId: trackLicenseOption.trackLicenseOptionId,
-        licenseType: {
-          licenseTypeId: trackLicenseOption.licenseType.licenseTypeId,
-          licenseTypeName: trackLicenseOption.licenseType.licenseTypeName,
-          licenseTerm: trackLicenseOption.licenseType.licenseTerm,
-          licenseTemplate: trackLicenseOption.licenseType.licenseTemplate,
-          downloadLimit: trackLicenseOption.licenseType.downloadLimit,
-          streamingLimit: trackLicenseOption.licenseType.streamingLimit,
-          price: Number(trackLicenseOption.licenseType.price).toFixed(2), //from the trackLicenseOption object,
-          currency: trackLicenseOption.licenseType.currency,
-        }
-      }, 
-      quantity: 1, 
-      type: 'track',
-      licenseAgreementAcknowledged: false
-    };
+  return {
+    id: track.trackId,
+    title: `${track.trackTitle}`,
+    trackDescription: `${track.trackDescription}`,
+    trackStorageIsrc: track.trackStorageIsrc,
+    trackStorageIswc: track.trackStorageIswc,
+    duration: track.duration_seconds,
+    producer: track.trackArtistFeaturesLine,
+    vinylThumbnail: track.trackVinylThumbnail, //Make sure the thumbnail is a blank vinyl for license purchases track being uploaded!!!
+    trackLicenseOption: {
+      trackLicenseOptionId: trackLicenseOption.trackLicenseOptionId,
+      licenseType: {
+        licenseTypeId: trackLicenseOption.licenseType.licenseTypeId,
+        licenseTypeName: trackLicenseOption.licenseType.licenseTypeName,
+        licenseTerm: trackLicenseOption.licenseType.licenseTerm,
+        licenseTypeFormat: trackLicenseOption.licenseType.licenseTypeFormat,
+        licenseTemplate: trackLicenseOption.licenseType.licenseTemplate,
+        songsPerLicense: trackLicenseOption.licenseType.songsPerLicense,
+        monetizedDownloadLimit: trackLicenseOption.licenseType.monetizedDownloadLimit,
+        monetizedStreamingLimit: trackLicenseOption.licenseType.monetizedStreamingLimit,
+        monetizedRadioPlays: trackLicenseOption.licenseType.monetizedRadioPlays,
+        monetizedVideoStreamingLimit: trackLicenseOption.licenseType.monetizedVideoStreamingLimit,
+        price: Number(trackLicenseOption.licenseType.price).toFixed(2), //from the trackLicenseOption object,
+        currency: trackLicenseOption.licenseType.currency,
+      }
+    },
+    quantity: 1,
+    type: 'track',
+    licenseAgreementAcknowledged: false
   };
+};
 
 // Initial state - same as your current context
 const initialState = {
@@ -74,7 +80,7 @@ export const isTrackLicenseInCartItems = (items, id, trackLicenseOptionId) =>
 // Create the slice
 export const cartSlice = createSlice({
   name: 'cart',
-  initialState, 
+  initialState,
   reducers: {
     // Initialize cart with items (often from localStorage)
     initCart: (state, action) => {
@@ -86,8 +92,8 @@ export const cartSlice = createSlice({
       state.totalPrice = totals.subtotal + (totals.subtotal * state.taxRate);
       state.isLoading = false;
       state.error = null;
-      },
-    
+    },
+
     // Add an item to the cart
     addToCart: (state, action) => {
       let existingItemIndex;
@@ -96,23 +102,23 @@ export const cartSlice = createSlice({
         existingItemIndex = state.items.findIndex( //below it's action.payload.id instead of trackid because createCartItemFromTrack function in line 16 returns the id of the track instead of trackId
           i => i.id === action.payload.id && i.trackLicenseOption.trackLicenseOptionId === action.payload.trackLicenseOption.trackLicenseOptionId
         );
-          }
+      }
       else {
         existingItemIndex = state.items.findIndex(
           i => i.id === action.payload.id
         );
-        }
+      }
 
-        if (existingItemIndex >= 0) {
-          // Item with same ID and license exists, update quantity
-          state.items[existingItemIndex].quantity += action.payload.quantity;
-        } 
-        else {
-          // Item with this ID and license doesn't exist, add as new
-          state.items.push(action.payload);
-          console.log("pushed item:", action.payload)
-        }
-      
+      if (existingItemIndex >= 0) {
+        // Item with same ID and license exists, update quantity
+        state.items[existingItemIndex].quantity += action.payload.quantity;
+      }
+      else {
+        // Item with this ID and license doesn't exist, add as new
+        state.items.push(action.payload);
+        console.log("pushed item:", action.payload)
+      }
+
       // Update totals
       const totals = calculateCartTotals(state.items);
       state.totalItems = totals.totalItems;
@@ -121,21 +127,21 @@ export const cartSlice = createSlice({
       state.totalPrice = totals.subtotal + (totals.subtotal * state.taxRate);
       state.error = null;
     },
-    
+
     // Remove an item from the cart
     removeFromCart: (state, action) => {
       const cartItem = action.payload;
       console.log("Equality check:", cartItem, state.items)
       console.log("items before filter:", [...state.items])
       if (cartItem.type === 'track') {
-      state.items = state.items.filter(item => 
-        !(item.id === cartItem.id && item.trackLicenseOption.trackLicenseOptionId === cartItem.trackLicenseOption.trackLicenseOptionId));
+        state.items = state.items.filter(item =>
+          !(item.id === cartItem.id && item.trackLicenseOption.trackLicenseOptionId === cartItem.trackLicenseOption.trackLicenseOptionId));
       }
       else {
-        state.items = state.items.filter(item => 
+        state.items = state.items.filter(item =>
           !(item.id === cartItem.id));
-      }      
-      
+      }
+
       // Update totals
       const totals = calculateCartTotals(state.items);
       state.totalItems = totals.totalItems;
@@ -145,11 +151,11 @@ export const cartSlice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
-    
+
     // Update quantity of an item in the cart
     updateQuantity: (state, action) => {
       const { item, quantity } = action.payload;
-      
+
       // Ensure quantity is valid (minimum 1)
       const safeQuantity = Math.max(1, quantity);
       if (item.type === 'track') {
@@ -163,7 +169,7 @@ export const cartSlice = createSlice({
         if (itemIndex >= 0) {
           state.items[itemIndex].quantity = safeQuantity;
         }
-      }      
+      }
       // Update totals
       const totals = calculateCartTotals(state.items);
       state.totalItems = totals.totalItems;
@@ -173,17 +179,17 @@ export const cartSlice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
-     
+
     // Toggle license agreement aknowledgment for an item
     toggleLicenseAgreement: (state, action) => {
       const { item, acknowledged } = action.payload;
       if (item.type === 'track') { //for track license
-      const itemIndex = state.items.findIndex(cartItem => cartItem.id === item.id && cartItem.trackLicenseOption.trackLicenseOptionId === item.trackLicenseOption.trackLicenseOptionId);
-      console.log("itemIndex", itemIndex)
-      if (itemIndex >= 0) {
-        state.items[itemIndex].licenseAgreementAcknowledged = acknowledged;
+        const itemIndex = state.items.findIndex(cartItem => cartItem.id === item.id && cartItem.trackLicenseOption.trackLicenseOptionId === item.trackLicenseOption.trackLicenseOptionId);
+        console.log("itemIndex", itemIndex)
+        if (itemIndex >= 0) {
+          state.items[itemIndex].licenseAgreementAcknowledged = acknowledged;
+        }
       }
-      }   
     },
 
     // Clear all items from the cart
@@ -196,12 +202,12 @@ export const cartSlice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
-    
+
     // Set loading state for async operations
     setCartLoading: (state, action) => {
       state.isLoading = action.payload;
     },
-    
+
     // Set error state
     setCartError: (state, action) => {
       state.error = action.payload;
@@ -211,15 +217,15 @@ export const cartSlice = createSlice({
 });
 
 // Export actions
-export const { 
+export const {
   initCart,
-  addToCart, 
-  removeFromCart, 
-  updateQuantity, 
-  clearCart, 
-  setCartLoading, 
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+  setCartLoading,
   setCartError,
-  toggleLicenseAgreement 
+  toggleLicenseAgreement
 } = cartSlice.actions;
 
 // Export selectors
@@ -231,12 +237,12 @@ export const selectCartError = (state) => state.cart.error;
 
 // Create more advanced selectors
 // check if an merch/asset is in the cart
-export const selectIsInCart = (state, id) => 
+export const selectIsInCart = (state, id) =>
   state.cart.items.some(item => item.id === id);
 
 
 // select merch/asset by id
-export const selectItemById = (state, id) => 
+export const selectItemById = (state, id) =>
   state.cart.items.find(item => item.id === id) || null;
 
 
@@ -256,7 +262,7 @@ export const selectTrackAndLicense = (state, track) => {
 };
 
 // Add selector to check if a specific item has acknowledged the license agreement
-export const selectLicenseAgreementAcknowledged = (state, id) => 
+export const selectLicenseAgreementAcknowledged = (state, id) =>
   state.cart.items.length > 0 && state.cart.items.some(item => item.id === id && item.licenseAgreementAcknowledged);
 
 // Selector to check if all license agreements are acknowledged
@@ -287,15 +293,15 @@ export const loadCartFromStorageThunk = createAsyncThunk(
 
 // Add specialized track thunk
 export const addTrackToCartAndSaveThunk = createAsyncThunk(
-    'cart/addTrackAndSave',
-    async ({track, trackLicenseOption}, { dispatch, getState }) => {
-      const cartItem = createCartItemFromTrack(track, trackLicenseOption);
-      dispatch(addToCart(cartItem));
-      const { cart } = getState();
-      saveCartToStorage(cart.items);
-      console.log("cart items after adding track:", cart.items);
-    }
-  );
+  'cart/addTrackAndSave',
+  async ({ track, trackLicenseOption }, { dispatch, getState }) => {
+    const cartItem = createCartItemFromTrack(track, trackLicenseOption);
+    dispatch(addToCart(cartItem));
+    const { cart } = getState();
+    saveCartToStorage(cart.items);
+    console.log("cart items after adding track:", cart.items);
+  }
+);
 
 // Thunk to add item and save to storage
 export const addToCartAndSaveThunk = createAsyncThunk(

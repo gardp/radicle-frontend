@@ -4,7 +4,7 @@ import { closeLicenseModal, selectLicenseModalState, selectLicenseModalItem } fr
 import { toggleLicenseAgreementAndSaveThunk } from '../store/slices/cartSlice';
 import { selectTrackAndLicense } from '../store/slices/cartSlice';
 import parse from 'html-react-parser';
-import { selectItemById,  } from '../store/slices/cartSlice';
+import { selectItemById, } from '../store/slices/cartSlice';
 import '../styles/LicenseAgreement.css';
 import { useLicenseTypes } from '../hooks/useLicense';
 import { useMemo } from 'react';
@@ -24,19 +24,19 @@ const LicenseAgreement = () => {
   // Safely find the license type after ensuring license_types is available
   // const licenseType = currentItem?.trackLicenseOption?.licenseType ?
   //   currentItem.trackLicenseOption.licenseType : null;
-//USE CurrentItem to grab the license type id and use in in turn to get the license content
+  //USE CurrentItem to grab the license type id and use in in turn to get the license content
   // State to track if user has checked the agreement box
   const [agreed, setAgreed] = useState(false);
   // State to track if agreement has been submitted
   // const [submitted, setSubmitted] = useState(false);
-  
+
   // Reset agreement state when modal opens with new item....very important and slick approach
   useEffect(() => {
     if (cartItem) {
       setAgreed(cartItem.licenseAgreementAcknowledged || false);
     }
   }, [cartItem]);
-  
+
   // Close modal on ESC key
   useEffect(() => {
     const handleEscapeKey = (e) => {
@@ -44,13 +44,13 @@ const LicenseAgreement = () => {
         dispatch(closeLicenseModal());
       }
     };
-    
+
     document.addEventListener('keydown', handleEscapeKey);
     return () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
   }, [isOpen, dispatch]);
-  
+
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -58,23 +58,23 @@ const LicenseAgreement = () => {
     } else {
       document.body.style.overflow = 'auto';
     }
-    
+
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, [isOpen]);
-  
+
   // Handle backdrop click to close modal
   const handleBackdropClick = (e) => {
     if (e.target.classList.contains('license-modal-backdrop')) {
       dispatch(closeLicenseModal());
     }
   };
-  
+
   const handleAgreeChange = (e) => {
     const isChecked = e.target.checked;
     setAgreed(isChecked);
-//****this currentItem is from the licenseModalItem selector, it's note from the cartSlice!!!!
+    //****this currentItem is from the licenseModalItem selector, it's note from the cartSlice!!!!
     dispatch(toggleLicenseAgreementAndSaveThunk({ //*******PUT THIS IN AGREED CHANGE AS I'M NO LONGER USING HANDLESUBMIT PER TRACK
       item: cartItem,
       acknowledged: isChecked
@@ -83,7 +83,7 @@ const LicenseAgreement = () => {
     console.log("cartItem", cartItem)
     console.log("licenseAgreementAcknowledged-", cartItem?.licenseAgreementAcknowledged || true)
   };
-  
+
   // const handleSubmit = () => {
   //   if (currentItem) {
   //     // Update the license agreement state in Redux
@@ -99,9 +99,9 @@ const LicenseAgreement = () => {
   //     dispatch(closeLicenseModal());
   //   }
   // };
-  
+
   if (!isOpen || !currentItem) return null;
-  
+
   // Getting the license agreement from the cart item
   const getLicenseAgreementText = () => {
     if (isLoading) return "Loading license agreement with track...";
@@ -110,76 +110,95 @@ const LicenseAgreement = () => {
     if (!cartItem || !licenseOption) return "License template not found for this item.";
     let template = cartItem.trackLicenseOption.licenseType.licenseTemplate;
 
-  //   template = template.replace(
-  //   /body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }/,
-  //   'body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; background: white; }'
-  // );
+    //   template = template.replace(
+    //   /body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }/,
+    //   'body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; background: white; }'
+    // );
 
-     // Replace template variables with actual data
-    template = template.replace(/{{\s*license_type_name\s*\|[^}]*}}/g, licenseOption.licenseTypeName || 'Non-Exclusive Beat Lease Agreement');
-    template = template.replace(/{{\s*track_title\s*\|[^}]*}}/g, cartItem.title || '____________');
-    template = template.replace(/{{\s*licensor_name\s*\|[^}]*}}/g, 'Your Company Name');
-    template = template.replace(/{{\s*licensee_name\s*\|[^}]*}}/g, 'Licensee Name');
-    template = template.replace(/{{\s*price\s*\|[^}]*}}/g, licenseOption.price || '______');
-    template = template.replace(/{{\s*currency\s*\|[^}]*}}/g, '$');
-    template = template.replace(/{{\s*effective_date[^}]*}}/g, new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
-  // Handle conditional logic
-    template = template.replace(/{%\s*if\s+video_rights\s*%}.*?{%\s*else\s*%}.*?{%\s*endif\s*%}/g, 
-      licenseOption.videoRights ? 'one (1)' : 'zero (0)');
-    
-    template = template.replace(/{%\s*if\s+monetized_radio_plays\s*%}.*?{%\s*else\s*%}.*?{%\s*endif\s*%}/g, 
-      licenseOption.monetizedRadioPlays ? 'an unlimited number' : 'a limited number');
-    
-    // Remove any remaining template tags
-    template = template.replace(/{{[^}]*}}/g, '____________');
+    // Replace template variables with actual data
+    // Define all replacement values
+    const now = new Date();
+    const replacements = {
+      'effective_date.date': now.getDate(),
+      'effective_date.month': now.toLocaleString('default', { month: 'long' }),
+      'effective_date.year': now.getFullYear(),
+      'licensee_name': 'Licensee Name', // Placeholder
+      'track_description': cartItem.trackDescription,
+      'track_id': cartItem.id || 'N/A',
+      'track_storage_isrc': cartItem.trackStorageIsrc || 'N/A',
+      'track_storage_iswc': cartItem.trackStorageIswc || 'N/A',
+      'order_reference': 'N/A',
+      'songs_per_license': licenseOption.songsPerLicense || '1',
+      'monetized_download_limit': licenseOption.monetizedDownloadLimit || 'N/A',
+      'monetized_streaming_limit': licenseOption.monetizedStreamingLimit || 'N/A',
+      'monetized_video_streaming_limit': licenseOption.monetizedVideoStreamingLimit || 'N/A',
+      'monetized_radio_plays': licenseOption.monetizedRadioPlays || 'N/A',
+      'license_fee': licenseOption.price || 'N/A',
+      'license_term': licenseOption.licenseTerm || '10',
+      'license_type_format': licenseOption.licenseTypeFormat || 'MP3-WAV',
+      'address.state': 'State',
+      'title': cartItem.title || 'Untitled', //description is better suited to go in the contract
+      'duration_seconds': cartItem.duration || '0:00',
+      'licensor_name': 'Gardly Philoctete (GardlyRadicle)',
+      'license_type_name': licenseOption.licenseTypeName || 'Non-Exclusive License',
+      'price': licenseOption.price || 'N/A',
+      'currency': '$'
+    };
+
+    // Generic replacement for {{ key|default:"val" }} pattern
+    template = template.replace(/{{\s*([a-zA-Z0-9_.]+)(?:\|default:"(.*?)")?\s*}}/g, (match, key, defaultValue) => {
+      return replacements[key] !== undefined ? replacements[key] : (defaultValue || match);
+    });
+
+    // Handle conditional logic (if any remains) - stripping for now as per previous logic
     template = template.replace(/{%[^%]*%}/g, '');
-    
+
     return template;
   };
-  
+
   return (
     <div className="license-modal-backdrop" onClick={handleBackdropClick}>
       <div className="license-modal-content">
         <button className="close-button" onClick={() => dispatch(closeLicenseModal())}>×</button>
-        
+
         <div className="license-header">
           <h2>License Agreement</h2>
           <p>Please review and acknowledge the license terms for {cartItem?.title}</p>
         </div>
-        
+
         <div className="license-agreement-content">
           <div className="license-text">
             {parse(getLicenseAgreementText())}
           </div>
           {console.log("LICENSE TEMPLATE (final)", getLicenseAgreementText())}
-          
+
           <div className="license-acknowledgment">
             <label className="checkbox-container">
-              <input 
-                type="checkbox" 
-                checked={agreed} 
+              <input
+                type="checkbox"
+                checked={agreed}
                 onChange={handleAgreeChange}
               />
               <span>I acknowledge that I have read, understood, and agree to the terms of this license agreement</span>
             </label>
           </div>
         </div>
-          <div className="license-footer">
+        <div className="license-footer">
           {cartItem?.licenseAgreementAcknowledged && agreed ? (
             <div className="license-submit-success">
               Agreement Acknowledged & Signed
             </div>
           ) : (
-            <div  
-              className="license-submit-button" 
-            >      
+            <div
+              className="license-submit-button"
+            >
               Review Agreement
-            </div>   
+            </div>
           )}
           {console.log("agreed", agreed)}
           {console.log("cartItem licenseAgreementAcknowledged", cartItem?.licenseAgreementAcknowledged)}
         </div>
-        
+
         {/*<div className="license-footer">
           {currentItem?.licenseAgreementAcknowledged ? (
             <div className="license-submit-success">

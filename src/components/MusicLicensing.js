@@ -37,11 +37,11 @@ const MusicLicensing = () => {
         <div className="licensing-unified-frame">
           {/* Hero Banner with Current Track Cover Art */}
           <div className="licensing-banner">
-            <div 
+            <div
               className="banner-background"
               style={{
-                backgroundImage: currentTrack?.trackCoverArt 
-                  ? `url(${currentTrack.trackCoverArt})` 
+                backgroundImage: currentTrack?.trackCoverArt
+                  ? `url(${currentTrack.trackCoverArt})`
                   : 'linear-gradient(135deg, var(--haiti-blue), var(--haiti-red))'
               }}
             >
@@ -51,7 +51,7 @@ const MusicLicensing = () => {
                     <div className="banner-text">
                       <h1 className="banner-title">License Your Sound</h1>
                       <p className="banner-subtitle">
-                        {currentTrack 
+                        {currentTrack
                           ? `Now Playing: ${currentTrack.trackTitle} - ${currentTrack.trackArtistFeaturesLine}`
                           : 'Discover and license premium beats for your next project'
                         }
@@ -66,7 +66,7 @@ const MusicLicensing = () => {
           {/* Music Container for All Beats */}
           <Container className="licensing-content">
             <Row className="licensing-music-container">
-              <MusicContainer 
+              <MusicContainer
                 libraries={beatsLibraries}
                 playerTitle="Beats Available for Licensing"
                 onTrackChange={handleTrackChange}

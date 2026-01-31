@@ -6,39 +6,39 @@ import '../../styles/CartPreview.css';
  * CartItem component that displays a single item in the cart preview
  */
 const CartItem = ({ item }) => {
-  const { 
+  const {
     // formatPrice, 
     removeFromCart
   } = useCart();
-  
+
   return (
     <div className="cart-item">
       <div className="cart-item-image">
-        <img 
-          src={item.vinylThumbnail} 
-          alt={item.trackTitle} 
+        <img
+          src={item.vinylThumbnail}
+          alt={item.trackTitle}
           className="cart-thumb"
         />
       </div>
-      
+
       <div className="cart-item-details">
-        <h4 className="cart-item-name">{item.title}</h4>
-        <p className="cart-item-description">{item.description}</p>
+        <h4 className="cart-item-description">{item.trackDescription}</h4>
+        <p className="cart-item-name">{item.trackLicenseOption.licenseType.licenseTypeName}</p>
         <div className="cart-item-license">
           {item.type === 'track' && (
-            <span className="license-badge">{item.trackLicenseOption.licenseType.licenseTypeName}</span>
+            <span className="license-badge">{item.trackLicenseOption.licenseType.licenseTypeFormat}</span>
           )}
         </div>
       </div>
-      
+
       <div className="cart-item-price">
         ${item.trackLicenseOption.licenseType.price}
       </div>
-      <button 
+      <button
         className="remove-item-btn skeuomorphic-btn danger with-glare"
         onClick={() => removeFromCart(item)}
         aria-label="Remove item"
-      > 
+      >
         ×
       </button>
 
@@ -62,7 +62,7 @@ const CartItem = ({ item }) => {
           +
         </button>
       </div> */}
-      
+
       {/* <div className="cart-item-total">
         '${item.trackLicenseOption.licenseType.price * item.quantity}'
       </div> */}

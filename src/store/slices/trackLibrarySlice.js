@@ -114,20 +114,24 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     licenseType: {
                       licenseTypeId: option.license_type.license_type_id,
                       licenseTypeName: option.license_type.license_type_name,
+                      licenseTypeFormat: option.license_type.license_type_format,
                       licenseTerm: option.license_type.license_term,
                       licenseTemplate: option.license_type.license_template,
                       fileFormatName: option.track_storage_file.file_format.name,
-                      downloadLimit: option.license_type.download_limit,
-                      streamingLimit: option.license_type.streaming_limit,
+                      songsPerLicense: option.license_type.songs_per_license,
+                      monetizedDownloadLimit: option.license_type.monetized_download_limit,
+                      monetizedStreamingLimit: option.license_type.monetized_streaming_limit,
                       monetizedRadioPlays: option.license_type.monetized_radio_plays,
+                      monetizedVideoStreamingLimit: option.license_type.monetized_video_streaming_limit,
                       price: parseFloat(option.license_type.price),
                       currency: option.license_type.currency,
                     },
                   }));
                   console.log('✅ Fetched track license options:', trackLicenseOptions);
                   // Find the Sample license option (use .find() not .filter())
+                  const targetFormat = trackLibrary.libraryName === "NEW FEATURES" ? "SONG" : "SAMPLE"; // if library is New Features, use the SONG format, else use the Sample format for beats library
                   const sampleLicenseOption = licensingOptions.find(option =>
-                    option.track_storage_file?.file_format?.name === "Sample"
+                    option.track_storage_file?.file_format?.name === targetFormat.toUpperCase()
                   );
                   console.log('✅ Fetched track LICENSE SAMPLE option and track:', sampleLicenseOption.track_storage_file.description, sampleLicenseOption.track_storage_file.file_path);
 
@@ -165,6 +169,8 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackDonationLink: trackDetail.donation_link || "",
                     trackLicenseOptions: trackLicenseOptions || [],
                     trackStorageFileDescription: sampleStorageFile?.description || "",
+                    trackStorageIsrc: sampleStorageFile.isrc_code || "",
+                    trackStorageIswc: sampleStorageFile.iswc_code || "",
                     trackStorageFilePath: sampleStorageFile?.file_path || "",
                     trackStorageFileFormatName: sampleStorageFile?.file_format?.name || "",
                     trackStorageFileFormatExtension: sampleStorageFile?.file_format?.extension || "",
