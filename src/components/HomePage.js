@@ -8,12 +8,12 @@ import Section from './Section';
 import { useAllLibrariesWithTracks } from '../hooks/useTracks';
 
 const HomePage = () => {
-  const { librariesWithTracks, isLoading, error } = useAllLibrariesWithTracks(); 
+  const { librariesWithTracks, isLoading, error } = useAllLibrariesWithTracks();
   //when executing the useAllLibrariesWithTracks hook, it will automatically execute the fetchLibrariesWithTracks,....(see next line)
   // so you don't need the function in the component, you just need the state objects extracted using the selectors!!!
 
   //now extract the right libraries for the home page musicContainer/AudioPlayer
-  const previewLibraries = librariesWithTracks?.filter(lib => lib.libraryName == "New Features" || lib.libraryName == "New Beats") || [];
+  const previewLibraries = librariesWithTracks?.filter(lib => lib.libraryName == "NEW FEATURES" || lib.libraryName == "NEW BEATS") || [];
   console.log('HomePage', librariesWithTracks);
   console.log('HomePage Loading', isLoading);
   console.log('HomePage Error', error);
@@ -37,23 +37,23 @@ const HomePage = () => {
           {isLoading && <p>Loading music...</p>}
           {error && <p>Error fetching music. Please try again later.</p>}
           {previewLibraries && previewLibraries.length > 0 && (
-            <MusicContainer 
-              libraries={previewLibraries} 
+            <MusicContainer
+              libraries={previewLibraries}
               trackCount={3}
-              playerTitle="New Features" 
+              playerTitle="New Features"
               scale={0.5} /* Scale from 0.5 to 1, where 1 is 100% (default) */
             />
           )}
         </Section>
         <Section title="More Media">
-          <Media/>
+          <Media />
         </Section>
         <div className="content-section">
-          <NewsletterSub/>
+          <NewsletterSub />
         </div>
       </div>
     </div>
-  );    
+  );
 };
 
 export default HomePage;
