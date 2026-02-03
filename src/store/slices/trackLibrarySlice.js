@@ -129,7 +129,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   }));
                   console.log('✅ Fetched track license options:', trackLicenseOptions);
                   // Find the Sample license option (use .find() not .filter()) because there is only one sample license option per track and find() returns the first match whereas filter() returns an array of all matches
-                  const targetFormat = trackLibrary.libraryName === "FEATURES" ? "SONG" : "SAMPLE"; // if library is Features, use the SONG name, else use the Sample name0 for beats library
+                  const targetFormat = trackLibrary.libraryName == "FEATURES" ? "SONG" : "SAMPLE"; // if library is Features, use the SONG name, else use the Sample name0 for beats library
                   console.log('✅ Fetched track target format:', targetFormat);
                   const sampleLicenseOption = licensingOptions.find(option =>
                     option.track_storage_file?.file_format?.name === targetFormat.toUpperCase()
