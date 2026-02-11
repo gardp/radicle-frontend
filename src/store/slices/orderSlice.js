@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { orderApi } from '../../api';
 
 // Initial state
+
 const initialState = {
   orderedItems: [],
   currentOrder: [],
@@ -9,6 +10,7 @@ const initialState = {
   isSubmitting: false,
   submitSuccess: false,
   error: null,
+  referenceNumber: null, // New field for persisting reference number
 };
 
 // Async thunk for submitting order to the backend
@@ -75,6 +77,16 @@ const orderSlice = createSlice({
     setCurrentOrder: (state, action) => {
       state.currentOrder = action.payload;
     },
+    // Generate a new reference number if one doesn't exist
+    generateReferenceNumber: (state) => {
+      if (!state.referenceNumber) {
+        state.referenceNumber = `${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${String(Math.floor(Math.random() * 100000)).padStart(5, '0')}`;
+      }
+    },
+    // Clear the reference number (e.g., after successful payment)
+    clearReferenceNumber: (state) => {
+      state.referenceNumber = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -88,6 +100,7 @@ const orderSlice = createSlice({
         state.isSubmitting = false;
         state.submitSuccess = true;
         state.currentOrder = action.payload;
+        // Optional: clear reference number here if desired, but user asked to clear AFTER payment
       })
       .addCase(submitOrderThunk.rejected, (state, action) => {
         state.isSubmitting = false;
@@ -106,7 +119,7 @@ const orderSlice = createSlice({
 });
 
 // Export actions
-export const { resetOrderState, setCurrentOrder } = orderSlice.actions;
+export const { resetOrderState, setCurrentOrder, generateReferenceNumber, clearReferenceNumber } = orderSlice.actions;
 
 // Export selectors
 export const selectCurrentOrder = (state) => state.order.currentOrder;
@@ -114,6 +127,7 @@ export const selectOrderHistory = (state) => state.order.orderHistory;
 export const selectIsSubmitting = (state) => state.order.isSubmitting;
 export const selectSubmitSuccess = (state) => state.order.submitSuccess;
 export const selectOrderError = (state) => state.order.error;
+export const selectReferenceNumber = (state) => state.order.referenceNumber;
 
 // Export reducer
 export default orderSlice.reducer;

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import useCart from '../../hooks/useCart';
 import { selectAllLicenseAgreementsAcknowledged } from '../../store/slices/cartSlice';
+import { 
+  selectReferenceNumber, 
+  generateReferenceNumber, 
+  clearReferenceNumber 
+} from '../../store/slices/orderSlice';
 import CheckoutForm from './CheckoutForm';
 import OrderSummary from './OrderSummary';
 import OrderConfirmation from './OrderConfirmation';
@@ -17,6 +22,7 @@ import '../../styles/Checkout.css';
  * Checkout component that handles the entire checkout process
  */
 const Checkout = () => {
+  const dispatch = useDispatch();
   // State for form data
   const [formData, setFormData] = useState({
     licenseeContact:{
@@ -98,11 +104,19 @@ const Checkout = () => {
   const [licensesReqLoading, setLicensesReqLoading] = useState(false); // for loading spinner
   const [licensesReqError, setLicensesReqError] = useState(null); // for error message
   const [licenseFiles, setLicenseFiles] = useState(null); // for saving licenses to use outside of handleSubmit
-  // storing reference number before handleSubmit to make sure it doesn't generate everytime handleSubmit runs...
+
+
+  // Get reference number from Redux store
   // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
-  const [referenceNumber] = useState(() => 
-  `${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${String(Math.floor(Math.random()*100000)).padStart(5,'0')}`
-);
+  const referenceNumber = useSelector(selectReferenceNumber);
+
+  // Generate reference number on mount if it doesn't exist
+  // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
+  useEffect(() => {
+    if (!referenceNumber) {
+      dispatch(generateReferenceNumber());
+    }
+  }, [referenceNumber, dispatch]);
   // Get cart data from context to format orders and send to APi
   const { items, subtotal, taxRate, taxAmount, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
@@ -515,6 +529,7 @@ const Checkout = () => {
     setOrderComplete(true);
     setCheckoutPhase('complete');
     clearCart();
+    dispatch(clearReferenceNumber()); // Clear reference number after successful payment
   };
 
   // NOW HANDLE STRIPE PAYMENT ERROR
@@ -552,6 +567,7 @@ const Checkout = () => {
       setOrderComplete(true);
       setCheckoutPhase('complete');
       clearCart();
+      dispatch(clearReferenceNumber()); // Clear reference number after successful payment
     } else {
       throw new Error('Capture failed');
     }

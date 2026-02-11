@@ -38,6 +38,10 @@ const PaymentWrapper = ({
     intent: 'capture',
   };
 
+  // StripeCardElement.js: When Stripe confirms the payment, it calls onPaymentSuccess(paymentIntent) (Line 33).
+  // PaymentWrapper.js: Receives this prop and passes it down to 
+  // StripePaymentElement (Lines 44-45). Checkout.js: Defines handleStripePaymentSuccess, 
+  // which accepts paymentIntent as an argument.
   if (paymentMethod === 'stripe' && clientSecret) {
     return (
       <Elements stripe={stripePromise} options={stripeOptions}>
