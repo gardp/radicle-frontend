@@ -24,7 +24,6 @@ const Checkout = () => {
       email: '',
       firstName: '',
       lastName: '',
-      sudoName: '',
       companyName: '',
       phoneNumber: '',
     },
@@ -39,6 +38,7 @@ const Checkout = () => {
       country: '',
     },
     musicProfessional:{
+      sudoName: '',
       refCode: '',
       proAffiliation: '',
       ipiNumber: '',
@@ -372,7 +372,6 @@ const Checkout = () => {
           first_name: formData.licenseeContact.firstName,
           last_name: formData.licenseeContact.lastName,
           email: formData.licenseeContact.email,
-          sudo_name: formData.licenseeContact.sudoName,
           company_name: formData.licenseeContact.companyName,
           phone_number: formData.licenseeContact.phoneNumber,
         },
@@ -385,6 +384,7 @@ const Checkout = () => {
           country: formData.mailingRegistrationAddress.country,
         },
         musicProfessional: {
+          sudo_name: formData.musicProfessional.sudoName,
           ref_code: formData.musicProfessional.refCode,
           pro_affiliation: formData.musicProfessional.proAffiliation,
           ipi_number: formData.musicProfessional.ipiNumber,

@@ -117,7 +117,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                       licenseTypeFormat: option.license_type.license_type_format,
                       licenseTerm: option.license_type.license_term,
                       licenseTemplate: option.license_type.license_template,
-                      fileFormatName: option.track_storage_file.file_format.name,
+                      fileFormatName: option.license_type.license_type_format,
                       songsPerLicense: option.license_type.songs_per_license,
                       monetizedDownloadLimit: option.license_type.monetized_download_limit,
                       monetizedStreamingLimit: option.license_type.monetized_streaming_limit,
@@ -132,15 +132,19 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   // Find the Sample license option (use .find() not .filter()) because there is only one sample license option per track and find() returns the first match whereas filter() returns an array of all matches
                   const targetFormat = trackLibrary.libraryName === "FEATURES" ? "SONG" : "SAMPLE"; // if library is Features, use the SONG name, else use the Sample name0 for beats library
                   console.log('✅ Fetched track target format:', targetFormat);
-                  const sampleLicenseOption = licensingOptions.find(option =>
-                    option.track_storage_file?.file_format?.name === targetFormat.toUpperCase()
+                  // Now using track to get all trackStorageFiles
+                  const trackStorageFiles = await trackApi.getTrackStorageFilesByTrackId(trackId);
+                  console.log('✅ Fetched track storage files:', trackStorageFiles);
+                  // Now find the trackStorageFile where track_storage_file.description is targetFormat (SONG or SAMPLE)
+                  const trackStorageFile = trackStorageFiles.find(option =>
+                    option.track_storage_file?.description === targetFormat.toUpperCase() // if targetFormat is SONG, find the SONG trackStorageFile, else find the SAMPLE trackStorageFile
                   );
-                  console.log('✅ Fetched track LICENSE SAMPLE option and track:', sampleLicenseOption.track_storage_file.description, sampleLicenseOption.track_storage_file.file_path);
+                  console.log('✅ Fetched track STORAGE FILE:', trackStorageFile.track_storage_file.description);
+                  // Now extracting the audio_file path for either SONG or SAMPLE trackStorageFile description
+                  const audioFile = trackStorageFile.audio_file;
+                  console.log('✅ Fetched track AUDIO FILE:', audioFile);
 
-                  // Get the track_storage_file from the sampleLicenseOption
-                  const sampleStorageFile = sampleLicenseOption?.track_storage_file;
-
-                  console.log(`Fetched trackDetail+LicensingOptions+SampleFile ${trackId}:`, trackDetail, licensingOptions, sampleStorageFile);
+                  console.log(`Fetched trackDetail+LicensingOptions+SampleFile ${trackId}:`, trackDetail, licensingOptions, trackStorageFile.track_storage_file.description);
 
                   // Transform the trackDetail to our track structure
                   const track = {
@@ -170,14 +174,14 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackStreamLink: trackDetail.stream_link || "",
                     trackDonationLink: trackDetail.donation_link || "",
                     trackLicenseOptions: trackLicenseOptions || [],
-                    trackStorageFileDescription: sampleStorageFile?.description || "",
-                    trackStorageIsrc: sampleStorageFile?.isrc_code || "",
-                    trackStorageIswc: sampleStorageFile?.iswc_code || "",
-                    trackStorageFilePath: sampleStorageFile.file_path || "",
-                    trackStorageFileFormatName: sampleStorageFile?.file_format?.name || "",
-                    trackStorageFileFormatExtension: sampleStorageFile?.file_format?.extension || "",
-                    trackStorageFileFormatBitDepth: sampleStorageFile?.file_format?.bit_depth || "",
-                    trackStorageFileFormatSampleRate: sampleStorageFile?.file_format?.sample_rate || "",
+                    trackStorageFileDescription: trackStorageFile?.description || "",
+                    trackStorageIsrc: audioFile?.isrc_code || "",
+                    trackStorageIswc: audioFile?.iswc_code || "",
+                    trackStorageFilePath: audioFile.file_path || "",
+                    trackStorageFileFormatName: audioFile?.file_format?.name || "",
+                    trackStorageFileFormatExtension: audioFile?.file_format?.extension || "",
+                    trackStorageFileFormatBitDepth: audioFile?.file_format?.bit_depth || "",
+                    trackStorageFileFormatSampleRate: audioFile?.file_format?.sample_rate || "",
                   };
 
                   return track;

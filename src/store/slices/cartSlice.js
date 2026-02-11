@@ -73,8 +73,8 @@ export const isTrackLicenseInCartItems = (items, id, trackLicenseOptionId) =>
   items.some(
     item =>
       item.type === 'track' &&
-      item.id === id &&
-      item.trackLicenseOption?.trackLicenseOptionId === trackLicenseOptionId
+      item.id === id && //this id is the track_id from the trackLibrarySlice
+      item.trackLicenseOption?.trackLicenseOptionId === trackLicenseOptionId //this trackLicenseOptionId is the trackLicenseOptionId from the trackLibrarySlice
   );
 
 // Create the slice

@@ -29,7 +29,7 @@ const TrackFrame = ({ libraries, currentLibTrackIndex, onTrackSelect }) => (
             </Nav.Item>
           ))}
         </Nav>
-        
+
         {/* Track frame container */}
         <div className="track-frame">
           <div className="track-list">
@@ -42,9 +42,10 @@ const TrackFrame = ({ libraries, currentLibTrackIndex, onTrackSelect }) => (
                     <Track
                       key={track.trackId}
                       track={track}
+                      libraryName={lib.libraryName}
                       isActive={track.trackId === libraries[currentLibTrackIndex.libraryIndex]?.tracks[currentLibTrackIndex.trackIndex]?.trackId && libIndex === currentLibTrackIndex.libraryIndex} //after clicking on a track, it will update the currentLibTrackIndex and make it active in isActive...which changes the styling of the track... (next line)
                       // Also the filterlibraries whill change the indices os it's better to use trackId to make active instead of index
-                      onClick={() => onTrackSelect({libraryIndex: libIndex, trackIndex: trackIndex})} //so by clicking on it, it will update the currentLibTrackIndex and make it active in isActive above...which changes the styling of the track
+                      onClick={() => onTrackSelect({ libraryIndex: libIndex, trackIndex: trackIndex })} //so by clicking on it, it will update the currentLibTrackIndex and make it active in isActive above...which changes the styling of the track
                     />
                   ))}
                 </Tab.Pane>

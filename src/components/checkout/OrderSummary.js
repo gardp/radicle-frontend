@@ -10,7 +10,7 @@ const OrderSummary = () => {
   const dispatch = useDispatch();
   const { items, subtotal, taxRate, taxAmount, totalPrice } = useCart();
 
-  
+
   // Handle opening the license agreement modal
   const handleOpenLicenseAgreement = (item) => {
     console.log("ITEM PASSED TO LICENSE AGREEMENT MODAL", item)
@@ -18,36 +18,40 @@ const OrderSummary = () => {
   };
 
   const shipping = 0; // Placeholder for shipping cost
-  
+
   return (
     <div className="order-summary">
       <h2 className="order-summary-header">Order Summary</h2>
-      
+
       <div className="order-items">
         {items.map((item, index) => (
           <div key={index} className="order-item">
             <div className="order-item-image">
-              <img src={item.vinylThumbnail} alt={item.title} />
+              {item.type === "track" ? (
+                <img src={item.vinylThumbnail} alt={item?.trackDescription} />
+              ) : (
+                <img src={item.albumThumbnail} alt={item?.description} />
+              )}
             </div>
             <div className="order-item-details">
-              <div className="order-item-name">{item.title}</div>
-              <div className="order-item-license">{item.trackLicenseOption?.licenseType?.licenseTypeName} License</div>
+              <div className="order-item-name">{item?.trackDescription}</div>
+              <div className="order-item-license">{item?.trackLicenseOption?.licenseType?.licenseTypeName} License</div>
               <div className="order-item-price">
-                ${item.trackLicenseOption?.licenseType?.price} × {item.quantity}  = ${item.trackLicenseOption?.licenseType?.price * item.quantity}
+                ${item?.trackLicenseOption?.licenseType?.price} × {item?.quantity}  = ${item?.trackLicenseOption?.licenseType?.price * item?.quantity}
               </div>
               <div
                 className={`license-agreement-link ${item.licenseAgreementAcknowledged ? 'acknowledged' : 'pending alert-pulse'}`}
                 onClick={() => handleOpenLicenseAgreement(item)}
               >
-                {item.licenseAgreementAcknowledged 
-                  ? 'Agreement Acknowledged' 
+                {item.licenseAgreementAcknowledged
+                  ? 'Agreement Acknowledged'
                   : '⚠️ REVIEW LICENSE AGREEMENT'}
               </div>
             </div>
           </div>
         ))}
       </div>
-      
+
       <div className="order-totals">
         <div className="order-total-row">
           <span>Subtotal</span>

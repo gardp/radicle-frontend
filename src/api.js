@@ -206,6 +206,14 @@ export const trackStorageFileApi = {
       console.error('Failed to get track storage file:', error);
       throw error;
     }),
+  getTrackStorageFilesByTrackId: (id) => api.get(`/track-storage-files/by-track/${id}/`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Failed to get track storage files by track id:', error);
+      throw error;
+    }),
 };
 
 
@@ -259,7 +267,7 @@ export const orderApi = {
       console.error('Failed to checkout order:', error);
       throw error;
     }),
-    // retrieve the license by order reference number (safer) for the user after payment
+  // retrieve the license by order reference number (safer) for the user after payment
   getLicenseByReferenceNumber: (ReferenceNumber) => api.get(`/orders/${ReferenceNumber}/licenses/`)
     .then(response => {
       return response.data;
