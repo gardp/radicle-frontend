@@ -101,12 +101,12 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
           // if library has tracks, fetch track details from the track_id array of the library
           if (library.tracks && library.tracks.length > 0) {
             trackLibrary.tracks = await Promise.all(
-              library.tracks.map(async (trackId) => {
-                console.log('🚀 Fetching track details for track ID:', trackId);
+              library.tracks.map(async (track_id) => {
+                console.log('🚀 Fetching track details for track ID:', track_id);
                 try {
-                  const trackDetail = await trackApi.getTrackDetail(trackId);
+                  const trackDetail = await trackApi.getTrackDetail(track_id);
                   // Fetch all license options for this track
-                  const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(trackId);
+                  const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(track_id);
                   console.log('✅ Fetched licensing options:', licensingOptions);
                   //Now destructure the licensingOptions list into the trackLicenseOption object
                   const trackLicenseOptions = await licensingOptions.map(option => ({
@@ -130,10 +130,10 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   console.log('✅ Fetched track license options now:', trackLicenseOptions);
                   console.log('✅ Fetched STORAGE FILE:HERE!!!');
                   // Find the Sample license option (use .find() not .filter()) because there is only one sample license option per track and find() returns the first match whereas filter() returns an array of all matches
-                  const targetFormat = trackLibrary.libraryName === "FEATURES" ? "SONG" : "SAMPLE"; // if library is Features, use the SONG name, else use the Sample name0 for beats library
+                  const targetFormat = trackLibrary.libraryName === "NEW FEATURES" ? "SONG" : "SAMPLE"; // if library is Features, use the SONG name, else use the Sample name0 for beats library
                   console.log('✅ Fetched track target format:', targetFormat);
                   // Now using track to get all trackStorageFiles
-                  const trackStorageFiles = await trackApi.getTrackStorageFilesByTrackId(trackId);
+                  const trackStorageFiles = await trackApi.getTrackStorageFilesByTrackId(track_id);
                   console.log('✅ Fetched track storage files:', trackStorageFiles);
                   // Now find the trackStorageFile where track_storage_file.description is targetFormat (SONG or SAMPLE)
                   const trackStorageFile = trackStorageFiles.find(option =>
@@ -144,7 +144,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   const audioFile = trackStorageFile.audio_file;
                   console.log('✅ Fetched track AUDIO FILE:', audioFile);
 
-                  console.log(`Fetched trackDetail+LicensingOptions+SampleFile ${trackId}:`, trackDetail, licensingOptions, trackStorageFile.track_storage_file.description);
+                  console.log(`Fetched trackDetail+LicensingOptions+SampleFile ${track_id}:`, trackDetail, licensingOptions, trackStorageFile.track_storage_file.description);
 
                   // Transform the trackDetail to our track structure
                   const track = {
