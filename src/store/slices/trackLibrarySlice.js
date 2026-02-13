@@ -105,9 +105,9 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
               library.tracks.map(async (trk) => { //mapping thru each track object in the library in the tracks array 
                 console.log('🚀 Fetching track details for each track:', trk);
                 try {
-                  const trackDetail = await trackApi.getTrackDetail(trk.track.track_id);
+                  const trackDetail = await trackApi.getTrackDetail(trk.track_id);
                   // Fetch all license options for this track
-                  const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(trk.track.track_id);
+                  const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(trk.track_id);
                   console.log('✅ Fetched licensing options:', licensingOptions);
                   //Now destructure the licensingOptions list into the trackLicenseOption object
                   const trackLicenseOptions = await licensingOptions.map(option => ({
@@ -138,7 +138,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     p => p.track_storage_desc === targetDescription
                   );
 
-                  console.log(`Fetched trackDetail+LicensingOptions+SelectedPreview ${trk.track.track_id}:`, trackDetail, licensingOptions, selectedPreviewAudio);
+                  console.log(`Fetched trackDetail+LicensingOptions+SelectedPreview ${trk.track_id}:`, trackDetail, licensingOptions, selectedPreviewAudio);
 
                   // Transform the trackDetail to our track structure
                   const track = {
