@@ -7,9 +7,9 @@ export const createCartItemFromTrack = (track, trackLicenseOption) => { //the tr
     id: track.trackId,
     title: `${track.trackTitle}`,
     trackDescription: `${track.trackDescription}`,
-    trackStorageIsrc: track.trackStorageIsrc,
-    trackStorageIswc: track.trackStorageIswc,
-    duration: track.duration_seconds,
+    trackStorageIsrc: track.trackAudioIsrc,
+    trackStorageIswc: track.trackAudioIswc,
+    duration: track.trackDuration,
     producer: track.trackArtistFeaturesLine,
     vinylThumbnail: track.trackVinylThumbnail, //Make sure the thumbnail is a blank vinyl for license purchases track being uploaded!!!
     trackLicenseOption: {

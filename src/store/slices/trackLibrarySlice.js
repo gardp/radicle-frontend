@@ -99,14 +99,15 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
             tracks: [],
           };
           // if library has tracks, fetch track details from the track_id array of the library
+          //IMPORTANT‼️ remember that now I only get the preview audio file for the tracks in the library and all the audio files
           if (library.tracks && library.tracks.length > 0) {
             trackLibrary.tracks = await Promise.all(
-              library.tracks.map(async (track_id) => {
-                console.log('🚀 Fetching track details for track ID:', track_id);
+              library.tracks.map(async (trk) => { //mapping thru each track object in the library in the tracks array 
+                console.log('🚀 Fetching track details for each track:', trk);
                 try {
-                  const trackDetail = await trackApi.getTrackDetail(track_id);
+                  const trackDetail = await trackApi.getTrackDetail(trk.track.track_id);
                   // Fetch all license options for this track
-                  const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(track_id);
+                  const licensingOptions = await trackLicenseOptionApi.getTrackLicenseOptionByTrackId(trk.track.track_id);
                   console.log('✅ Fetched licensing options:', licensingOptions);
                   //Now destructure the licensingOptions list into the trackLicenseOption object
                   const trackLicenseOptions = await licensingOptions.map(option => ({
@@ -129,22 +130,15 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   }));
                   console.log('✅ Fetched track license options now:', trackLicenseOptions);
                   console.log('✅ Fetched STORAGE FILE:HERE!!!');
-                  // Find the Sample license option (use .find() not .filter()) because there is only one sample license option per track and find() returns the first match whereas filter() returns an array of all matches
-                  const targetFormat = trackLibrary.libraryName === "NEW FEATURES" ? "SONG" : "SAMPLE"; // if library is Features, use the SONG name, else use the Sample name0 for beats library
-                  console.log('✅ Fetched track target format:', targetFormat);
-                  // Now using track to get all trackStorageFiles
-                  const trackStorageFiles = await trackApi.getTrackStorageFilesByTrackId(track_id);
-                  console.log('✅ Fetched track storage files:', trackStorageFiles);
-                  // Now find the trackStorageFile where track_storage_file.description is targetFormat (SONG or SAMPLE)
-                  const trackStorageFile = trackStorageFiles.find(option =>
-                    option.track_storage_file?.description === targetFormat.toUpperCase() // if targetFormat is SONG, find the SONG trackStorageFile, else find the SAMPLE trackStorageFile
-                  );
-                  console.log('✅ Fetched track STORAGE FILE:', trackStorageFile.track_storage_file.description);
-                  // Now extracting the audio_file path for either SONG or SAMPLE trackStorageFile description
-                  const audioFile = trackStorageFile.audio_file;
-                  console.log('✅ Fetched track AUDIO FILE:', audioFile);
+                  const targetDescription = trackLibrary.libraryName === "NEW FEATURES" ? "SONG" : "SAMPLE";
 
-                  console.log(`Fetched trackDetail+LicensingOptions+SampleFile ${track_id}:`, trackDetail, licensingOptions, trackStorageFile.track_storage_file.description);
+                  // Find the correct preview audio based on the targetdescription... 
+                  // So if the library is NEW FEATURES, find the SONG preview audio, else find the SAMPLE preview audio
+                  const selectedPreviewAudio = trk.preview_audio?.find(
+                    p => p.track_storage_desc === targetDescription
+                  );
+
+                  console.log(`Fetched trackDetail+LicensingOptions+SelectedPreview ${trk.track.track_id}:`, trackDetail, licensingOptions, selectedPreviewAudio);
 
                   // Transform the trackDetail to our track structure
                   const track = {
@@ -174,14 +168,14 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackStreamLink: trackDetail.stream_link || "",
                     trackDonationLink: trackDetail.donation_link || "",
                     trackLicenseOptions: trackLicenseOptions || [],
-                    trackStorageFileDescription: trackStorageFile?.description || "",
-                    trackStorageIsrc: audioFile?.isrc_code || "",
-                    trackStorageIswc: audioFile?.iswc_code || "",
-                    trackStorageFilePath: audioFile.file_path || "",
-                    trackStorageFileFormatName: audioFile?.file_format?.name || "",
-                    trackStorageFileFormatExtension: audioFile?.file_format?.extension || "",
-                    trackStorageFileFormatBitDepth: audioFile?.file_format?.bit_depth || "",
-                    trackStorageFileFormatSampleRate: audioFile?.file_format?.sample_rate || "",
+                    trackStorageFileDescription: targetDescription, // This is the storage file description for the audio_file selected 
+                    trackAudioIsrc: selectedPreviewAudio?.isrc_code || "",
+                    trackAudioIswc: selectedPreviewAudio?.iswc_code || "",
+                    trackAudioFilePath: selectedPreviewAudio?.file_path || "",
+                    trackAudioFileFormatName: selectedPreviewAudio?.file_format?.name || "",
+                    trackAudioFileFormatExtension: selectedPreviewAudio?.file_format?.extension || "",
+                    trackAudioFileFormatBitDepth: selectedPreviewAudio?.file_format?.bit_depth || "",
+                    trackAudioFileFormatSampleRate: selectedPreviewAudio?.file_format?.sample_rate || "",
                   };
 
                   return track;

@@ -22,7 +22,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
     ...lib,
     tracks: lib.tracks?.filter(track =>
       String(track.trackTitle || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(track.trackArtist || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(track.trackArtistFeaturesLine || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(track.trackBpm || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(track.trackDescription || "").toLowerCase().includes(searchTerm.toLowerCase())
     ) || []
@@ -37,9 +37,9 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
   // console.log('This is the current library', currentLibrary)
   const tracks = currentLibrary?.tracks || [];
   const currentTrack = tracks[currentLibTrackIndex.trackIndex];
-  const { trackTitle, trackArtist, trackStorageFilePath, vinylThumbnail } = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
+  const { trackTitle, trackArtistFeaturesLine, trackAudioFilePath, trackVinylThumbnail } = currentTrack || {}; // So that is the current track by default- Add guard for undefined currentTrack
   // Construct the full, playable URL. The browser automatically adds/resolves the base host url automatically...so don't add in development phase
-  const fullAudioUrl = trackStorageFilePath ? `${trackStorageFilePath}` : ''; // extracting the audioFile from currentTrack above
+  const fullAudioUrl = trackAudioFilePath ? `${trackAudioFilePath}` : ''; // extracting the audioFile from currentTrack above
   // const fullAudioUrl = trackStorageFilePath ? `${API_BASE_URL}${trackStorageFilePath}` : '';
   // Refs
   // const audioRef = useRef(new Audio(fullAudioUrl)); //giving that audio file to a ref
