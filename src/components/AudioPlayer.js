@@ -239,7 +239,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
     audioRef.current?.pause();
 
     // 2. If valid new track, load it
-    if (trackStorageFilePath) {
+    if (trackAudioFilePath) {
       audioRef.current = new Audio(fullAudioUrl);
       setTrackProgress(0);
 
@@ -255,7 +255,7 @@ const AudioPlayer = ({ libraries, playerTitle, onTrackChange }) => {
         }
       }
     }
-  }, [trackStorageFilePath, fullAudioUrl]); // Depend on the raw data, not computed value
+  }, [trackAudioFilePath, fullAudioUrl]); // Depend on the raw data, not computed value
   // trackStorageFilePath: Triggers when the track file changes
   // fullAudioUrl: Ensures you have the latest URL value inside the effect.
   //fullAudioUrl comes from trackStorage so you want to make sure the fullAudioUrl is already loaded by the time the useEffect triggers
