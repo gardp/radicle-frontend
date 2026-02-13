@@ -409,6 +409,7 @@ const Checkout = () => {
           
         //***BUYER INFO*** as placeholder for payment in case I have to lose something other than stripe//
         buyerContact: {
+          contact_type: 'INDIVIDUAL',
           first_name: formData.licenseeContact.firstName,
           last_name: formData.licenseeContact.lastName,
           email: formData.licenseeContact.email,
