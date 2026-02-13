@@ -85,9 +85,9 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               <input
                 type="text"
                 id="sudoName"
-                name="licenseeContact.sudoName"
+                name="musicProfessional.sudoName"
                 className="form-control"
-                value={formData.licenseeContact.sudoName}
+                value={formData.musicProfessional.sudoName}
                 onChange={onChange}
                 placeholder="Your artist name"
               />

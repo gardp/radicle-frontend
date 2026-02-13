@@ -606,7 +606,6 @@ const Checkout = () => {
       email: 'gardly.philoctete@gmail.com',
       firstName: 'John',
       lastName: 'Doe',
-      sudoName: 'Johnyyy Doe',
       companyName: 'Test Company',
       phoneNumber: '123-456-7890',
     },
