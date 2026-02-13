@@ -122,8 +122,10 @@
 
 /* Items Container */
 .cart-items-container {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 150px;
+  max-height: 400px;
+  overflow-y: auto;
   position: relative;
   margin-bottom: 15px;
 }
@@ -156,8 +158,8 @@
 
 /* Cart Items List */
 .cart-items-list {
-  max-height: 270px;
-  overflow-y: auto;
+  /* max-height: 270px;
+  overflow-y: auto; */
   padding-right: 5px;
 }
 
