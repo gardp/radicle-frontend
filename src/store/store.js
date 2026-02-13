@@ -3,6 +3,7 @@ import priceLicensingSlice from './slices/priceLicensing.js'; // Import your red
 import cartReducer from './slices/cartSlice.js';
 import licenseAgreementSlice from './slices/licenseAgreementSlice.js';
 import trackLibrarySlice from './slices/trackLibrarySlice.js';
+import orderReducer from './slices/orderSlice.js';
 export const store = configureStore({
   reducer: {
     priceLicensing: priceLicensingSlice, // Add your reducers here from the priceLicensingSlice object
@@ -10,6 +11,7 @@ export const store = configureStore({
     cart: cartReducer,
     licenseAgreement: licenseAgreementSlice,
     trackLibrary: trackLibrarySlice,
+    order: orderReducer,
   },
 });
 
