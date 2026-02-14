@@ -231,7 +231,7 @@ const Checkout = () => {
     if (!order.reference_number) return;
 
     try {
-      const purchasedLicenses = await orderApi.getLicenseByReferenceNumber(referenceNumber); //you don't get the license until order is complete in the backend
+      const purchasedLicenses = await orderApi.getLicenseByReferenceNumber(order.reference_number); //you don't get the license until order is complete in the backend
       // this returns the following object to deconstruct for OrderConfirmation:
       // {
       //   "order_reference_number": str(order.reference_number),
@@ -501,7 +501,6 @@ const Checkout = () => {
         // *******If the payment doens't go through
     }   catch (paymentError) {
         console.error('Payment processing failed:', paymentError);
-        dispatch(clearReferenceNumber()); // Clear reference number so a new one is generated for retry
         setErrors({
         paymentSubmission: paymentError.response?.data?.message || 'Failed to process payment. Please try again.'
       });
@@ -537,7 +536,6 @@ const Checkout = () => {
 
   // NOW HANDLE STRIPE PAYMENT ERROR
     const handlePaymentError = (errorMessage) => {
-    dispatch(clearReferenceNumber()); // Clear reference number so a new one is generated for retry
     setErrors({ paymentSubmission: errorMessage });
     setIsProcessing(false);
   };
