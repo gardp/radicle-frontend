@@ -501,6 +501,7 @@ const Checkout = () => {
         // *******If the payment doens't go through
     }   catch (paymentError) {
         console.error('Payment processing failed:', paymentError);
+        dispatch(clearReferenceNumber()); // Clear reference number so a new one is generated for retry
         setErrors({
         paymentSubmission: paymentError.response?.data?.message || 'Failed to process payment. Please try again.'
       });
@@ -531,10 +532,12 @@ const Checkout = () => {
     setCheckoutPhase('complete');
     clearCart();
     dispatch(clearReferenceNumber()); // Clear reference number after successful payment
+    console.log('Reference number cleared:', referenceNumber);
   };
 
   // NOW HANDLE STRIPE PAYMENT ERROR
     const handlePaymentError = (errorMessage) => {
+    dispatch(clearReferenceNumber()); // Clear reference number so a new one is generated for retry
     setErrors({ paymentSubmission: errorMessage });
     setIsProcessing(false);
   };
