@@ -109,6 +109,10 @@ const LicenseAgreement = () => {
     const licenseOption = cartItem?.trackLicenseOption?.licenseType;
     if (!cartItem || !licenseOption) return "License template not found for this item.";
     let template = cartItem.trackLicenseOption.licenseType.licenseTemplate;
+    
+    console.log('=== TEMPLATE REPLACEMENT DEBUG ===');
+    console.log('Original template length:', template.length);
+    console.log('First 500 chars of template:', template.substring(0, 500));
 
     //   template = template.replace(
     //   /body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }/,
@@ -146,6 +150,8 @@ const LicenseAgreement = () => {
     };
 
     // Handle date formatting: {{ effective_date|date:"F d, Y" }}
+    let dateMatches = template.match(/\{\{\s*effective_date\|date:"F d, Y"[^}]*\}\}/g);
+    console.log('Date "F d, Y" matches found:', dateMatches?.length || 0);
     template = template.replace(/\{\{\s*effective_date\|date:"F d, Y"[^}]*\}\}/g, 
       now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
     
@@ -153,29 +159,46 @@ const LicenseAgreement = () => {
     template = template.replace(/\{\{\s*effective_date\|date:"F"[^}]*\}\}/g, 
       now.toLocaleDateString('en-US', { month: 'long' }));
     template = template.replace(/\{\{\s*effective_date\|date:"Y"[^}]*\}\}/g, now.getFullYear());
+    console.log('After date replacements');
 
     // Handle conditional blocks: {% if video_rights %}...{% else %}...{% endif %}
+    let conditionalMatches = template.match(/\{%\s*if\s+video_rights\s*%\}(.*?)\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}/gs);
+    console.log('Conditional blocks found:', conditionalMatches?.length || 0);
     template = template.replace(/\{%\s*if\s+video_rights\s*%\}(.*?)\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}/gs, 
       (match, ifContent, elseContent) => {
         return replacements.video_rights ? ifContent : elseContent;
       });
 
     // Handle for loops (writers table) - replace with empty rows for now
+    let loopMatches = template.match(/\{%\s*for\s+writer\s+in\s+writers.*?\{%\s*empty\s*%\}(.*?)\{%\s*endfor\s*%\}/gs);
+    console.log('For loops found:', loopMatches?.length || 0);
     template = template.replace(/\{%\s*for\s+writer\s+in\s+writers.*?\{%\s*empty\s*%\}(.*?)\{%\s*endfor\s*%\}/gs, 
       (match, emptyContent) => emptyContent);
 
     // Handle remaining {% %} tags
+    let remainingTags = template.match(/\{%[^%]*%\}/g);
+    console.log('Remaining {% %} tags:', remainingTags?.length || 0, remainingTags);
     template = template.replace(/\{%[^%]*%\}/g, '');
 
     // Handle {{ variable|default:"value" }} pattern
+    let variableMatches = template.match(/\{\{\s*([a-zA-Z0-9_.]+)(?:\|default:"(.*?)")?\s*\}\}/g);
+    console.log('Variable placeholders found:', variableMatches?.length || 0);
+    console.log('Sample variables:', variableMatches?.slice(0, 5));
+    
     template = template.replace(/\{\{\s*([a-zA-Z0-9_.]+)(?:\|default:"(.*?)")?\s*\}\}/g, 
       (match, key, defaultValue) => {
         const value = replacements[key];
         if (value !== undefined && value !== null) {
+          console.log(`Replacing ${key} with:`, value);
           return value;
         }
+        console.log(`Using default for ${key}:`, defaultValue || '________________');
         return defaultValue || '________________';
       });
+
+    console.log('Final template length:', template.length);
+    console.log('Remaining unreplaced {{ }}:', (template.match(/\{\{[^}]*\}\}/g) || []).length);
+    console.log('=== END TEMPLATE DEBUG ===');
 
     return template;
   };
