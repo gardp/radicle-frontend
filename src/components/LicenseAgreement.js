@@ -196,6 +196,16 @@ const LicenseAgreement = () => {
         return defaultValue || '________________';
       });
 
+    // Strip the full HTML document wrapper (DOCTYPE, html, head, style, body tags)
+    // The template's <style> block applies globally and overrides .license-text background
+    // Only keep the inner <body> content; contract element styles are in LicenseAgreement.css
+    template = template.replace(/<!DOCTYPE[^>]*>/i, '');
+    template = template.replace(/<html[^>]*>/i, '');
+    template = template.replace(/<\/html>/i, '');
+    template = template.replace(/<head[\s\S]*?<\/head>/i, '');
+    template = template.replace(/<body[^>]*>/i, '');
+    template = template.replace(/<\/body>/i, '');
+
     console.log('Final template length:', template.length);
     console.log('Remaining unreplaced {{ }}:', (template.match(/\{\{[^}]*\}\}/g) || []).length);
     console.log('=== END TEMPLATE DEBUG ===');
