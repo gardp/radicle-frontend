@@ -119,39 +119,63 @@ const LicenseAgreement = () => {
     // Define all replacement values
     const now = new Date();
     const replacements = {
-      'effective_date.date': now.getDate(),
-      'effective_date.month': now.toLocaleString('default', { month: 'long' }),
-      'effective_date.year': now.getFullYear(),
-      'licensee_name': 'Licensee Name', // Placeholder
-      'track_description': cartItem.trackDescription,
-      'track_id': cartItem.id || 'N/A',
+      'effective_date': now,
+      'licensee_name': 'Licensee Name',
+      'track_description': cartItem.trackDescription || cartItem.title || 'Untitled',
+      'audio_file_isrc': cartItem.trackStorageIsrc || 'N/A',
       'track_storage_isrc': cartItem.trackStorageIsrc || 'N/A',
       'track_storage_iswc': cartItem.trackStorageIswc || 'N/A',
-      'order_reference': 'N/A',
-      'songs_per_license': licenseOption.songsPerLicense || '1',
+      'monetized_streaming_limit': licenseOption.monetizedStreamingLimit || 'Unlimited',
       'monetized_download_limit': licenseOption.monetizedDownloadLimit || 'N/A',
-      'monetized_streaming_limit': licenseOption.monetizedStreamingLimit || 'N/A',
       'monetized_video_streaming_limit': licenseOption.monetizedVideoStreamingLimit || 'N/A',
-      'monetized_radio_plays': licenseOption.monetizedRadioPlays || 'N/A',
+      'monetized_radio_plays': licenseOption.monetizedRadioPlays || 'Limited',
       'license_fee': licenseOption.price || 'N/A',
-      'license_term': licenseOption.licenseTerm || '10',
-      'license_type_format': licenseOption.licenseTypeFormat || 'MP3-WAV',
-      'address.state': 'State',
-      'title': cartItem.title || 'Untitled', //description is better suited to go in the contract
-      'duration_seconds': cartItem.duration || '0:00',
-      'licensor_name': 'Gardly Philoctete (GardlyRadicle)',
+      'royalty_payment': '3%',
+      'license_term': licenseOption.licenseTerm || '10 years',
       'license_type_name': licenseOption.licenseTypeName || 'Non-Exclusive License',
-      'price': licenseOption.price || 'N/A',
-      'currency': '$'
+      'licensor_name': 'Gardly Philoctete (GardlyRadicle)',
+      'licensor_address.all.0': 'Address on file',
+      'licensee_address.all.0': 'Address on file',
+      'credit_requirement': 'Produced by',
+      'track_title': cartItem.title || 'Untitled',
+      'track_duration': cartItem.duration || '0:00',
+      'licensee_pro_affiliation': 'ASCAP / BMI / SESAC / Other',
+      'licensee_share': '50',
+      'currency': '$',
+      'video_rights': licenseOption.videoRights || false
     };
 
-    // Generic replacement for {{ key|default:"val" }} pattern
-    template = template.replace(/{{\s*([a-zA-Z0-9_.]+)(?:\|default:"(.*?)")?\s*}}/g, (match, key, defaultValue) => {
-      return replacements[key] !== undefined ? replacements[key] : (defaultValue || match);
-    });
+    // Handle date formatting: {{ effective_date|date:"F d, Y" }}
+    template = template.replace(/\{\{\s*effective_date\|date:"F d, Y"[^}]*\}\}/g, 
+      now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+    
+    template = template.replace(/\{\{\s*effective_date\|date:"j"[^}]*\}\}/g, now.getDate());
+    template = template.replace(/\{\{\s*effective_date\|date:"F"[^}]*\}\}/g, 
+      now.toLocaleDateString('en-US', { month: 'long' }));
+    template = template.replace(/\{\{\s*effective_date\|date:"Y"[^}]*\}\}/g, now.getFullYear());
 
-    // Handle conditional logic (if any remains) - stripping for now as per previous logic
-    template = template.replace(/{%[^%]*%}/g, '');
+    // Handle conditional blocks: {% if video_rights %}...{% else %}...{% endif %}
+    template = template.replace(/\{%\s*if\s+video_rights\s*%\}(.*?)\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}/gs, 
+      (match, ifContent, elseContent) => {
+        return replacements.video_rights ? ifContent : elseContent;
+      });
+
+    // Handle for loops (writers table) - replace with empty rows for now
+    template = template.replace(/\{%\s*for\s+writer\s+in\s+writers.*?\{%\s*empty\s*%\}(.*?)\{%\s*endfor\s*%\}/gs, 
+      (match, emptyContent) => emptyContent);
+
+    // Handle remaining {% %} tags
+    template = template.replace(/\{%[^%]*%\}/g, '');
+
+    // Handle {{ variable|default:"value" }} pattern
+    template = template.replace(/\{\{\s*([a-zA-Z0-9_.]+)(?:\|default:"(.*?)")?\s*\}\}/g, 
+      (match, key, defaultValue) => {
+        const value = replacements[key];
+        if (value !== undefined && value !== null) {
+          return value;
+        }
+        return defaultValue || '________________';
+      });
 
     return template;
   };

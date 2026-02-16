@@ -17,12 +17,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: none;
+  backdrop-filter: blur(5px);
   padding-top: 60px; /* Add padding to avoid navbar overlap */
 }
 
@@ -109,13 +109,14 @@
 }
 
 .license-text {
-  background: #ffffff; 
+  background: #ffffff !important; 
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 24px;
   max-height: 400px;
   overflow-y: auto;
   position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* License Agreement Content Styles */
