@@ -283,13 +283,14 @@
   /*box-shadow: 0 3px 16px rgba(196, 18, 48, 0.2);
 }
 
-/* Icon Positions - general styling */
-a:has(.stream-icon),
-a:has(.buy-icon),
-a:has(.download-icon) {
+/* Icon link wrapper (tooltip anchor) */
+.track-icon-link {
   position: relative;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin: 0 3px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Cursor pointer moved to track-item main declaration */
@@ -298,6 +299,7 @@ a:has(.download-icon) {
 .tooltip {
   visibility: hidden;
   position: absolute;
+  inset: auto;
   background-color: transparent;
   background-image: linear-gradient(to bottom, rgba(40, 40, 40, 0.95), rgba(0, 0, 0, 0.9));
   color: white;
@@ -306,57 +308,58 @@ a:has(.download-icon) {
   border-radius: 6px;
   font-size: calc(12px * var(--track-base-size));
   white-space: nowrap;
+  max-width: min(220px, calc(100vw - 16px));
   z-index: 3;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
   pointer-events: none;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-a:hover .tooltip {
+.track-icon-link:is(:hover, :focus, :focus-visible, :active) .tooltip {
   visibility: visible;
   opacity: 1;
 }
 
-/* Tooltip positioning */
-a:has(.stream-icon) .tooltip {
-  left: 50%;
-  bottom: calc(-25px * var(--track-base-size));
-  transform: translateX(-50%);
-}
-
-a:has(.buy-icon) .tooltip {
-  left: 50%;
-  /* bottom: calc(-25px * var(--track-base-size));
-  transform: translateX(-50%); */
-}
-
-a:has(.download-icon) .tooltip {
-  left: 50%;
-  bottom: calc(-25px * var(--track-base-size));
-  transform: translateX(-50%);
+/* Desktop placement: put tooltip on the left side of icon to stay in viewport */
+.track-icon-link.tooltip-left .tooltip {
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Add arrow to tooltip */
 .tooltip::after {
   content: "";
   position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: calc(-5px * var(--track-base-size));
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
   border-width: calc(5px * var(--track-base-size));
   border-style: solid;
-  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+  border-color: transparent transparent transparent rgba(0, 0, 0, 0.9);
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
 }
 
-/* Adjust arrow position for bottom tooltip */
-a:has(.download-icon) .tooltip::after {
-  top: auto;
-  bottom: 100%;
-  border-color: transparent transparent rgba(40, 40, 40, 0.95) transparent;
+/* Viewport-dependent auto flip: on smaller widths, show tooltip above icon */
+@media (max-width: 1024px) {
+  .track-icon-link.tooltip-left .tooltip {
+    right: 0;
+    left: auto;
+    bottom: calc(100% + 10px);
+    top: auto;
+    transform: none;
+  }
+
+  .track-icon-link.tooltip-left .tooltip::after {
+    top: 100%;
+    left: auto;
+    right: 12px;
+    transform: none;
+    border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+  }
 }
 
 /* Track label - Now contains the visual styling that was on track-item */
@@ -530,10 +533,6 @@ a:has(.download-icon) .tooltip::after {
     padding: 2px;
   }
   
-  .tooltip {
-    display: none;
-  }
-
   /* Remove transform on hover */
   .track-item:hover {
     transform: none;
@@ -596,10 +595,6 @@ a:has(.download-icon) .tooltip::after {
     width: 20px;               /* Reduced from 24px */
     height: 20px;
     padding: 2px;
-  }
-  
-  .tooltip {
-    display: none;
   }
   
   /* Remove transform on hover */

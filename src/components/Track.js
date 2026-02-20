@@ -92,10 +92,15 @@ const Track = ({ track, isActive, onClick, libraryName }) => {
           {/* Buy and Download icons */}
           <div className="track-icons-up">
             {track.trackBuyLink && (
-              <a href="#" onClick={(e) => {
+              <a
+                href="#"
+                className="track-icon-link tooltip-left"
+                aria-label="Beat Lease"
+                onClick={(e) => {
                 e.stopPropagation(); handleCartClick(e); // stopPropagation prevents the parent track-item onClick from firing 
                 console.log("Buy clicked", track);
-              }}>
+                }}
+              >
                 <img
                   // className="track-icon buy-icon skeuomorphic-btn primary with-glare" justink
                   className="track-icon buy-icon primary with-glare"
@@ -106,7 +111,12 @@ const Track = ({ track, isActive, onClick, libraryName }) => {
               </a>
             )}
             {track.trackDownloadLink && (
-              <a href="#" onClick={handleDownloadClick}>
+              <a
+                href="#"
+                className="track-icon-link tooltip-left"
+                aria-label="Free Download"
+                onClick={handleDownloadClick}
+              >
                 <img
                   className="track-icon download-icon skeuomorphic-btn accent with-glare"
                   src={downloadIcon}
@@ -119,7 +129,14 @@ const Track = ({ track, isActive, onClick, libraryName }) => {
           {/* Stream icon */}
           <div className="track-icons-down">
             {track.trackStreamLink && (
-              <a href={track.trackStreamLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+              <a
+                href={track.trackStreamLink}
+                className="track-icon-link tooltip-left"
+                aria-label="Stream"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <img
                   className="track-icon stream-icon skeuomorphic-btn"
                   src={streamIcon}
