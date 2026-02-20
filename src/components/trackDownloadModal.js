@@ -204,7 +204,7 @@ const TrackDownloadModal = () => {
 
         {/* Email */}
         <div className="download-email-section">
-          <label>Email address (required — subscribes you to our newsletter)</label>
+          <label>Email address (required for Download)</label>
           <input
             className={`download-email-input ${emailInvalid ? 'invalid' : ''}`}
             type="email"
