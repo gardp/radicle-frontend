@@ -25,7 +25,7 @@ export const createCartItemFromTrack = (track, trackLicenseOption) => { //the tr
         monetizedStreamingLimit: trackLicenseOption.licenseType.monetizedStreamingLimit,
         monetizedRadioPlays: trackLicenseOption.licenseType.monetizedRadioPlays,
         monetizedVideoStreamingLimit: trackLicenseOption.licenseType.monetizedVideoStreamingLimit,
-        price: Number(trackLicenseOption.licenseType.price).toFixed(2), //from the trackLicenseOption object,
+        price: Number(trackLicenseOption.licenseType.price).toFixed(2), //from the trackLicenseOption object. Price is donation amount if freeDownload option selected
         currency: trackLicenseOption.licenseType.currency,
       }
     },
@@ -73,7 +73,7 @@ export const isTrackLicenseInCartItems = (items, id, trackLicenseOptionId) =>
   items.some(
     item =>
       item.type === 'track' &&
-      item.id === id && //this id is the track_id from the trackLibrarySlice
+      item.id === id && //this id is the track_id from the trackLibrarySlice. it's redundant since we have the trackLicenseOptionId that is unique already but keeping it for extra check and testing
       item.trackLicenseOption?.trackLicenseOptionId === trackLicenseOptionId //this trackLicenseOptionId is the trackLicenseOptionId from the trackLibrarySlice
   );
 
@@ -268,6 +268,19 @@ export const selectLicenseAgreementAcknowledged = (state, id) =>
 // Selector to check if all license agreements are acknowledged
 export const selectAllLicenseAgreementsAcknowledged = (state) => {
   return state.cart.items.every(item => item.licenseAgreementAcknowledged === true);
+};
+
+// Selector: true when the cart is non-empty AND every item is a track
+// with a "PERSONAL USE" license. Used to trigger express checkout
+// (skip CheckoutForm, auto-fill dummy data, auto-acknowledge).
+export const selectIsPersonalUseOnly = (state) => {
+  const { items } = state.cart;
+  if (items.length === 0) return false;
+  return items.every(
+    item =>
+      item.type === 'track' &&
+      item.trackLicenseOption?.licenseType?.licenseTypeName === 'PERSONAL USE'
+  );
 };
 // Export reducer
 export default cartSlice.reducer;

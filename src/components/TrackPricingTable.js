@@ -21,6 +21,12 @@ const TrackPricingTable = () => {
   // const { data: license_types } = useLicenseTypes();
   console.log("pricing table current track", currentTrack);
   console.log("pricing table selected license option", selectedLicenseOption);
+
+  // Filter out PERSONAL USE from the pricing table.
+  // PERSONAL USE is only intended to be shown/selected inside TrackDownloadModal.
+  const displayTrackLicenseOptions = (currentTrack?.trackLicenseOptions || []).filter(
+    (trackLicenseOption) => trackLicenseOption?.licenseType?.licenseTypeName !== 'PERSONAL USE'
+  );
   
   // // printing the cart state
   // const { items = [] } = useSelector((state) => state.cart.items || []);
@@ -148,8 +154,9 @@ const TrackPricingTable = () => {
         </div>
         
         <div className="pricing-options-container">
-          {currentTrack.trackLicenseOptions.map(trackLicenseOption => (
-            console.log("track license option", currentTrack.trackLicenseOptions),
+          {/* SHOWING ALL LICENSE OPTIONS  EXCEPT FOR "PERSONAL USE" AS IT'S ONLY INTENDED FOR THE trackDownloadModal*/}
+          {displayTrackLicenseOptions.map(trackLicenseOption => (
+            console.log("track license option", displayTrackLicenseOptions),
             <div 
               key={trackLicenseOption.trackLicenseOptionId}
               className={`pricing-option ${selectedLicenseOption === trackLicenseOption? 'selected' : ''}`} //${option.recommended ? 'recommended' : ''}` 
@@ -163,8 +170,8 @@ const TrackPricingTable = () => {
                 <li>{trackLicenseOption?.licenseType?.licenseTypeName}</li>
                 <li>{trackLicenseOption?.licenseType?.licenseTerm}</li>
                 <li>{trackLicenseOption?.licenseType?.fileFormatName}</li>
-                <li>{trackLicenseOption?.licenseType?.downloadLimit} Downloads</li>
-                <li>{trackLicenseOption?.licenseType?.streamingLimit} Streams</li>
+                <li>{trackLicenseOption?.licenseType?.monetizedDownloadLimit} Downloads</li>
+                <li>{trackLicenseOption?.licenseType?.monetizedStreamingLimit} Streams</li>
                 <li>No Refunds</li>
               </ul>
               <button 

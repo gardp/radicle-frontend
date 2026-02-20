@@ -3,10 +3,12 @@ import '../styles/AudioPlayer.css';
 import '../styles/Track.css';
 import '../styles/SkeuomorphicButtons.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { openPricingModal, closePricingModal } from '../store/slices/priceLicensing.js';
+import { openPricingModal, closePricingModal, openDownloadModal } from '../store/slices/priceLicensing.js';
 import cartIconRed from '../assets/images/icons8-cart-crimson-red.png';
-import downloadIcon from '../assets/images/icons8-listening-to-music-on-headphones-100.png';
-import streamIcon from '../assets/images/icons8-music-stream-red.png';
+// import downloadIcon from '../assets/images/icons8-listening-to-music-on-headphones-100.png'; 
+import downloadIcon from '../assets/images/icons8-music-stream-red.png';
+// import streamIcon from '../assets/images/icons8-music-stream-red.png'; 
+import streamIcon from '../assets/images/icons8-headphones-100.png';
 import babyRadicle from '../assets/images/baby-radicle.png';
 import avatar from '../assets/images/radicleavatar.jpg';
 const Track = ({ track, isActive, onClick, libraryName }) => {
@@ -35,6 +37,21 @@ const Track = ({ track, isActive, onClick, libraryName }) => {
     dispatch(closePricingModal());
   };
 
+  // Handle download icon click — verify PERSONAL USE license exists, then open download modal
+  const handleDownloadClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const hasPersonalUse = track.trackLicenseOptions?.some(
+      (opt) => opt.licenseType?.licenseTypeName === 'PERSONAL USE'
+    );
+    if (!hasPersonalUse) {
+      console.error('No PERSONAL USE license option found for track:', track.trackTitle);
+      return;
+    }
+    dispatch(openDownloadModal(track)); // opens TrackDownloadModal via priceLicensing slice
+    console.log('Download clicked — opening download modal for:', track.trackTitle);
+  };
+
   return (
     <>
       <div
@@ -54,9 +71,9 @@ const Track = ({ track, isActive, onClick, libraryName }) => {
         <div className="track-label">
           <div className="track-info-line">
             <span className="track-title">
-              {/* if libraryName is FEATURES, use trackTitle, else use trackDescription */}
-              {libraryName === "FEATURES"
-                ? (track.trackTitle || "N/A - Coming soon")
+              {/* if libraryName is FEATURES or REMIX, use trackTitle (+ version subtitle), else use trackDescription */}
+              {(libraryName === "FEATURES" || libraryName === "REMIX")
+                ? `${track.trackTitle || "N/A - Coming soon"}${track.trackVersionSubtitle ? ` (${track.trackVersionSubtitle})` : ""}`
                 : (track.trackDescription || "N/A - Coming soon")}
             </span>
             <span className="track-separator"> - </span>
@@ -85,17 +102,17 @@ const Track = ({ track, isActive, onClick, libraryName }) => {
                   src={cartIconRed}
                   alt="Buy"
                 />
-                <span className="tooltip">Buy</span>
+                <span className="tooltip">Beat Lease</span>
               </a>
             )}
             {track.trackDownloadLink && (
-              <a href={track.trackDownloadLink} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.stopPropagation(); console.log("Download clicked"); }}>
+              <a href="#" onClick={handleDownloadClick}>
                 <img
                   className="track-icon download-icon skeuomorphic-btn accent with-glare"
                   src={downloadIcon}
                   alt="Download"
                 />
-                <span className="tooltip">Download</span>
+                <span className="tooltip">Free Download</span>
               </a>
             )}
           </div>

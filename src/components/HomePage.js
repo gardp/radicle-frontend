@@ -13,7 +13,7 @@ const HomePage = () => {
   // so you don't need the function in the component, you just need the state objects extracted using the selectors!!!
 
   //now extract the right libraries for the home page musicContainer/AudioPlayer
-  const previewLibraries = librariesWithTracks?.filter(lib => lib.libraryName == "NEW FEATURES" || lib.libraryName == "NEW BEATS") || [];
+  const previewLibraries = librariesWithTracks?.filter(lib => lib.libraryName == "NEW BEATS" || lib.libraryName == "FEATURES" || lib.libraryName == "REMIX") || [];
   console.log('HomePage', librariesWithTracks);
   console.log('HomePage Loading', isLoading);
   console.log('HomePage Error', error);
@@ -39,8 +39,12 @@ const HomePage = () => {
           {previewLibraries && previewLibraries.length > 0 && (
             <MusicContainer
               libraries={previewLibraries}
-              trackCount={3}
-              playerTitle="New Features"
+              trackCountByLibrary={{
+                "NEW BEATS": 5,
+                "FEATURES": 20,
+                "REMIXES": 20,
+              }}
+              playerTitle="HIGHLIGHTS"
               scale={0.5} /* Scale from 0.5 to 1, where 1 is 100% (default) */
             />
           )}

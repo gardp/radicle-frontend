@@ -11,6 +11,7 @@ import CustomNavbar from './components/CustomNavbar';
 import Catalog from './components/Catalog';
 import Checkout from './components/checkout/Checkout';
 import TrackPricingTable from './components/TrackPricingTable';
+import TrackDownloadModal from './components/trackDownloadModal';
 import LicenseAgreement from './components/LicenseAgreement';
 import OrderConfirmation from './components/checkout/OrderConfirmation';
 import MusicLicensing from './components/MusicLicensing';
@@ -46,6 +47,7 @@ function App() {
             </main>
           {/* </Container> */}
           <TrackPricingTable/>
+          <TrackDownloadModal/>
           <LicenseAgreement/>
         </div>
       </Router>

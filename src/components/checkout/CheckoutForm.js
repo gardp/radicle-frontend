@@ -34,7 +34,7 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             />
             {errors.email && <div className="error-message">{errors.email}</div>}
           </div>
-
+          {/* This might me a bit redundant if user already subscribed via freedownload, but leave it for persistency  */}
           <div className="form-group">
             <label className="email-list-checkbox-container">
               <input

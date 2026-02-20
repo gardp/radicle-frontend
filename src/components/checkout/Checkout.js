@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import useCart from '../../hooks/useCart';
-import { selectAllLicenseAgreementsAcknowledged } from '../../store/slices/cartSlice';
+import { selectAllLicenseAgreementsAcknowledged, selectIsPersonalUseOnly, toggleLicenseAgreementAndSaveThunk } from '../../store/slices/cartSlice';
 import { 
   selectReferenceNumber, 
   generateReferenceNumber, 
@@ -105,6 +105,13 @@ const Checkout = () => {
   const [licensesReqError, setLicensesReqError] = useState(null); // for error message
   const [licenseFiles, setLicenseFiles] = useState(null); // for saving licenses to use outside of handleSubmit
 
+  // --- Express checkout state (for carts with only PERSONAL USE items) ---
+  // When every cart item has licenseTypeName === "PERSONAL USE", we skip the
+  // CheckoutForm UI, auto-fill dummy licensee data (real email from localStorage),
+  // auto-acknowledge license agreements, and submit the order automatically.
+  const [isExpressCheckout, setIsExpressCheckout] = useState(false);
+  const expressSubmittedRef = useRef(false); // guard to prevent double-submission
+  const isPersonalUseOnly = useSelector(selectIsPersonalUseOnly);
 
   // Get reference number from Redux store
   // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
@@ -128,25 +135,85 @@ const Checkout = () => {
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (items.length === 0 && !orderComplete && !isProcessing) {
+    if (items.length === 0 && !orderComplete && !isProcessing && !isExpressCheckout) {
       navigate('/');
     }
-  }, [items, navigate, orderComplete, isProcessing]);
+  }, [items, navigate, orderComplete, isProcessing, isExpressCheckout]);
 
-  // useEffect(() => {
-  //   if (orderComplete && order) {
-  //     navigate('/order-confirmation', {
-  //       state: {
-  //         order,
-  //         payment,           // e.g. the response you got back or the payload you built
-  //         email: formData.contact.email,
-  //         purchasedItems: items, // or the orderItems you built
-  //       },
-  //       replace: true, // optional: avoids user going back to checkout with browser back
-  //     });
-  //   }
-  // }, [orderComplete, order, payment, formData?.contact?.email, items, navigate]);
-  
+  // --- Express checkout: detect PERSONAL USE only cart and auto-prepare ---
+  useEffect(() => {
+    if (!isPersonalUseOnly || isExpressCheckout || isProcessing || orderComplete) return;
+    console.log('Express checkout: PERSONAL USE only cart detected');
+
+    // 1. Read the newsletter email persisted by TrackDownloadModal
+    const savedEmail = localStorage.getItem('radicle_newsletter_email') || '';
+
+    // 2. Auto-fill form with realistic dummy data; only email is real
+    setFormData({
+      licenseeContact: {
+        contactType: 'INDIVIDUAL',
+        email: savedEmail,
+        firstName: 'Free',
+        lastName: 'Download',
+        companyName: '',
+        phoneNumber: '0000000000',
+      },
+      emailListSubscription: false, // already subscribed via TrackDownloadModal
+      mailingRegistrationAddress: {
+        addressType: 'Registration',
+        addressLine1: '0000 Free Download',
+        addressLine2: '',
+        city: 'Internet',
+        state: 'NA',
+        zipCode: '00000',
+        country: 'US',
+      },
+      musicProfessional: {
+        sudoName: '',
+        refCode: '',
+        proAffiliation: '',
+        ipiNumber: '',
+        snsLink1: '',
+        snsLink2: '',
+      },
+      paymentProcessing: {
+        card: {
+          paymentMethod: 'stripe',
+          cardNumber: '',
+          expiryDate: '',
+          cvv: '',
+        },
+        paypal: {
+          paymentMethod: 'paypal',
+        },
+      },
+    });
+
+    // 3. Auto-acknowledge license agreements for every cart item
+    items.forEach(item => {
+      dispatch(toggleLicenseAgreementAndSaveThunk({ item, acknowledged: true }));
+    });
+
+    setIsExpressCheckout(true);
+  }, [isPersonalUseOnly]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // --- Express checkout: auto-submit once formData + acknowledgments are ready ---
+  useEffect(() => {
+    if (
+      isExpressCheckout &&
+      allLicenseAgreementsAcknowledged &&
+      referenceNumber &&
+      !isProcessing &&
+      !orderComplete &&
+      !expressSubmittedRef.current
+    ) {
+      expressSubmittedRef.current = true; // prevent re-entry on subsequent renders
+      console.log('Express checkout: auto-submitting order');
+      // Call handleSubmit with a synthetic event (preventDefault is a no-op)
+      handleSubmit({ preventDefault: () => {} });
+    }
+  }, [isExpressCheckout, allLicenseAgreementsAcknowledged, referenceNumber, isProcessing, orderComplete]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -304,52 +371,6 @@ const Checkout = () => {
       newErrors.country = 'Country is required';
     }
 
-    // Billing Address validation
-    // if (!formData.paymentProcessing.card.billingAddress.addressLine1 || formData.paymentProcessing.card.billingAddress.addressLine1.length < 5) {
-    //   newErrors.addressLine1 = 'Valid street address is required';
-    // }
-    
-    // if (!formData.paymentProcessing.card.billingAddress.city) {
-    //   newErrors.city = 'City is required';
-    // }
-    
-    // if (!formData.paymentProcessing.card.billingAddress.state) {
-    //   newErrors.state = 'State/Province is required';
-    // }
-    
-    // if (!formData.paymentProcessing.card.billingAddress.zipCode || !/^[0-9]{5}(-[0-9]{4})?$/.test(formData.paymentProcessing.card.billingAddress.zipCode)) {
-    //   newErrors.zipCode = 'Valid zip code is required (e.g., 12345 or 12345-6789)';
-    // }
-    
-    // if (!formData.paymentProcessing.card.billingAddress.country) {
-    //   newErrors.country = 'Country is required';
-    // }
-    
-    // // Payment validation- to uncomment
-    // if (!formData.paymentProcessing.card.paymentMethod) {
-    //   newErrors.paymentMethod = 'Please select a payment method';
-    // }
-    
-    // if (formData.paymentProcessing.card.paymentMethod === 'stripe') {
-    //   if (!formData.paymentProcessing.card.cardNumber || !/^[0-9]{16}$/.test(formData.paymentProcessing.card.cardNumber.replace(/\s/g, ''))) {
-    //     newErrors.cardNumber = 'Valid card number is required';
-    //   }
-      
-    //   if (!formData.paymentProcessing.card.expiryDate || !/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(formData.paymentProcessing.card.expiryDate)) {
-    //     newErrors.expiryDate = 'Valid expiry date is required (MM/YY)';
-    //   }
-      
-    //   if (!formData.paymentProcessing.card.cvv || !/^[0-9]{3,4}$/.test(formData.paymentProcessing.card.cvv)) {
-    //     newErrors.cvv = 'Valid CVV is required';
-    //   }
-
-    //   if (!formData.paymentProcessing.card.contact.firstNameOnCard) {
-    //     newErrors.firstNameOnCard = 'First name on card is required';
-    //   } 
-      
-    //   if (!formData.paymentProcessing.card.contact.lastNameOnCard) {
-    //     newErrors.lastNameOnCard = 'Last name on card is required';
-    //   }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -686,6 +707,7 @@ const Checkout = () => {
     setFormData(testData);
   };
 // ******Test data for quick form filling during development
+// Returning for checkout phase only
   return (
     <div className="checkout-container">
       <div className="checkout-header">
@@ -724,17 +746,28 @@ const Checkout = () => {
       
       <div className="checkout-layout">
         {checkoutPhase === 'info' ? (
-          <>
-            <CheckoutForm 
-              formData={formData}
-              onChange={handleInputChange}
-              errors={errors}
-              onSubmit={handleSubmit}
-              isProcessing={isProcessing}
-              isSubmitDisabled={!allLicenseAgreementsAcknowledged}
-            />
-            <OrderSummary />
-          </>
+          isExpressCheckout ? (
+            /* Express checkout: skip form, show loading while order is auto-submitted */
+            <div className="express-checkout-processing" style={{ textAlign: 'center', padding: '60px 20px', color: 'white', width: '100%' }}>
+              <h2>Processing Free Download...</h2>
+              <p>Setting up your order automatically. Please wait...</p>
+              {(errors.orderSubmission || errors.paymentSubmission) && (
+                <p style={{ color: '#ff6666', marginTop: '16px' }}>{errors.orderSubmission || errors.paymentSubmission}</p>
+              )}
+            </div>
+          ) : (
+            <>
+              <CheckoutForm 
+                formData={formData}
+                onChange={handleInputChange}
+                errors={errors}
+                onSubmit={handleSubmit}
+                isProcessing={isProcessing}
+                isSubmitDisabled={!allLicenseAgreementsAcknowledged}
+              />
+              <OrderSummary />
+            </>
+          )
         ) : (
           <>
             <div className="payment-section">
