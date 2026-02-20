@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaGitSquare } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
 import '../styles/SkeuomorphicButtons.css';
 import '../styles/AudioControlButtons.css';
 import '../styles/AudioControls.css';
+import { openPricingModal, openDownloadModal } from '../store/slices/priceLicensing.js';
 
 import playIcon from '../assets/images/icons8-play-button-red.png';
 import pauseIcon from '../assets/images/icons8-pause-button-red.png';
@@ -17,8 +19,9 @@ import prevIconYellow from '../assets/images/icons8-prev-yellow.png';
 
 
 // New icons for streaming and buying
-import streamIcon from '../assets/images/icons8-music-stream-black.png';
+import streamIcon from '../assets/images/icons8-headphones-100-black.png';
 import buyIcon from '../assets/images/icons8-cart-black.png';
+import downloadIcon from '../assets/images/icons8-music-stream-black.png';
 
 const AudioControls = ({
   isPlaying,
@@ -33,6 +36,7 @@ const AudioControls = ({
   trackStyling,
 }) => {
   // Size customization functionality has been removed
+  const dispatch = useDispatch();
 
   // Using a ref to track media query for desktop view
   const [isDesktop, setIsDesktop] = useState(false);
@@ -50,6 +54,26 @@ const AudioControls = ({
 
     return () => mediaQuery.removeEventListener('change', handleResize);
   }, []);
+
+  const handleBuyClick = (e) => {
+    e.preventDefault();
+    dispatch(openPricingModal(track));
+  };
+
+  const handleDownloadClick = (e) => {
+    e.preventDefault();
+    const hasPersonalUse = track?.trackLicenseOptions?.some(
+      (opt) => opt.licenseType?.licenseTypeName === 'PERSONAL USE'
+    );
+
+    if (!hasPersonalUse) {
+      console.error('No PERSONAL USE license option found for track:', track?.trackTitle);
+      return;
+    }
+
+    dispatch(openDownloadModal(track));
+  };
+
   if (!track) {
     return null;
   }
@@ -69,12 +93,40 @@ const AudioControls = ({
       <div className="now-playing-container">
         {/* New div for stream and buy icons */}
         <div className="audio-actions-bar">
-          <div className="stream-icon-container">
-            <img src={streamIcon} alt="Stream Track" className="action-icon" />
-          </div>
-          <div className="buy-icon-container">
-            <img src={buyIcon} alt="Buy Track" className="action-icon" />
-          </div>
+          {track.trackStreamLink && (
+            <a
+              href={track.trackStreamLink}
+              className="action-icon-link"
+              aria-label="Stream"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={streamIcon} alt="Stream Track" className="action-icon" />
+              <span className="audio-action-tooltip">Stream</span>
+            </a>
+          )}
+          {track.trackBuyLink && (
+            <a
+              href="#"
+              className="action-icon-link"
+              aria-label="Beat Lease"
+              onClick={handleBuyClick}
+            >
+              <img src={buyIcon} alt="Buy Track" className="action-icon" />
+              <span className="audio-action-tooltip">Beat Lease</span>
+            </a>
+          )}
+          {track.trackDownloadLink && (
+            <a
+              href="#"
+              className="action-icon-link"
+              aria-label="Free Download"
+              onClick={handleDownloadClick}
+            >
+              <img src={downloadIcon} alt="Download Track" className="action-icon" />
+              <span className="audio-action-tooltip">Free Download</span>
+            </a>
+          )}
         </div>
         {/* Vinyl artwork for mobile - inside now-playing-container */}
         {!isDesktop && (

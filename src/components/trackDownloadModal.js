@@ -131,7 +131,7 @@ const TrackDownloadModal = () => {
     // --- 1. Subscribe to newsletter (block until success) ---
     setStatusMessage({ type: 'loading', text: 'Subscribing to newsletter...' });
     try {
-      await newsletterApi.subscribe({ email, source: 'free_download' });
+      await newsletterApi.subscribe({ email, source: 'DOWNLOAD' });
     } catch (err) {
       console.error('Newsletter subscription failed:', err);
       const serverMsg = err?.response?.data?.message || err?.response?.data?.error || 'Newsletter subscription failed. Please try again.';
@@ -176,7 +176,7 @@ const TrackDownloadModal = () => {
 
         {/* Donation Amount */}
         <div className="download-donation-section">
-          <label>Support the artist with an optional donation</label>
+          <label>Support the cause{':)'}✊</label>
           <div className="download-donation-input-wrapper">
             <span className="currency-symbol">$</span>
             <input

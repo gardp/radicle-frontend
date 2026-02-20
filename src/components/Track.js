@@ -8,7 +8,7 @@ import cartIconRed from '../assets/images/icons8-cart-crimson-red.png';
 // import downloadIcon from '../assets/images/icons8-listening-to-music-on-headphones-100.png'; 
 import downloadIcon from '../assets/images/icons8-music-stream-red.png';
 // import streamIcon from '../assets/images/icons8-music-stream-red.png'; 
-import streamIcon from '../assets/images/icons8-headphones-100.png';
+import streamIcon from '../assets/images/icons8-headphones-100-red.png';
 import babyRadicle from '../assets/images/baby-radicle.png';
 import avatar from '../assets/images/radicleavatar.jpg';
 const Track = ({ track, isActive, onClick, libraryName }) => {

@@ -105,11 +105,9 @@
 }
 
 /* Options Container */
-/* grid-template-columns: repeat(4, 1fr); */
 .pricing-options-container {
   display: grid;
-  grid-template-columns: repeat(4, minmax(180px, 220px));
-  justify-content: center;
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px; /* Reduced from 24px */
   margin-bottom: 24px; /* Reduced from 32px */
 }
@@ -317,11 +315,9 @@
 }
 
 /* Responsive Design */
-/* grid-template-columns: repeat(2, 1fr); */
 @media (max-width: 1200px) {
   .pricing-options-container {
-    grid-template-columns: repeat(2, minmax(180px, 260px));
-    justify-content: center;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .pricing-modal-content {
