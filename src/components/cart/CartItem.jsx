@@ -14,7 +14,7 @@ const CartItem = ({ item }) => {
   const licenseTypeName = item?.trackLicenseOption?.licenseType?.name
     || item?.trackLicenseOption?.licenseType?.licenseTypeName;
   const displayDescription = licenseTypeName === 'PERSONAL USE'
-    ? item.trackTitle
+    ? item.title
     : item.trackDescription;
 
   return (
@@ -22,7 +22,7 @@ const CartItem = ({ item }) => {
       <div className="cart-item-image">
         <img
           src={item.vinylThumbnail}
-          alt={item.trackTitle}
+          alt={item.trackDescription}
           className="cart-thumb"
         />
       </div>
