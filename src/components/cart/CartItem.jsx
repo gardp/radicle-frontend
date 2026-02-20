@@ -11,6 +11,12 @@ const CartItem = ({ item }) => {
     removeFromCart
   } = useCart();
 
+  const licenseTypeName = item?.trackLicenseOption?.licenseType?.name
+    || item?.trackLicenseOption?.licenseType?.licenseTypeName;
+  const displayDescription = licenseTypeName === 'PERSONAL USE'
+    ? item.trackTitle
+    : item.trackDescription;
+
   return (
     <div className="cart-item">
       <div className="cart-item-image">
@@ -22,7 +28,7 @@ const CartItem = ({ item }) => {
       </div>
 
       <div className="cart-item-details">
-        <h4 className="cart-item-description">{item.trackDescription}</h4>
+        <h4 className="cart-item-description">{displayDescription}</h4>
         <p className="cart-item-name">{item.trackLicenseOption.licenseType.licenseTypeName}</p>
         <div className="cart-item-license">
           {item.type === 'track' && (

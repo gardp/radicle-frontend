@@ -40,7 +40,7 @@ const initialState = {
   items: [],
   totalItems: 0,
   subtotal: 0,
-  taxRate: 0.08,
+  taxRate: 0.00,
   taxAmount: 0,
   totalPrice: 0,
   isLoading: false,
