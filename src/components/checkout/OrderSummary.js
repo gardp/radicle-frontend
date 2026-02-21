@@ -41,6 +41,9 @@ const OrderSummary = () => {
             {(() => {
               const licenseTypeName = item?.trackLicenseOption?.licenseType?.licenseTypeName;
               const isPersonalUse = licenseTypeName === 'PERSONAL USE';
+              const orderItemName = isPersonalUse
+                ? item?.title
+                : item?.trackDescription;
 
               return (
                 <>
@@ -52,7 +55,7 @@ const OrderSummary = () => {
               )}
             </div>
             <div className="order-item-details">
-              <div className="order-item-name">{item?.trackDescription}</div>
+              <div className="order-item-name">{orderItemName}</div>
               <div className="order-item-license">{item?.trackLicenseOption?.licenseType?.licenseTypeName} License</div>
               <div className="order-item-price">
                 ${item?.trackLicenseOption?.licenseType?.price} × {item?.quantity}  = ${item?.trackLicenseOption?.licenseType?.price * item?.quantity}
