@@ -70,7 +70,8 @@ const TrackDownloadModal = () => {
     return isTrackLicenseInCartItems(
       items,
       currentDownloadTrack.trackId,
-      personalUseLicenseOption.trackLicenseOptionId
+      personalUseLicenseOption.trackLicenseOptionId,
+      currentDownloadTrack.trackDescription
     );
   };
 

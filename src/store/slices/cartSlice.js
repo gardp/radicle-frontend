@@ -69,12 +69,22 @@ const calculateCartTotals = (items) => {
 };
 
 // Helper function to check if a track license is in the cart
-export const isTrackLicenseInCartItems = (items, id, trackLicenseOptionId) =>
+// For PERSONAL USE, optionally match trackDescription as an extra guard.
+export const isTrackLicenseInCartItems = (items, id, trackLicenseOptionId, trackDescription = null) =>
   items.some(
-    item =>
+    item => {
+      const isPersonalUse = item.trackLicenseOption?.licenseType?.licenseTypeName === 'PERSONAL USE';
+      const isDescriptionMatch = !isPersonalUse
+        || trackDescription == null
+        || item.trackDescription === trackDescription;
+
+      return (
       item.type === 'track' &&
       item.id === id && //this id is the track_id from the trackLibrarySlice. it's redundant since we have the trackLicenseOptionId that is unique already but keeping it for extra check and testing
-      item.trackLicenseOption?.trackLicenseOptionId === trackLicenseOptionId //this trackLicenseOptionId is the trackLicenseOptionId from the trackLibrarySlice
+      item.trackLicenseOption?.trackLicenseOptionId === trackLicenseOptionId && //this trackLicenseOptionId is the trackLicenseOptionId from the trackLibrarySlice
+      isDescriptionMatch
+      );
+    }
   );
 
 // Create the slice
