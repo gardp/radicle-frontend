@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { openLicenseModal } from '../../store/slices/licenseAgreementSlice';
+import { toggleLicenseAgreementAndSaveThunk } from '../../store/slices/cartSlice';
 import '../../styles/Checkout.css';
 import useCart from '../../hooks/useCart';
 /**
@@ -9,6 +10,17 @@ import useCart from '../../hooks/useCart';
 const OrderSummary = () => {
   const dispatch = useDispatch();
   const { items, subtotal, taxRate, taxAmount, totalPrice } = useCart();
+
+  useEffect(() => {
+    items.forEach((item) => {
+      const licenseTypeName = item?.trackLicenseOption?.licenseType?.licenseTypeName;
+      const isPersonalUse = licenseTypeName === 'PERSONAL USE';
+
+      if (isPersonalUse && !item.licenseAgreementAcknowledged) {
+        dispatch(toggleLicenseAgreementAndSaveThunk({ item, acknowledged: true }));
+      }
+    });
+  }, [dispatch, items]);
 
 
   // Handle opening the license agreement modal
@@ -26,6 +38,12 @@ const OrderSummary = () => {
       <div className="order-items">
         {items.map((item, index) => (
           <div key={index} className="order-item">
+            {(() => {
+              const licenseTypeName = item?.trackLicenseOption?.licenseType?.licenseTypeName;
+              const isPersonalUse = licenseTypeName === 'PERSONAL USE';
+
+              return (
+                <>
             <div className="order-item-image">
               {item.type === "track" ? (
                 <img src={item.vinylThumbnail} alt={item?.trackDescription} />
@@ -39,15 +57,20 @@ const OrderSummary = () => {
               <div className="order-item-price">
                 ${item?.trackLicenseOption?.licenseType?.price} × {item?.quantity}  = ${item?.trackLicenseOption?.licenseType?.price * item?.quantity}
               </div>
-              <div
-                className={`license-agreement-link ${item.licenseAgreementAcknowledged ? 'acknowledged' : 'pending alert-pulse'}`}
-                onClick={() => handleOpenLicenseAgreement(item)}
-              >
-                {item.licenseAgreementAcknowledged
-                  ? 'Agreement Acknowledged'
-                  : '⚠️ REVIEW LICENSE AGREEMENT'}
-              </div>
+              {!isPersonalUse && (
+                <div
+                  className={`license-agreement-link ${item.licenseAgreementAcknowledged ? 'acknowledged' : 'pending alert-pulse'}`}
+                  onClick={() => handleOpenLicenseAgreement(item)}
+                >
+                  {item.licenseAgreementAcknowledged
+                    ? 'Agreement Acknowledged'
+                    : '⚠️ REVIEW LICENSE AGREEMENT'}
+                </div>
+              )}
             </div>
+                </>
+              );
+            })()}
           </div>
         ))}
       </div>

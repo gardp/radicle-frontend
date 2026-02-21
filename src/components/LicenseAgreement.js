@@ -169,6 +169,14 @@ const LicenseAgreement = () => {
         return replacements.video_rights ? ifContent : elseContent;
       });
 
+    // Handle download_date conditional block by always inserting current date.
+    // Example supported block:
+    // {% if download_date %}{{ download_date|date:"F j, Y" }}{% else %}{% now "F j, Y" %}{% endif %}
+    template = template.replace(
+      /\{%\s*if\s+download_date\s*%\}[\s\S]*?\{%\s*else\s*%\}[\s\S]*?\{%\s*endif\s*%\}/g,
+      now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    );
+
     // Handle for loops (writers table) - replace with empty rows for now
     let loopMatches = template.match(/\{%\s*for\s+writer\s+in\s+writers.*?\{%\s*empty\s*%\}(.*?)\{%\s*endfor\s*%\}/gs);
     console.log('For loops found:', loopMatches?.length || 0);
