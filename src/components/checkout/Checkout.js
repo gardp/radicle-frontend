@@ -505,7 +505,7 @@ const Checkout = () => {
     }   catch (paymentError) {
         console.error('Payment processing failed:', paymentError);
         setErrors({
-        paymentSubmission: paymentError.response?.data?.message || 'Failed to process payment. Please try again.'
+        paymentSubmission: paymentError?.response?.data?.message || 'Failed to process payment. Please try again.'
       });
     } finally {
         setIsProcessing(false);
