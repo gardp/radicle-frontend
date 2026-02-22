@@ -502,6 +502,39 @@
   }
 }
 
+/* Personal Use download notice */
+.personal-use-notice {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 174, 176, 0.08), rgba(0, 212, 255, 0.12));
+  border: 1px solid rgba(0, 212, 255, 0.25);
+}
+
+.personal-use-notice-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.personal-use-notice-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  background: linear-gradient(90deg, #00aeb0, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.personal-use-notice-text {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+  font-weight: 400;
+}
+
 /* Order confirmation page */
 .order-confirmation {
   text-align: center;

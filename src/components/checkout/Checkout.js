@@ -105,12 +105,11 @@ const Checkout = () => {
   const [licensesReqError, setLicensesReqError] = useState(null); // for error message
   const [licenseFiles, setLicenseFiles] = useState(null); // for saving licenses to use outside of handleSubmit
 
-  // --- Express checkout state (for carts with only PERSONAL USE items) ---
-  // When every cart item has licenseTypeName === "PERSONAL USE", we skip the
-  // CheckoutForm UI, auto-fill dummy licensee data (real email from localStorage),
-  // auto-acknowledge license agreements, and submit the order automatically.
-  const [isExpressCheckout, setIsExpressCheckout] = useState(false);
-  const expressSubmittedRef = useRef(false); // guard to prevent double-submission
+  // --- Personal Use checkout state ---
+  // When every cart item has licenseTypeName === "PERSONAL USE", we auto-fill
+  // dummy licensee data (real email from localStorage), auto-acknowledge license
+  // agreements, and show only the payment method picker + a "Complete Download" button.
+  const personalUseFilledRef = useRef(false); // guard to prevent re-running auto-fill
   const isPersonalUseOnly = useSelector(selectIsPersonalUseOnly);
 
   // Get reference number from Redux store
@@ -128,22 +127,22 @@ const Checkout = () => {
   const { items, subtotal, taxRate, taxAmount, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   
-  // Check if all license agreements are acknowledged
+  // Check if all license agreements in the cart are acknowledged
   const allLicenseAgreementsAcknowledged = useSelector(selectAllLicenseAgreementsAcknowledged);
   
   // Use effect that automatically passes all initial form values to formData upon rendering
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (items.length === 0 && !orderComplete && !isProcessing && !isExpressCheckout) {
+    if (items.length === 0 && !orderComplete && !isProcessing) {
       navigate('/');
     }
-  }, [items, navigate, orderComplete, isProcessing, isExpressCheckout]);
+  }, [items, navigate, orderComplete, isProcessing]);
 
-  // --- Express checkout: detect PERSONAL USE only cart and auto-prepare ---
+  // --- Personal Use checkout: detect PERSONAL USE only cart and auto-fill dummy data ---
   useEffect(() => {
-    if (!isPersonalUseOnly || isExpressCheckout || isProcessing || orderComplete) return;
-    console.log('Express checkout: PERSONAL USE only cart detected');
+    if (!isPersonalUseOnly || personalUseFilledRef.current || isProcessing || orderComplete) return;
+    console.log('Personal Use checkout: PERSONAL USE only cart detected');
 
     // 1. Read the newsletter email persisted by TrackDownloadModal
     const savedEmail = localStorage.getItem('radicle_newsletter_email') || '';
@@ -194,25 +193,8 @@ const Checkout = () => {
       dispatch(toggleLicenseAgreementAndSaveThunk({ item, acknowledged: true }));
     });
 
-    setIsExpressCheckout(true);
+    personalUseFilledRef.current = true;
   }, [isPersonalUseOnly]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // --- Express checkout: auto-submit once formData + acknowledgments are ready ---
-  useEffect(() => {
-    if (
-      isExpressCheckout &&
-      allLicenseAgreementsAcknowledged &&
-      referenceNumber &&
-      !isProcessing &&
-      !orderComplete &&
-      !expressSubmittedRef.current
-    ) {
-      expressSubmittedRef.current = true; // prevent re-entry on subsequent renders
-      console.log('Express checkout: auto-submitting order');
-      // Call handleSubmit with a synthetic event (preventDefault is a no-op)
-      handleSubmit({ preventDefault: () => {} });
-    }
-  }, [isExpressCheckout, allLicenseAgreementsAcknowledged, referenceNumber, isProcessing, orderComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -714,7 +696,7 @@ const Checkout = () => {
         <h1>Checkout</h1>
         <p>
           {checkoutPhase === 'info' 
-            ? 'Complete your purchase by providing your details below'
+            ? (isPersonalUseOnly ? 'Complete your free download below' : 'Complete your purchase by providing your details below')
             : 'Complete your payment'}
         </p>
       </div>
@@ -746,16 +728,6 @@ const Checkout = () => {
       
       <div className="checkout-layout">
         {checkoutPhase === 'info' ? (
-          isExpressCheckout ? (
-            /* Express checkout: skip form, show loading while order is auto-submitted */
-            <div className="express-checkout-processing" style={{ textAlign: 'center', padding: '60px 20px', color: 'white', width: '100%' }}>
-              <h2>Processing Free Download...</h2>
-              <p>Setting up your order automatically. Please wait...</p>
-              {(errors.orderSubmission || errors.paymentSubmission) && (
-                <p style={{ color: '#ff6666', marginTop: '16px' }}>{errors.orderSubmission || errors.paymentSubmission}</p>
-              )}
-            </div>
-          ) : (
             <>
               <CheckoutForm 
                 formData={formData}
@@ -764,10 +736,10 @@ const Checkout = () => {
                 onSubmit={handleSubmit}
                 isProcessing={isProcessing}
                 isSubmitDisabled={!allLicenseAgreementsAcknowledged}
+                isPersonalUseOnly={isPersonalUseOnly}
               />
               <OrderSummary />
             </>
-          )
         ) : (
           <>
             <div className="payment-section">

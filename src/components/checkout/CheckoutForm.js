@@ -6,7 +6,7 @@ import paypalIcon from '../../assets/images/icons8-paypal-96.png';
 /**
  * CheckoutForm component handles collecting customer information and payment details
  */
-const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSubmitDisabled }) => {
+const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSubmitDisabled, isPersonalUseOnly }) => {
   // Payment method icons
   const paymentIcons = {
     stripe: stripeIcon,
@@ -16,6 +16,17 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
   return (
     <div className="checkout-form-container">
       <form onSubmit={onSubmit}>
+        {/* For PERSONAL USE only: show elegant notification + payment methods only */}
+        {isPersonalUseOnly && (
+          <div className="personal-use-notice">
+            <div className="personal-use-notice-icon">🎵</div>
+            <h2 className="personal-use-notice-title">Almost Done!</h2>
+            <p className="personal-use-notice-text">Choose a payment method to proceed with your download</p>
+          </div>
+        )}
+
+        {!isPersonalUseOnly && (
+        <>
         {/* Contact Information */}
         <div className="checkout-form-section">
           <h3 className="form-section-title">Licensee Contact Information</h3>
@@ -311,6 +322,8 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             </div>
           </div>
         </div>
+        </>
+        )}
         <br />
 
         {/* <div className="form-group">
@@ -481,7 +494,9 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
               Processing...
             </>
           ) : (
-            isSubmitDisabled ? 'Acknowledge License Agreements to Continue' : 'Complete Purchase'
+            isPersonalUseOnly
+              ? 'Complete Download'
+              : (isSubmitDisabled ? 'Acknowledge License Agreements to Continue' : 'Complete Purchase')
           )}
         </button>
       </form>
