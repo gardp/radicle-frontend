@@ -267,7 +267,7 @@ export const orderApi = {
       console.error('Failed to checkout order:', error);
       throw error;
     }),
-  // retrieve the license by order reference number (safer) for the user after payment
+  // retrieve the license by order reference number (safer) for the user after payment- this is get_license_and_tracks() in the backend
   getLicenseByReferenceNumber: (ReferenceNumber) => api.get(`/orders/${ReferenceNumber}/licenses/`)
     .then(response => {
       return response.data;

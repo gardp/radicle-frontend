@@ -118,6 +118,7 @@ const Checkout = () => {
 
   // Generate reference number on mount if it doesn't exist
   // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
+  //And only clear it when the order is complete
   useEffect(() => {
     if (!referenceNumber) {
       dispatch(generateReferenceNumber());
@@ -273,6 +274,7 @@ const Checkout = () => {
     if (retries >= maxRetries) {
       setLicensesReqError(new Error('License not ready after multiple attempts'));
       setLicensesReqLoading(false);
+      dispatch(clearReferenceNumber());
       return;
     }
 
@@ -290,6 +292,7 @@ const Checkout = () => {
       setLicenseFiles(purchasedLicenses);
       setLicensesReqLoading(false);
       setLicensesReqError(null);
+      dispatch(clearReferenceNumber());
       console.log("YESS ALL WORKED OUT", purchasedLicenses);
     } catch (error) {
       
@@ -306,7 +309,7 @@ const Checkout = () => {
 
   // Start the retry process
   fetchLicensesWithRetry();
-}, [paymentProcessed, referenceNumber, orderComplete, order?.reference_number]);
+}, [dispatch, paymentProcessed, orderComplete, order?.reference_number]);
   
   // Validate form data
   const validateForm = () => {
@@ -484,7 +487,6 @@ const Checkout = () => {
         setOrderComplete(true);
         setCheckoutPhase('complete');
         clearCart();
-        dispatch(clearReferenceNumber());
         setIsProcessing(false);
         return;
       }
@@ -547,8 +549,8 @@ const Checkout = () => {
     setOrderComplete(true);
     setCheckoutPhase('complete');
     clearCart();
-    dispatch(clearReferenceNumber()); // Clear reference number after successful payment
-    console.log('Reference number cleared:', referenceNumber);
+    // dispatch(clearReferenceNumber()); // Clear reference number after successful payment
+    console.log('Reference number cleared (handleStripePaymentSuccess):', referenceNumber);
   };
 
   // NOW HANDLE STRIPE PAYMENT ERROR
@@ -586,7 +588,8 @@ const Checkout = () => {
       setOrderComplete(true);
       setCheckoutPhase('complete');
       clearCart();
-      dispatch(clearReferenceNumber()); // Clear reference number after successful payment
+     // dispatch(clearReferenceNumber()); // Clear reference number after successful payment
+     console.log('Reference number cleared (handlePayPalApprove):', referenceNumber);
     } else {
       throw new Error('Capture failed');
     }
