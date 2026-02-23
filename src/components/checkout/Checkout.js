@@ -478,18 +478,7 @@ const Checkout = () => {
       const paymentMethod = formData.paymentProcessing.card.paymentMethod;
       console.log('Order status:', orderData?.status, 'Payment method:', paymentMethod);
 
-      // For $0 orders (e.g., free PERSONAL USE downloads), skip payment intent entirely.
-      // Stripe and PayPal reject $0.00 payment intents.
       const orderTotal = parseFloat(orderData.total_amount ?? totalPrice ?? 0);
-      if (orderData && orderData.status === "PENDING" && orderTotal === 0) {
-        console.log('$0 order detected — skipping payment intent, completing order directly');
-        setPaymentProcessed(true);
-        setOrderComplete(true);
-        setCheckoutPhase('complete');
-        clearCart();
-        setIsProcessing(false);
-        return;
-      }
 
       if (orderData && orderData.status === "PENDING") {
         console.log('Entering payment intent block...');
@@ -505,6 +494,32 @@ const Checkout = () => {
         });
         console.log('Payment Intent created:', paymentIntentResponse);
       // ***END OF PAYMENT INTENT RESPONSE***
+
+      /**
+       * $0 PERSONAL USE flow documentation:
+       *
+       * We intentionally still call paymentApi.paymentIntent() for zero-total orders so the backend
+       * executes the same payment-intent initialization pathway as normal paid orders. This keeps
+       * backend side effects consistent (order/payment linkage, downstream processing, and the data
+       * path used by license + track retrieval).
+       *
+       * After that backend call succeeds, there is no real customer charge to confirm on the frontend.
+       * So we bypass the Stripe/PayPal client confirmation callbacks and directly mark checkout as
+       * completed in the UI. This transitions the app into the same state consumed by
+       * fetchLicensesWithRetry() (paymentProcessed + orderComplete), which then fetches licenses/tracks.
+       *
+       * Important: this bypass only happens AFTER the payment-intent API request has succeeded.
+       * If payment intent creation fails, execution goes to catch and the order is not marked complete.
+       */
+      // Stripe and PayPal reject $0.00 payment. so the next section prevents from going to the payment success/verification check from paypal and stripe
+      if (orderTotal === 0) {
+        console.log('$0 order detected — payment intent completed on backend, skipping frontend payment confirmation');
+        setPaymentProcessed(true);
+        setOrderComplete(true);
+        setCheckoutPhase('complete');
+        clearCart();
+        return;
+      }
 
       // ***NOW EXTRACTING SERVER CLIENT SECRET 
       if (paymentMethod === 'stripe') {
