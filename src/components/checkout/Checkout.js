@@ -474,7 +474,21 @@ const Checkout = () => {
       // ***BEGINNING OF PAYMENT INTENT RESPONSE*** //
       const paymentMethod = formData.paymentProcessing.card.paymentMethod;
       console.log('Order status:', orderData?.status, 'Payment method:', paymentMethod);
-      
+
+      // For $0 orders (e.g., free PERSONAL USE downloads), skip payment intent entirely.
+      // Stripe and PayPal reject $0.00 payment intents.
+      const orderTotal = parseFloat(orderData.total_amount ?? totalPrice ?? 0);
+      if (orderData && orderData.status === "PENDING" && orderTotal === 0) {
+        console.log('$0 order detected — skipping payment intent, completing order directly');
+        setPaymentProcessed(true);
+        setOrderComplete(true);
+        setCheckoutPhase('complete');
+        clearCart();
+        dispatch(clearReferenceNumber());
+        setIsProcessing(false);
+        return;
+      }
+
       if (orderData && orderData.status === "PENDING") {
         console.log('Entering payment intent block...');
         try {

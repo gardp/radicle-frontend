@@ -2,6 +2,9 @@ import React from 'react';
 import '../../styles/Checkout.css';
 import stripeIcon from '../../assets/images/icons8-stripe-96.png';
 import paypalIcon from '../../assets/images/icons8-paypal-96.png';
+import { getData as getCountryData } from 'country-list';
+
+const countries = getCountryData();
 
 /**
  * CheckoutForm component handles collecting customer information and payment details
@@ -296,27 +299,11 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
                 required
               >
                 <option value="">Select a country</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="GB">United Kingdom</option>
-                <option value="AU">Australia</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
-                <option value="ES">Spain</option>
-                <option value="JP">Japan</option>
-                <option value="IN">India</option>
-                <option value="BR">Brazil</option>
-                <option value="MX">Mexico</option>
-                <option value="IT">Italy</option>
-                <option value="PT">Portugal</option>
-                <option value="CH">Switzerland</option>
-                <option value="TR">Turkey</option>
-                <option value="ZA">South Africa</option>
-                <option value="NG">Nigeria</option>
-                <option value="EG">Egypt</option>
-                <option value="KE">Kenya</option>
-                <option value="GH">Ghana</option>
-                {/* Add more countries as needed */}
+                {countries.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.name}
+                  </option>
+                ))}
               </select>
               {errors.country && <div className="error-message">{errors.country}</div>}
             </div>
