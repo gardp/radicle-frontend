@@ -445,16 +445,16 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
         {/* Payment Information - stripe or Paypal*/}
         <div className="payment-methods">
           <div
-            className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'stripe' ? 'selected' : ''}`}
-            onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'stripe' } })}
+            className={`payment-method ${formData.paymentProcessing.paymentMethod === 'stripe' ? 'selected' : ''}`}
+            onClick={() => onChange({ target: { name: 'paymentProcessing.paymentMethod', value: 'stripe' } })}
           >
             <img src={paymentIcons.stripe} alt="stripe" />
             <span>Stripe</span>
           </div>
 
           <div
-            className={`payment-method ${formData.paymentProcessing.card.paymentMethod === 'paypal' ? 'selected' : ''}`}
-            onClick={() => onChange({ target: { name: 'paymentProcessing.card.paymentMethod', value: 'paypal' } })}
+            className={`payment-method ${formData.paymentProcessing.paymentMethod === 'paypal' ? 'selected' : ''}`}
+            onClick={() => onChange({ target: { name: 'paymentProcessing.paymentMethod', value: 'paypal' } })}
           >
             <img src={paymentIcons.paypal} alt="PayPal" />
             <span>PayPal</span>

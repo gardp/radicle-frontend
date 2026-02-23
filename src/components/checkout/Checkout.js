@@ -52,16 +52,8 @@ const Checkout = () => {
       snsLink2: '',
     },
     paymentProcessing:{
-      card:{
-        paymentMethod: 'stripe',
-        cardNumber: '',
-        expiryDate: '',
-        cvv: '',
-      },
-      paypal: {
-        paymentMethod: 'paypal',
-        // PayPal specific fields
-      },
+      paymentMethod: 'stripe', // or 'paypal'
+    },
     // buyerContact:{
     //   contactType: 'INDIVIDUAL',
     //   email: '',
@@ -86,7 +78,6 @@ const Checkout = () => {
     //       postalCode: '',
     //       country: '',
     //     },  
-    },
   });
   
   // State for form validation errors
@@ -177,15 +168,7 @@ const Checkout = () => {
         snsLink2: '',
       },
       paymentProcessing: {
-        card: {
-          paymentMethod: 'stripe',
-          cardNumber: '',
-          expiryDate: '',
-          cvv: '',
-        },
-        paypal: {
-          paymentMethod: 'paypal',
-        },
+        paymentMethod: 'stripe', // or 'paypal'
       },
     });
 
@@ -201,14 +184,6 @@ const Checkout = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === 'checkbox' ? checked : value;
-    
-    // If trying to update billing address while sameAddressAsShipping is true, ignore the change:
-    // Check if the "Same Address as shipping" checkbox is checked
-    // Check if the field being changed is part of the billing address
-    // Completely ignore the change attempt if both conditions are true
-    // if (formData.paymentProcessing.card.BillingSameAddressAsMailing && name.startsWith('paymentProcessing.card.billingAddress')) {
-    //   return;
-    // }
     
     // spread error to extract name and Clear error when field is edited. 
     // Clear any validation error for this field
@@ -246,23 +221,6 @@ const Checkout = () => {
       });
     }
   };
-  
-  // make building address the same as shipping or on its own depending on user choice on sameAddressAsShipping checkbox
-  // useEffect(() => {
-  //   if (formData.paymentProcessing.card.BillingSameAddressAsMailing) {
-  //     setFormData(currentFormData => ({
-  //       ...currentFormData,
-  //       paymentProcessing: {
-  //         ...currentFormData.paymentProcessing,
-  //         card: {
-  //           ...currentFormData.paymentProcessing.card,
-  //           billingAddress: currentFormData.mailingRegistrationAddress,
-  //         },
-  //       },
-  //     }));
-  //   }
-  //   console.log("addressLine1", formData.paymentProcessing.card.billingAddress.addressLine1);
-  // }, [formData.paymentProcessing.card.BillingSameAddressAsMailing, formData.mailingRegistrationAddress]); 
   
   // USE EFFECT TO FETCH LICENSES WHEN PAYMENT IS SUCCESSFUL
   useEffect(() => {
@@ -439,7 +397,7 @@ const Checkout = () => {
         })),
         //***PAYMENT***// Besides method and currency, everything else is being calculated on the server
         payment: {
-          payment_method: formData.paymentProcessing.card.paymentMethod,
+          payment_method: formData.paymentProcessing.paymentMethod,
           currency: "usd",
         }
       }
@@ -475,7 +433,7 @@ const Checkout = () => {
       // Set completion last so confirmation renders with non-null payment
 
       // ***BEGINNING OF PAYMENT INTENT RESPONSE*** //
-      const paymentMethod = formData.paymentProcessing.card.paymentMethod;
+      const paymentMethod = formData.paymentProcessing.paymentMethod;
       console.log('Order status:', orderData?.status, 'Payment method:', paymentMethod);
 
       const orderTotal = parseFloat(orderData.total_amount ?? totalPrice ?? 0);
@@ -621,7 +579,7 @@ const Checkout = () => {
     // retrieve the license by reference number (safer) for the user after payment
     const paymentData = {
       amount: order.total_amount,
-      provider: formData.paymentProcessing.card.paymentMethod,
+      provider: formData.paymentProcessing.paymentMethod,
     }
 
     // retrieve the license by reference number (safer) for the order confirmationafter payment
@@ -665,16 +623,7 @@ const Checkout = () => {
     },
 
     paymentProcessing:{
-      card:{
-        paymentMethod: 'stripe',
-        cardNumber: '4111 1111 1111 1111',
-        expiryDate: '12/25',
-        cvv: '123',
-      },
-      paypal: {
-        paymentMethod: 'paypal',
-        // PayPal specific fields
-      },
+      paymentMethod: 'stripe',
     // buyerContact:{
     //   buyerType: 'INDIVIDUAL',
     //   email: 'gardly.philoctete@gmail.com',
@@ -702,19 +651,6 @@ const Checkout = () => {
     },
   };
 
-  // Build billingDetails object for Stripe (add this before the return statement in the payment phase)
-// const billingDetails = {
-//   name: `${formData.paymentProcessing.card.contact.firstNameOnCard} ${formData.paymentProcessing.card.contact.lastNameOnCard}`,
-//   email: formData.paymentProcessing.card.contact.email || formData.licenseeContact.email,
-//   address: {
-//     line1: formData.paymentProcessing.card.billingAddress.addressLine1,
-//     line2: formData.paymentProcessing.card.billingAddress.addressLine2 || undefined,
-//     city: formData.paymentProcessing.card.billingAddress.city,
-//     state: formData.paymentProcessing.card.billingAddress.state,
-//     postal_code: formData.paymentProcessing.card.billingAddress.zipCode,
-//     country: formData.paymentProcessing.card.billingAddress.country,
-//   },
-// };
 
   // Function to fill form with test data
   const fillTestData = () => {
@@ -779,7 +715,7 @@ const Checkout = () => {
               <p>Order Reference: {order?.reference_number}</p>
               
               <PaymentWrapper
-                paymentMethod={formData.paymentProcessing.card.paymentMethod}
+                paymentMethod={formData.paymentProcessing.paymentMethod}
                 clientSecret={clientSecret}
                 orderId={order?.order_id}
                 onPaymentSuccess={handleStripePaymentSuccess}
