@@ -136,15 +136,32 @@ const Checkout = () => {
     if (!isPersonalUseOnly || personalUseFilledRef.current || isProcessing || orderComplete) return;
     console.log('Personal Use checkout: PERSONAL USE only cart detected');
 
-    // 1. Read the newsletter email persisted by TrackDownloadModal
-    const subscriber = localStorage.getItem('radicle_newsletter_subscriber') || '';
+    // 1. Read persisted subscriber data from TrackDownloadModal safely
+    const savedSubscriberRaw = localStorage.getItem('radicle_newsletter_subscriber');
+    let subscriber = { email: '', name: '' };
+    if (savedSubscriberRaw) {
+      try {
+        const parsedSubscriber = JSON.parse(savedSubscriberRaw); //parse the raw data because localStorage only stores strings
+        if (parsedSubscriber && typeof parsedSubscriber === 'object') {
+          subscriber = {
+            email: parsedSubscriber.email || '',
+            name: parsedSubscriber.name || '',
+          };
+        }
+      } catch (error) {
+        console.warn('Failed to parse stored subscriber payload:', error);
+      }
+    }
+
+    const subscriberEmail = subscriber.email;
+    const subscriberName = subscriber.name || (subscriberEmail ? subscriberEmail.split('@')[0] : 'Free');
 
     // 2. Auto-fill form with realistic dummy data; only email is real
     setFormData({
       licenseeContact: {
         contactType: 'INDIVIDUAL',
-        email: subscriber.email,
-        firstName: subscriber.name || subscriber.email.split('@')[0],
+        email: subscriberEmail,
+        firstName: subscriberName,
         lastName: '*',
         companyName: '',
         phoneNumber: '0000000000',
