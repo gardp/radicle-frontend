@@ -137,15 +137,15 @@ const Checkout = () => {
     console.log('Personal Use checkout: PERSONAL USE only cart detected');
 
     // 1. Read the newsletter email persisted by TrackDownloadModal
-    const savedEmail = localStorage.getItem('radicle_newsletter_email') || '';
+    const subscriber = localStorage.getItem('radicle_newsletter_subscriber') || '';
 
     // 2. Auto-fill form with realistic dummy data; only email is real
     setFormData({
       licenseeContact: {
         contactType: 'INDIVIDUAL',
-        email: savedEmail,
-        firstName: 'Free',
-        lastName: 'Download',
+        email: subscriber.email,
+        firstName: subscriber.name || subscriber.email.split('@')[0],
+        lastName: '*',
         companyName: '',
         phoneNumber: '0000000000',
       },
@@ -405,7 +405,7 @@ const Checkout = () => {
       // Subscribe licensee to newsletter if subscription button is check
       if (formData.emailListSubscription) {
         try {
-          const licenseeEmailSubscription = await newsletterApi.subscribe({ email: formData.licenseeContact.email, source: 'CHECKOUT' });
+          const licenseeEmailSubscription = await newsletterApi.subscribe({ email: formData.licenseeContact.email, name: formData.licenseeContact.firstName + ' ' + formData.licenseeContact.lastName, source: 'CHECKOUT' });
           console.log('Licensee subscribed to newsletter:', licenseeEmailSubscription);
         } catch (error) {
           console.error('Failed to subscribe licensee to newsletter:', error);

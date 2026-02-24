@@ -8,6 +8,7 @@ import '../styles/trackDownloadModal.css';
 
 const DONATION_PRESETS = [1, 3, 5, 10, 15, 20];
 const EMAIL_STORAGE_KEY = 'radicle_newsletter_email';
+const SUBSCRIBER_STORAGE_KEY = 'radicle_newsletter_subscriber';
 
 const TrackDownloadModal = () => {
   const dispatch = useDispatch();
@@ -17,14 +18,25 @@ const TrackDownloadModal = () => {
   // --- Local state ---
   const [donationAmount, setDonationAmount] = useState('0.00');
   const [activePreset, setActivePreset] = useState(null);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [statusMessage, setStatusMessage] = useState(null); // { type: 'loading' | 'error', text: string }
 
-  // Load persisted email from localStorage on mount
+  // Load persisted subscriber data from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem(EMAIL_STORAGE_KEY);
-    if (saved) setEmail(saved);
+    const savedSubscriber = localStorage.getItem(SUBSCRIBER_STORAGE_KEY);
+    if (savedSubscriber) {
+      try {
+        const parsedSubscriber = JSON.parse(savedSubscriber);
+        if (parsedSubscriber?.email) setEmail(parsedSubscriber.email);
+        if (parsedSubscriber?.name) setName(parsedSubscriber.name);
+        return;
+      } catch (error) {
+        console.warn('Failed to parse saved subscriber from localStorage:', error);
+      }
+    }
+
   }, []);
 
   // Reset local state when modal opens/closes
@@ -34,9 +46,19 @@ const TrackDownloadModal = () => {
       setActivePreset(null);
       setEmailInvalid(false);
       setStatusMessage(null);
-      // Re-read persisted email each time the modal opens
-      const saved = localStorage.getItem(EMAIL_STORAGE_KEY);
-      if (saved) setEmail(saved);
+
+      // Re-read persisted subscriber each time the modal opens
+      const savedSubscriber = localStorage.getItem(SUBSCRIBER_STORAGE_KEY);
+      if (savedSubscriber) {
+        try {
+          const parsedSubscriber = JSON.parse(savedSubscriber);
+          setName(parsedSubscriber?.name || '');
+          setEmail(parsedSubscriber?.email || '');
+          return;
+        } catch (error) {
+          console.warn('Failed to parse saved subscriber from localStorage:', error);
+        }
+      }
     }
   }, [isDownloadOpen]);
 
@@ -109,6 +131,10 @@ const TrackDownloadModal = () => {
     if (emailInvalid) setEmailInvalid(false);
   };
 
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
   // Simple email format check
   const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
 
@@ -132,7 +158,11 @@ const TrackDownloadModal = () => {
     // --- 1. Subscribe to newsletter (block until success) ---
     setStatusMessage({ type: 'loading', text: 'Subscribing to newsletter...' });
     try {
-      await newsletterApi.subscribe({ email, source: 'DOWNLOAD' });
+      await newsletterApi.subscribe({
+        email,
+        name: name.trim() || undefined,
+        source: 'DOWNLOAD',
+      });
     } catch (err) {
       console.error('Newsletter subscription failed:', err);
       const serverMsg = err?.response?.data?.message || err?.response?.data?.error || 'Newsletter subscription failed. Please try again.';
@@ -140,8 +170,14 @@ const TrackDownloadModal = () => {
       return; // Block — do not add to cart
     }
 
-    // Persist email for future sessions
-    localStorage.setItem(EMAIL_STORAGE_KEY, email);
+    // Persist subscriber for future sessions
+    localStorage.setItem(
+      SUBSCRIBER_STORAGE_KEY,
+      JSON.stringify({
+        email,
+        name: name.trim(),
+      })
+    );
 
     // --- 2. Build a modified license option with the donation amount as the price ---
     const donationLicenseOption = {
@@ -201,6 +237,18 @@ const TrackDownloadModal = () => {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Name (optional) */}
+        <div className="download-email-section">
+          <label>Name (optional)</label>
+          <input
+            className="download-email-input"
+            type="text"
+            value={name}
+            onChange={handleNameChange}
+            placeholder="Your name"
+          />
         </div>
 
         {/* Email */}
