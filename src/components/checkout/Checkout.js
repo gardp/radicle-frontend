@@ -162,7 +162,7 @@ const Checkout = () => {
         contactType: 'INDIVIDUAL',
         email: subscriberEmail,
         firstName: subscriberName,
-        lastName: '*',
+        lastName: 'from Radicle Sound',
         companyName: '',
         phoneNumber: '0000000000',
       },
