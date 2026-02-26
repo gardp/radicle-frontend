@@ -170,7 +170,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackVinylThumbnail: trackDetail.vinyl_thumbnail || "",
                     trackCoverArt: trackDetail.cover_art || "",
                     trackBuyLink: targetDescription === "REMIX" ? null : (trackDetail.buy_link || ""), // remove the beat leasing buylink for remix tracks
-                    trackStreamLink: trackDetail.stream_link || "",
+                    trackStreamLink: targetDescription === "SAMPLE" ? null : (trackDetail.stream_link || ""),
                     trackDownloadLink: targetDescription === "SAMPLE" ? null : (trackDetail.download_link || ""),
                     trackDonationLink: trackDetail.donation_link || "",
                     trackLicenseOptions: trackLicenseOptions || [],
