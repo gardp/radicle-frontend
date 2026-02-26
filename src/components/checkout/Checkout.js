@@ -409,7 +409,7 @@ const Checkout = () => {
         items: items.filter(item => item.type === 'track').map(item => ({
           track_id: item.id, //from the cartslice
           track_license_option_id: item.trackLicenseOption.trackLicenseOptionId,
-          price: item.price,
+          price: item.trackLicenseOption.licenseType.price,
           quantity: item.quantity,
         })),
         //***PAYMENT***// Besides method and currency, everything else is being calculated on the server
