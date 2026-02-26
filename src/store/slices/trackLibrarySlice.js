@@ -171,7 +171,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackCoverArt: trackDetail.cover_art || "",
                     trackBuyLink: targetDescription === "REMIX" ? null : (trackDetail.buy_link || ""), // remove the beat leasing buylink for remix tracks
                     trackStreamLink: trackDetail.stream_link || "",
-                    trackDownloadLink: trackDetail.download_link || "",
+                    trackDownloadLink: targetDescription === "SAMPLE" ? null : (trackDetail.download_link || ""),
                     trackDonationLink: trackDetail.donation_link || "",
                     trackLicenseOptions: trackLicenseOptions || [],
                     trackStorageFileDescription: targetDescription, // This is the storage file description for the audio_file selected 

@@ -156,13 +156,13 @@ const Checkout = () => {
     const subscriberEmail = subscriber.email;
     const subscriberName = subscriber.name || (subscriberEmail ? subscriberEmail.split('@')[0] : 'Free');
 
-    // 2. Auto-fill form with realistic dummy data; only email is real
+    // 2. Auto-fill form with realistic dummy data for Donations (PERSONAL USE only); only email is real
     setFormData({
       licenseeContact: {
         contactType: 'INDIVIDUAL',
         email: subscriberEmail,
-        firstName: subscriberName,
-        lastName: 'from Radicle Sound',
+        firstName: 'Recipient - ',
+        lastName: subscriberName,
         companyName: '',
         phoneNumber: '0000000000',
       },
@@ -194,7 +194,7 @@ const Checkout = () => {
       dispatch(toggleLicenseAgreementAndSaveThunk({ item, acknowledged: true }));
     });
 
-    personalUseFilledRef.current = true;
+    personalUseFilledRef.current = true; //guard to prevent re-running auto-fill
   }, [isPersonalUseOnly]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle form input changes
@@ -487,7 +487,7 @@ const Checkout = () => {
        * If payment intent creation fails, execution goes to catch and the order is not marked complete.
        */
       // Stripe and PayPal reject $0.00 payment. so the next section prevents from going to the payment success/verification check from paypal and stripe
-      if (orderTotal === 0) {
+      if (orderTotal === 0) { //if it's 0, it's a download without donation, so we skip the payment confirmation because of this block
         console.log('$0 order detected — payment intent completed on backend, skipping frontend payment confirmation');
         setPaymentProcessed(true);
         setOrderComplete(true);
