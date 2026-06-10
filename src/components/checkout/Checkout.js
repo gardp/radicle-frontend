@@ -82,6 +82,15 @@ const Checkout = () => {
   
   // State for form validation errors
   const [errors, setErrors] = useState({});
+  /**
+ * Stores the Google reCAPTCHA token returned by the checkout CAPTCHA widget.
+ *
+ * This token proves that the customer completed the CAPTCHA challenge before
+ * the frontend sends the checkout payload to the backend. The backend must
+ * verify this token with Google's reCAPTCHA verification API before creating
+ * the order.
+ */
+const [recaptchaToken, setRecaptchaToken] = useState('');
   
   // State for order processing
   const [isProcessing, setIsProcessing] = useState(false); // for loading spinner
@@ -106,7 +115,58 @@ const Checkout = () => {
   // Get reference number from Redux store
   // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
   const referenceNumber = useSelector(selectReferenceNumber);
+    /**
+   * Loads the Google reCAPTCHA v2 script for the checkout page and registers
+   * page-specific global callbacks used by the rendered CAPTCHA widget.
+   *
+   * The `checkoutRecaptchaCallback` callback receives the token when the user
+   * successfully completes the challenge. The token is stored in React state and
+   * later added to the checkout payload.
+   *
+   * The cleanup removes this component's callback references when the checkout
+   * page unmounts so stale callbacks do not remain on `window`.
+   */
+  useEffect(() => {
+    const existingScript = document.querySelector('script[src="https://www.google.com/recaptcha/api.js"]');
 
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    window.checkoutRecaptchaCallback = (token) => {
+      setRecaptchaToken(token);
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        recaptcha: null,
+      }));
+    };
+
+    window.checkoutRecaptchaExpired = () => {
+      setRecaptchaToken('');
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        recaptcha: 'reCAPTCHA expired. Please complete it again.',
+      }));
+    };
+
+    window.checkoutRecaptchaError = () => {
+      setRecaptchaToken('');
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        recaptcha: 'reCAPTCHA failed to load. Please refresh the page.',
+      }));
+    };
+
+    return () => {
+      delete window.checkoutRecaptchaCallback;
+      delete window.checkoutRecaptchaExpired;
+      delete window.checkoutRecaptchaError;
+    };
+  }, []);
   // Generate reference number on mount if it doesn't exist
   // so that reference number doesn't change at every submission....So that if I go back to the order page by mistake, it doesn't generate another reference number, hence another order
   //And only clear it when the order is complete
@@ -244,20 +304,20 @@ const Checkout = () => {
   console.log("USE EFFECT referenceNumber", referenceNumber);
   console.log("USE EFFECT orderstatus", order?.status);
 
-  const fetchLicensesWithRetry = async (retries = 0, maxRetries = 7) => {
+  const fallbackPollForLicenses = async (retries = 0, maxRetries = 7) => {
       setLicensesReqLoading(true);
     if (retries >= maxRetries) {
-      setLicensesReqError(new Error('License not ready after multiple attempts'));
+      setLicensesReqError(new Error('Failed to fetch licenses after multiple attempts'));
       setLicensesReqLoading(false);
       dispatch(clearReferenceNumber());
       return;
     }
 
-    if (!orderComplete || !order || !paymentProcessed) return;
-    if (!order.reference_number) return;
-
-    try {
-      const purchasedLicenses = await orderApi.getLicenseByReferenceNumber(order.reference_number); //you don't get the license until order is complete in the backend
+        try {
+      //this is for get_licenses_and_tracks in the backend in transactions/views.py
+      const purchasedLicenses = await orderApi.getLicenseByReferenceNumber(
+        order.reference_number, 
+        formData.licenseeContact.email); //you don't get the license until order is complete in the backend
       // this returns the following object to deconstruct for OrderConfirmation:
       // {
       //   "order_reference_number": str(order.reference_number),
@@ -274,17 +334,71 @@ const Checkout = () => {
       // If backend says "not ready", retry with exponential backoff
       if (error.response?.status === 403 || error.response?.status === 404 || error.response?.data?.status === 'pending') {
         const delay = Math.min(1000 * Math.pow(2, retries), 10000); // 1s, 2s, 4s, 8s, max 10s
-        setTimeout(() => fetchLicensesWithRetry(retries + 1, maxRetries), delay);
+        setTimeout(() => fallbackPollForLicenses(retries + 1, maxRetries), delay);
       } else {
-        setLicensesReqError(error);
+        setLicensesReqError(new Error('License request failed'));
         setLicensesReqLoading(false);
       }
     }
-  };
+      };
 
-  // Start the retry process
-  fetchLicensesWithRetry();
-}, [dispatch, paymentProcessed, orderComplete, order?.reference_number]);
+    if (!orderComplete || !order || !paymentProcessed) return;
+    if (!order.reference_number) return;
+
+    setLicensesReqLoading(true);
+    setLicensesReqError(null);
+
+    /**
+ * Opens the backend Server-Sent Events stream for license fulfillment.
+ *
+ * The stream is created through `orderApi` so endpoint construction stays
+ * centralized in [api.js](cci:7://file:///Users/gardlyphiloctete/Documents/radicle-frontend/src/api.js:0:0-0:0), matching the pattern used by normal order API
+ * helpers such as [getLicenseByReferenceNumber](cci:1://file:///Users/gardlyphiloctete/Documents/radicle-frontend/src/api.js:269:2-277:6).
+ *
+ * The returned EventSource remains open until:
+ *   - the backend sends the `active` event,
+ *   - the backend/browser triggers an error,
+ *   - the component unmounts and the effect cleanup closes it.
+ */
+    const licenseStatusStream = orderApi.openLicenseStatusStream(
+      order.reference_number,
+      formData.licenseeContact.email  
+    );
+
+    licenseStatusStream.addEventListener('active', (event) => {
+    const licenseData = JSON.parse(event.data);
+ 
+    setLicenseFiles(licenseData);
+    setLicensesReqLoading(false);
+    setLicensesReqError(null);
+    dispatch(clearReferenceNumber());
+ 
+    return licenseStatusStream.close();
+    });
+
+    licenseStatusStream.addEventListener('pending', () => {
+    setLicensesReqLoading(true);
+    });
+
+    licenseStatusStream.onerror = () => {
+      licenseStatusStream.close(); 
+      /**
+       * Falls back to polling when the live license-status stream fails.
+       *
+       * SSE can fail because of proxy buffering, network interruptions, browser
+       * connection limits, or backend stream timeouts. A failed stream does not
+       * necessarily mean license fulfillment failed, so we keep the loading state
+       * active and let the polling fallback decide whether to show a final error.
+       */
+      setLicensesReqError(null);
+      setLicensesReqLoading(true);
+      fallbackPollForLicenses();
+    };
+
+  return () => {
+    licenseStatusStream.close();
+  };
+}, [dispatch, paymentProcessed, orderComplete, order?.reference_number, formData.licenseeContact.email]);
   
   // Validate form data
   const validateForm = () => {
@@ -294,6 +408,17 @@ const Checkout = () => {
     if (!allLicenseAgreementsAcknowledged) {
       newErrors.licenseAgreement = 'You must acknowledge all license agreements before checkout';
       return false;
+    }
+
+        /**
+     * Requires a completed CAPTCHA before creating the checkout order.
+     *
+     * The frontend validation prevents accidental submission without a token,
+     * but the backend verification remains the real security check because
+     * frontend validation can be bypassed.
+     */
+    if (!recaptchaToken) {
+      newErrors.recaptcha = 'Please complete the reCAPTCHA before continuing.';
     }
     
     // Email validation
@@ -360,7 +485,14 @@ const Checkout = () => {
       const orderPayload = {
         //***REFERENCE NUMBER for the order***//
         referenceNumber: referenceNumber,
-        
+        /**
+         * reCAPTCHA token generated by Google's checkout CAPTCHA widget.
+         *
+         * The backend should verify this token before creating the order. If the
+         * token is missing, expired, already used, or invalid, the backend should
+         * reject the checkout request.
+         */
+        recaptchaToken: recaptchaToken,
         //***CONTRIBUTOR INFO***//
         licenseeContact: {
           contact_type: 'INDIVIDUAL',
@@ -521,6 +653,19 @@ const Checkout = () => {
      
     catch (orderError) {
       console.error('Order error:', orderError)
+      /**
+       * Clears the used CAPTCHA token after a failed checkout attempt.
+       *
+       * Google reCAPTCHA tokens are short-lived and should be treated as
+       * single-use. Resetting here forces the customer to complete a fresh
+       * challenge before retrying the checkout request.
+       */
+      setRecaptchaToken('');
+
+      if (window.grecaptcha) {
+        window.grecaptcha.reset();
+      }
+
       setErrors({
         orderSubmission: orderError.response?.data?.message || 'Failed to process Order'
       })
@@ -722,6 +867,7 @@ const Checkout = () => {
                 isProcessing={isProcessing}
                 isSubmitDisabled={!allLicenseAgreementsAcknowledged}
                 isPersonalUseOnly={isPersonalUseOnly}
+                recaptchaSiteKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               />
               <OrderSummary />
             </>

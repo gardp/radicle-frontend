@@ -25,6 +25,7 @@ if (!API_BASE_URL) {
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true, // Include cookies/cors credentials to maintain session in case frontend and backend are on different origins
   headers: {
     'Content-Type': 'application/json',
   },
@@ -64,9 +65,15 @@ api.interceptors.response.use(
 
       if (refreshToken) {
         try {
-          const resp = await axios.post(`${API_BASE_URL}/accounts/token/refresh/`, {
+          const resp = await axios.post(`${API_BASE_URL}/accounts/token/refresh/`, 
+            {
             refresh: refreshToken,
-          });
+            },
+            {
+              withCredentials: true,
+            }
+        
+        );
           const newAccessToken = resp?.data?.access;
           if (newAccessToken) {
             localStorage.setItem('access_token', newAccessToken);
@@ -268,7 +275,7 @@ export const orderApi = {
       throw error;
     }),
   // retrieve the license by order reference number (safer) for the user after payment- this is get_license_and_tracks() in the backend
-  getLicenseByReferenceNumber: (ReferenceNumber) => api.get(`/orders/${ReferenceNumber}/licenses/`)
+  getLicenseByReferenceNumber: (ReferenceNumber, email) => api.get(`/orders/${ReferenceNumber}/licenses/?email=${email}`)
     .then(response => {
       return response.data;
     })
@@ -276,6 +283,40 @@ export const orderApi = {
       console.error('Failed to get payment status:', error);
       throw error;
     }),
+  
+    /**
+   * Opens a Server-Sent Events stream for license fulfillment updates.
+   *
+   * This is intentionally not implemented with Axios because browser
+   * `EventSource` owns the HTTP connection and continuously receives streamed
+   * events from the backend. Axios is request/response based and is not the
+   * right primitive for SSE.
+   *
+   * Backend endpoint expected:
+   *   GET /orders/{referenceNumber}/license-status/stream/?email={email}
+   *
+   * The returned EventSource should be consumed by the caller with event
+   * listeners such as:
+   *   - `active`: licenses are ready and event.data contains the license payload
+   *   - `pending`: fulfillment is still in progress
+   *   - `timeout`: backend ended the stream and frontend should fallback
+   *   - `error`: browser/network/SSE connection failure
+   *
+   * Args:
+   *   referenceNumber: Stable order reference number used to identify the order.
+   *   email: Licensee email used by the backend to verify order ownership.
+   *
+   * Returns:
+   *   EventSource: Live SSE connection. Caller is responsible for calling
+   *   `.close()` during cleanup.
+   */
+
+    openLicenseStatusStream: (referenceNumber, email) => {
+    const streamUrl = `${API_BASE_URL}/orders/${encodeURIComponent(referenceNumber)}/license-status/stream/?email=${encodeURIComponent(email)}`;
+ 
+    return new EventSource(streamUrl, { withCredentials: true });
+  },
+  
 };
 
 // Now the payment API
@@ -299,7 +340,7 @@ export const paymentApi = {
 
 //now the newsletter API collection 
 export const newsletterApi = {
-  subscribe: (data) => api.post('/newsletter/subscribe/', data) // data is for email and source (e.g. 'footer')
+  subscribe: (data) => api.post('/newsletter/subscribe/', data) // data is for email, name, source, and categories
     .then(response => {
       return response.data;
     })

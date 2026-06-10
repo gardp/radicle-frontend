@@ -9,7 +9,7 @@ const countries = getCountryData();
 /**
  * CheckoutForm component handles collecting customer information and payment details
  */
-const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSubmitDisabled, isPersonalUseOnly }) => {
+const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSubmitDisabled, isPersonalUseOnly, recaptchaSiteKey }) => {
   // Payment method icons
   const paymentIcons = {
     stripe: stripeIcon,
@@ -468,7 +468,24 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             {errors.licenseAgreement}
           </div>
         )}
-
+        {/**
+        * Google reCAPTCHA v2 checkout challenge.
+        *
+        * The customer must complete this challenge before the checkout form can
+        * submit. Google calls `checkoutRecaptchaCallback` with a token, and
+        * Checkout.js- cci:7://file:///Users/gardlyphiloctete/Documents/radicle-frontend/src/components/checkout/Checkout.js:0:0-0:0 stores that token so it can be sent to the backend inside
+        * the order payload.
+        */}
+        <div className="form-group">
+          <div
+            className="g-recaptcha"
+            data-sitekey={recaptchaSiteKey}
+            data-callback="checkoutRecaptchaCallback"
+            data-expired-callback="checkoutRecaptchaExpired"
+            data-error-callback="checkoutRecaptchaError"
+          ></div>
+          {errors.recaptcha && <div className="error-message">{errors.recaptcha}</div>}
+        </div>
         <button
           type="submit"
           className={`checkout-button ${isSubmitDisabled ? 'disabled' : ''}`}
