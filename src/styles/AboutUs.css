@@ -19,17 +19,43 @@
 
 .about-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-    padding: 2rem; /* Add some padding if needed, or rely on content-section/page-wrapper */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    align-items: flex-start;
+    padding: 2.5rem; /* Add some padding if needed, or rely on content-section/page-wrapper */
+}
+
+.about-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.service-panel {
+    background: rgba(17, 20, 27, 0.65);
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(230, 181, 76, 0.08);
+}
+
+.service-panel .service-list {
+    margin-top: 0;
 }
 
 .about-image {
     position: relative;
-    border-radius: 15px;
+    border-radius: 50%;
     overflow: hidden;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 60%), var(--haiti-dark);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0.6rem;
+    min-height: 7.5rem;
+    max-width: 180px;
+    margin: 0 auto;
 }
 
 .about-image img {
@@ -37,6 +63,14 @@
     height: auto;
     display: block;
     transition: transform 0.3s ease;
+    object-fit: contain;
+}
+
+.about-logo {
+    width: 72%;
+    max-width: 120px;
+    margin: 0 auto;
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.45));
 }
 
 .about-image:hover img {
@@ -64,7 +98,7 @@
 
 .service-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1rem;
     padding: 1rem;
     /* background: rgba(40, 40, 40, 0.5); */ /* Previous background */
@@ -73,6 +107,13 @@
     transition: transform 0.3s ease, background-color 0.3s ease;
     /* border: 1px solid rgba(255, 255, 255, 0.1); */ /* Existing border, can be kept or adjusted */
     box-shadow: inset 0 0 0 1px rgba(230, 181, 76, 0.1); /* Subtle gold inner border like MusicContainer */
+}
+
+/* When the service item is a clickable link, remove default anchor styling */
+.service-item-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .service-item:hover {
@@ -85,28 +126,55 @@
 
 .service-icon {
     margin-right: 1rem;
+    margin-top: 0.15rem;
     font-size: 1.5rem;
+    flex-shrink: 0;
     color: var(--accent-text-color); /* Use theme accent color */
+}
+
+.service-item-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.service-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 0.35rem;
+    color: var(--primary-heading-color);
+}
+
+.service-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0;
+    color: var(--body-text-color);
+    opacity: 0.8;
 }
 
 /* Responsive Design */
 @media (max-width: 992px) {
     .about-content {
-        grid-template-columns: 1fr;
         gap: 2rem;
+        padding: 1.5rem;
     }
 
     .about-image {
-        max-width: 600px;
         margin: 0 auto;
+        min-height: 20rem;
     }
 
-    .about-text {
+    .about-left {
+        align-items: center;
         text-align: center;
     }
 
+    .service-panel {
+        padding: 1.5rem;
+    }
+
     .service-item {
-        justify-content: center;
+        justify-content: flex-start;
     }
 }
 

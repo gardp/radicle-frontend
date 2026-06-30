@@ -14,6 +14,13 @@ export default defineConfig({
     loader: 'jsx',
     include: /src\/.*\.jsx?$/,
     exclude: [],
+    // Strips all console.* calls (log, warn, error, etc.) and debugger statements
+    // from the production bundle. This improves performance by eliminating
+    // synchronous I/O overhead, prevents accidental leakage of sensitive data
+    // (tokens, user info, internal state) into the browser console, and keeps
+    // production logs clean so real errors are easier to spot.
+    // Does NOT affect development builds — logs will still appear during `npm run dev`.
+    drop: ['console', 'debugger'],
   },
   optimizeDeps: {
     esbuildOptions: {
