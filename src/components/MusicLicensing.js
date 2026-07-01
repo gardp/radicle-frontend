@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import MusicContainer from './MusicContainer';
+import Seo from './Seo';
 import { useAllLibrariesWithTracks } from '../hooks/useTracks';
 import '../styles/MusicLicensing.css';
 
@@ -33,6 +34,10 @@ const MusicLicensing = () => {
 
   return (
     <div className="page-wrapper">
+      <Seo
+        title="Music Licensing"
+        description="License premium beats from Radicle Sound for your next project. Browse beats available for licensing and choose the right license for your needs."
+      />
       <div className="licensing-page">
         <div className="licensing-unified-frame">
           {/* Hero Banner with Current Track Cover Art */}

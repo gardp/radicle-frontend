@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { contactApi } from '../api';
+import Seo from './Seo';
 import '../styles/Contact.css';
 // import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -149,6 +150,10 @@ const Contact = () => {
 
   return (
     <div className="contact-container page-wrapper">
+      <Seo
+        title="Contact"
+        description="Get in touch with Radicle Sound for music production, recording, mixing, mastering and licensing inquiries."
+      />
       <div className="contact-form-container">
         <h2>Get in Touch</h2>
         <form onSubmit={handleSubmit}>

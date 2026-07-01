@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Seo from './Seo';
 import '../styles/AboutUs.css';
 import { FaMusic, FaMicrophone, FaCompactDisc, FaHeadphones } from 'react-icons/fa';
 import radicleDrumLogo from '../assets/images/Radicle Sound Logo drum.png';
@@ -8,6 +9,10 @@ import radicleDrumLogo from '../assets/images/Radicle Sound Logo drum.png';
 const AboutUs = () => {
     return (
         <div className="about-container page-wrapper">
+            <Seo
+                title="About Us"
+                description="Learn about Radicle Sound — an independent music label and beat marketplace crafting original beats, remixes and features."
+            />
             <div className="main-content">
                 <div className="content-section">
                     {/* The existing content of AboutUs page will be here, removing the 'about-glass' div */}

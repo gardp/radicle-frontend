@@ -89,7 +89,7 @@ const AudioControls = ({
           />
         </div>
       )}
-      <h1 className="now-playing-title">Now Playing</h1>
+      <h2 className="now-playing-title">Now Playing</h2>
       <div className="now-playing-container">
         {/* New div for stream and buy icons */}
         <div className="audio-actions-bar">

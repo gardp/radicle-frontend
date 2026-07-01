@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../Seo';
 import '../../styles/Checkout.css';
 import useCart from '../../hooks/useCart';
 import { orderApi } from '../../api';
@@ -15,6 +16,7 @@ const OrderConfirmation = ({ order, purchasedItems, payment, email, licenses }) 
   return (
 
     <div className="order-confirmation">
+      <Seo title="Order Confirmation" noindex />
       <div className="download-warning-banner">
         <span className="download-warning-icon">⚠️</span>
         <div className="download-warning-text">

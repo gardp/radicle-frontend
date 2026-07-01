@@ -1,21 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { loadCartFromStorageThunk } from './store/slices/cartSlice';
-import HomePage from './components/HomePage';
-import Contact from './components/Contact';
-import AboutUs from './components/AboutUs';
 import './App.css';
 import CustomNavbar from './components/CustomNavbar';
-import Catalog from './components/Catalog';
-import Checkout from './components/checkout/Checkout';
 import TrackPricingTable from './components/TrackPricingTable';
 import TrackDownloadModal from './components/trackDownloadModal';
 import LicenseAgreement from './components/LicenseAgreement';
-import OrderConfirmation from './components/checkout/OrderConfirmation';
-import MusicLicensing from './components/MusicLicensing';
-import NotFound from './components/NotFound';
+
+// Route-level code splitting: each page is loaded in its own chunk so the
+// initial bundle stays small (better LCP/INP — Core Web Vitals ranking signals).
+const HomePage = lazy(() => import('./components/HomePage'));
+const Contact = lazy(() => import('./components/Contact'));
+const AboutUs = lazy(() => import('./components/AboutUs'));
+const Catalog = lazy(() => import('./components/Catalog'));
+const Checkout = lazy(() => import('./components/checkout/Checkout'));
+const OrderConfirmation = lazy(() => import('./components/checkout/OrderConfirmation'));
+const MusicLicensing = lazy(() => import('./components/MusicLicensing'));
+const NotFound = lazy(() => import('./components/NotFound'));
 
 function App() {
   const dispatch = useDispatch();
@@ -30,22 +32,22 @@ function App() {
       <Router>
         <div className="app-container">
         <CustomNavbar />
-          {/* <Container className="app-content-container"> */}
             <main className="main-content">
-              <Routes>
-              <Route path="/" exact element={<HomePage />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/about" element={<AboutUs />} />
-              {/* <Route path="/catalog" element={<Catalog />} /> */}
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/order-confirmation" element={<OrderConfirmation />} />
-              <Route path="/licensing" element={<MusicLicensing/>} />
-              <Route path="*" element={<NotFound />} />
-                {/* Always start with the most specific routes first then move to the more general ones... */}
-                {/* Add more routes as needed */}
-              </Routes>
+              <Suspense fallback={<div className="route-loading" aria-busy="true">Loading…</div>}>
+                <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/catalog" element={<Catalog />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/licensing" element={<MusicLicensing/>} />
+                <Route path="*" element={<NotFound />} />
+                  {/* Always start with the most specific routes first then move to the more general ones... */}
+                  {/* Add more routes as needed */}
+                </Routes>
+              </Suspense>
             </main>
-          {/* </Container> */}
           <TrackPricingTable/>
           <TrackDownloadModal/>
           <LicenseAgreement/>

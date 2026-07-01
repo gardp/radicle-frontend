@@ -55,7 +55,7 @@ const CustomNavbar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="navbar-nav ms-auto">
             <Nav.Link as={Link} to="/" className={isActive('/')}>HOME</Nav.Link>
-            {/* <Nav.Link as={Link} to="/catalog" className={isActive('/catalog')}>CATALOG</Nav.Link> */}
+            <Nav.Link as={Link} to="/catalog" className={isActive('/catalog')}>CATALOG</Nav.Link>
             <Nav.Link as={Link} to="/licensing" className={isActive('/licensing')}>MUSIC LICENSING</Nav.Link>
             {/* <Nav.Link as={Link} to="/services">STUDIO SERVICES</Nav.Link> */}
             <Nav.Link as={Link} to="/about" className={isActive('/about')}>ABOUT</Nav.Link>

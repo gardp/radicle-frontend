@@ -5,6 +5,8 @@ import MusicContainer from './MusicContainer';
 import Media from './Media';
 import NewsletterSub from './NewsletterSub';
 import Section from './Section';
+import Seo from './Seo';
+import { SITE_NAME, SITE_URL } from '../config/site';
 import { useAllLibrariesWithTracks } from '../hooks/useTracks';
 
 const HomePage = () => {
@@ -19,8 +21,30 @@ const HomePage = () => {
   console.log('HomePage Error', error);
   console.log('HomePage previewLibraries', previewLibraries);
 
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: `${SITE_URL}/logo512.png`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  ];
+
   return (
     <div className="page-wrapper">
+      <Seo
+        title=""
+        description="Stream original beats, remixes and features from Radicle Sound. Discover new music and license premium sound for your next project."
+        canonicalPath="/"
+        jsonLd={structuredData}
+      />
       {/* Hero Section - Full Viewport Height Carousel */}
       {/* <section className="hero-section">
 

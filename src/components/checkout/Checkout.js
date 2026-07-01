@@ -8,6 +8,7 @@ import {
   generateReferenceNumber, 
   clearReferenceNumber 
 } from '../../store/slices/orderSlice';
+import Seo from '../Seo';
 import CheckoutForm from './CheckoutForm';
 import OrderSummary from './OrderSummary';
 import OrderConfirmation from './OrderConfirmation';
@@ -822,6 +823,7 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
 // Returning for checkout phase only
   return (
     <div className="checkout-container">
+      <Seo title="Checkout" noindex />
       <div className="checkout-header">
         <h1>Checkout</h1>
         <p>

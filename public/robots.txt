@@ -1,3 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+# Do not index transactional pages
+Disallow: /checkout
+Disallow: /order-confirmation
+
+# Update the domain below to match your production origin (VITE_SITE_URL)
+Sitemap: https://www.radiclesound.com/sitemap.xml

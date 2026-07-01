@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Radicle Sound",
+  "name": "Radicle Sound | Beats, Remixes & Music Licensing",
+  "description": "Stream original beats, remixes and features, and license premium sound for your next project.",
   "icons": [
     {
       "src": "favicon.ico",
