@@ -20,7 +20,7 @@ export default defineConfig({
     // (tokens, user info, internal state) into the browser console, and keeps
     // production logs clean so real errors are easier to spot.
     // Does NOT affect development builds — logs will still appear during `npm run dev`.
-    drop: ['console', 'debugger'],
+    // drop: ['console', 'debugger'],
   },
   optimizeDeps: {
     esbuildOptions: {

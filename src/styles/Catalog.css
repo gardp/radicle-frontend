@@ -1,0 +1,123 @@
+.catalog-page {
+  padding-top: 100px;
+}
+
+.catalog-lede {
+  max-width: 720px;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin: 0 auto 2rem;
+  color: var(--body-text-color);
+  opacity: 0.9;
+}
+
+.catalog-panel {
+  background: rgba(17, 20, 27, 0.7);
+  border-radius: 18px;
+  padding: 2rem;
+  border: 1px solid rgba(230, 181, 76, 0.08);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+.catalog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.catalog-row {
+  width: 100%;
+}
+
+.catalog-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  background-color: var(--haiti-dark);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(230, 181, 76, 0.12);
+  transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.catalog-item:hover,
+.catalog-item:focus-visible {
+  transform: translateX(8px);
+  background-color: rgba(23, 26, 33, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(230, 181, 76, 0.35);
+}
+
+.catalog-item:focus-visible {
+  outline: 2px solid var(--accent-text-color);
+  outline-offset: 3px;
+}
+
+.catalog-item-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.catalog-item-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(230, 181, 76, 0.3);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.catalog-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.catalog-item-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-heading-color);
+}
+
+.catalog-item-artists {
+  font-size: 0.95rem;
+  color: var(--body-text-color);
+}
+
+.catalog-item-meta {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(230, 181, 76, 0.85);
+}
+
+.catalog-item-id {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(230, 181, 76, 0.8);
+}
+
+@media (max-width: 768px) {
+  .catalog-panel {
+    padding: 1.5rem;
+  }
+
+  .catalog-item {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .catalog-item-id {
+    grid-column: 1 / -1;
+    justify-self: flex-start;
+    margin-top: 0.5rem;
+  }
+}

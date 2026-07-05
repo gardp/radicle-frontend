@@ -135,8 +135,8 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackLibrary.libraryName === "FEATURES"
                       ? "ORIGINAL"
                       : trackLibrary.libraryName === "REMIXES"
-                        ? "REMIX"
-                        : "SAMPLE";
+                      ? "REMIX"
+                      : "SAMPLE";
 
                   // Find the correct preview audio based on the targetdescription... 
                   // So if the library is NEW FEATURES, find the ORIGINAL SONG preview audio, else find the SAMPLE preview audio
