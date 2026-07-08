@@ -140,7 +140,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
 
                   // Find the correct preview audio based on the targetdescription... 
                   // So if the library is NEW FEATURES, find the ORIGINAL SONG preview audio, else find the SAMPLE preview audio
-                  const selectedPreviewAudio = trk.preview_audio[0]?.find(
+                  const selectedPreviewAudio = trk.preview_audio?.find(
                     p => p.track_storage_desc === targetDescription
                   );
 
@@ -183,7 +183,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackAudioFileFormatBitDepth: selectedPreviewAudio?.file_format?.bit_depth || "",
                     trackAudioFileFormatSampleRate: selectedPreviewAudio?.file_format?.sample_rate || "",
                   };
-
+                  console.log('✅ The track is Fetched:', track);
                   return track;
                 } catch (error) {
                   console.error(`Failed to fetch track ${trackId}:`, error);
