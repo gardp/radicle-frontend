@@ -161,27 +161,41 @@ const LicenseAgreement = () => {
     template = template.replace(/\{\{\s*effective_date\|date:"Y"[^}]*\}\}/g, now.getFullYear());
     console.log('After date replacements');
 
-    // Handle conditional blocks: {% if video_rights %}...{% else %}...{% endif %}
-    let conditionalMatches = template.match(/\{%\s*if\s+video_rights\s*%\}(.*?)\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}/gs);
-    console.log('Conditional blocks found:', conditionalMatches?.length || 0);
-    template = template.replace(/\{%\s*if\s+video_rights\s*%\}(.*?)\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}/gs, 
-      (match, ifContent, elseContent) => {
-        return replacements.video_rights ? ifContent : elseContent;
-      });
-
     // Handle download_date conditional block by always inserting current date.
     // Example supported block:
     // {% if download_date %}{{ download_date|date:"F j, Y" }}{% else %}{% now "F j, Y" %}{% endif %}
+    // NOTE: Must run BEFORE the generic conditional handler so it takes precedence.
     template = template.replace(
       /\{%\s*if\s+download_date\s*%\}[\s\S]*?\{%\s*else\s*%\}[\s\S]*?\{%\s*endif\s*%\}/g,
       now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     );
 
-    // Handle for loops (writers table) - replace with empty rows for now
-    let loopMatches = template.match(/\{%\s*for\s+writer\s+in\s+writers.*?\{%\s*empty\s*%\}(.*?)\{%\s*endfor\s*%\}/gs);
+    // Generic conditional handler: resolves ANY {% if VAR %}A{% else %}B{% endif %}
+    // (no nesting exists in this template) by looking VAR up in `replacements`.
+    // Runs BEFORE the generic {% %} strip and BEFORE the {{ variable }} pass, so any
+    // {{ token }} left inside the chosen branch still gets substituted later.
+    // Django truthiness: falsy = undefined/null/false/''/0; any non-empty string is truthy.
+    const isDjangoTruthy = (v) =>
+      v !== undefined && v !== null && v !== false && v !== '' && v !== 0;
+    let conditionalMatches = template.match(/\{%\s*if\s+[a-zA-Z0-9_.]+\s*%\}[\s\S]*?\{%\s*else\s*%\}[\s\S]*?\{%\s*endif\s*%\}/g);
+    console.log('Conditional blocks found:', conditionalMatches?.length || 0);
+    template = template.replace(
+      /\{%\s*if\s+([a-zA-Z0-9_.]+)\s*%\}([\s\S]*?)\{%\s*else\s*%\}([\s\S]*?)\{%\s*endif\s*%\}/g,
+      (match, varName, ifContent, elseContent) =>
+        isDjangoTruthy(replacements[varName]) ? ifContent : elseContent
+    );
+
+    // Writers table: nested loop with an {% empty %} fallback that itself loops
+    // {% for i in "1234" %}<tr>...blank row...</tr>{% endfor %} to render 4 blank rows.
+    // Extract the blank row markup from the template's own empty branch (so column
+    // structure stays in sync) and repeat it exactly 4 times. Any {{ token }} inside
+    // (e.g. licensee_pro_affiliation) is filled by the later variable pass.
+    let loopMatches = template.match(/\{%\s*for\s+writer\s+in\s+writers[\s\S]*?\{%\s*endfor\s*%\}[\s\S]*?\{%\s*endfor\s*%\}/g);
     console.log('For loops found:', loopMatches?.length || 0);
-    template = template.replace(/\{%\s*for\s+writer\s+in\s+writers.*?\{%\s*empty\s*%\}(.*?)\{%\s*endfor\s*%\}/gs, 
-      (match, emptyContent) => emptyContent);
+    template = template.replace(
+      /\{%\s*for\s+writer\s+in\s+writers[\s\S]*?\{%\s*empty\s*%\}[\s\S]*?\{%\s*for\s+i\s+in\s+"1234"\s*%\}([\s\S]*?)\{%\s*endfor\s*%\}[\s\S]*?\{%\s*endfor\s*%\}/g,
+      (match, blankRow) => blankRow.repeat(4)
+    );
 
     // Handle remaining {% %} tags
     let remainingTags = template.match(/\{%[^%]*%\}/g);

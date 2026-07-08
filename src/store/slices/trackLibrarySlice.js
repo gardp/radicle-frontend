@@ -131,12 +131,12 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                   console.log('✅ Fetched track license options now:', trackLicenseOptions);
                   console.log('✅ Fetched STORAGE FILE:HERE!!!');
                   //the library request serializes it so that the track_storage_file description gets sent to the front end in "track_storage_desc" as computed below
-                  const targetDescription =
-                    trackLibrary.libraryName === "FEATURES"
-                      ? "ORIGINAL"
-                      : trackLibrary.libraryName === "REMIXES"
-                      ? "REMIX"
-                      : "SAMPLE";
+                  const targetDescription = "PREVIEW"
+                    // trackLibrary.libraryName === "ORIGINAL"
+                    //   ? "ORIGINAL"
+                    //   : trackLibrary.libraryName === "REMIXES"
+                    //   ? "REMIX"
+                    //   : "SAMPLE";
 
                   // Find the correct preview audio based on the targetdescription... 
                   // So if the library is NEW FEATURES, find the ORIGINAL SONG preview audio, else find the SAMPLE preview audio
@@ -170,18 +170,18 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackVinylThumbnail: trackDetail.vinyl_thumbnail || "",
                     trackCoverArt: trackDetail.cover_art || "",
                     trackBuyLink: targetDescription === "REMIX" ? null : (trackDetail.buy_link || ""), // remove the beat leasing buylink for remix tracks
-                    trackStreamLink: targetDescription === "SAMPLE" ? null : (trackDetail.stream_link || ""),
-                    trackDownloadLink: targetDescription === "SAMPLE" ? null : (trackDetail.download_link || ""),
+                    trackStreamLink: targetDescription === "PREVIEW" ? null : (trackDetail.stream_link || ""),
+                    trackDownloadLink: targetDescription === "PREVIEW" ? null : (trackDetail.download_link || ""),
                     trackDonationLink: trackDetail.donation_link || "",
                     trackLicenseOptions: trackLicenseOptions || [],
                     trackStorageFileDescription: targetDescription, // This is the storage file description for the audio_file selected 
-                    trackAudioIsrc: selectedPreviewAudio?.isrc_code || "",
-                    trackAudioIswc: selectedPreviewAudio?.iswc_code || "",
-                    trackAudioFilePath: selectedPreviewAudio?.file_path || "",
-                    trackAudioFileFormatName: selectedPreviewAudio?.file_format?.name || "",
-                    trackAudioFileFormatExtension: selectedPreviewAudio?.file_format?.extension || "",
-                    trackAudioFileFormatBitDepth: selectedPreviewAudio?.file_format?.bit_depth || "",
-                    trackAudioFileFormatSampleRate: selectedPreviewAudio?.file_format?.sample_rate || "",
+                    trackAudioIsrc: selectedPreviewAudio[0]?.isrc_code || "",
+                    trackAudioIswc: selectedPreviewAudio[0]?.iswc_code || "",
+                    trackAudioFilePath: selectedPreviewAudio[0]?.file_path || "",
+                    trackAudioFileFormatName: selectedPreviewAudio[0]?.file_format?.name || "",
+                    trackAudioFileFormatExtension: selectedPreviewAudio[0]?.file_format?.extension || "",
+                    trackAudioFileFormatBitDepth: selectedPreviewAudio[0]?.file_format?.bit_depth || "",
+                    trackAudioFileFormatSampleRate: selectedPreviewAudio[0]?.file_format?.sample_rate || "",
                   };
 
                   return track;
