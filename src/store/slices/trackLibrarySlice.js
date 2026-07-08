@@ -140,7 +140,7 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
 
                   // Find the correct preview audio based on the targetdescription... 
                   // So if the library is NEW FEATURES, find the ORIGINAL SONG preview audio, else find the SAMPLE preview audio
-                  const selectedPreviewAudio = trk.preview_audio?.find(
+                  const selectedPreviewAudio = trk.preview_audio[0]?.find(
                     p => p.track_storage_desc === targetDescription
                   );
 
@@ -175,13 +175,13 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackDonationLink: trackDetail.donation_link || "",
                     trackLicenseOptions: trackLicenseOptions || [],
                     trackStorageFileDescription: targetDescription, // This is the storage file description for the audio_file selected 
-                    trackAudioIsrc: selectedPreviewAudio[0]?.isrc_code || "",
-                    trackAudioIswc: selectedPreviewAudio[0]?.iswc_code || "",
-                    trackAudioFilePath: selectedPreviewAudio[0]?.file_path || "",
-                    trackAudioFileFormatName: selectedPreviewAudio[0]?.file_format?.name || "",
-                    trackAudioFileFormatExtension: selectedPreviewAudio[0]?.file_format?.extension || "",
-                    trackAudioFileFormatBitDepth: selectedPreviewAudio[0]?.file_format?.bit_depth || "",
-                    trackAudioFileFormatSampleRate: selectedPreviewAudio[0]?.file_format?.sample_rate || "",
+                    trackAudioIsrc: selectedPreviewAudio?.isrc_code || "",
+                    trackAudioIswc: selectedPreviewAudio?.iswc_code || "",
+                    trackAudioFilePath: selectedPreviewAudio?.file_path || "",
+                    trackAudioFileFormatName: selectedPreviewAudio?.file_format?.name || "",
+                    trackAudioFileFormatExtension: selectedPreviewAudio?.file_format?.extension || "",
+                    trackAudioFileFormatBitDepth: selectedPreviewAudio?.file_format?.bit_depth || "",
+                    trackAudioFileFormatSampleRate: selectedPreviewAudio?.file_format?.sample_rate || "",
                   };
 
                   return track;
