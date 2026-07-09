@@ -169,10 +169,10 @@ export const fetchLibrariesWithTracks = createAsyncThunk(
                     trackThumbnail: trackDetail.thumbnail || "",
                     trackVinylThumbnail: trackDetail.vinyl_thumbnail || "",
                     trackCoverArt: trackDetail.cover_art || "",
-                    trackBuyLink: targetDescription === "REMIX" ? null : (trackDetail.buy_link || ""), // remove the beat leasing buylink for remix tracks
-                    trackStreamLink: targetDescription === "PREVIEW" ? null : (trackDetail.stream_link || ""),
-                    trackDownloadLink: targetDescription === "PREVIEW" ? null : (trackDetail.download_link || ""),
-                    trackDonationLink: trackDetail.donation_link || "",
+                    trackBuyLink: (trackDetail.buy_link || ""), // remove the beat leasing buylink for remix tracks
+                    trackStreamLink: (trackDetail.stream_link || ""), // these link is added to the db depending on whether the track is a remix, orinigals or sample
+                    trackDownloadLink: (trackDetail.download_link || "test"), // these link is added to the db depending on whether the track is a remix, orinigals or sample
+                    trackDonationLink: trackDetail.donation_link || "", // these link is added to the db depending on whether the track is a remix, orinigals or sample
                     trackLicenseOptions: trackLicenseOptions || [],
                     trackStorageFileDescription: targetDescription, // This is the storage file description for the audio_file selected 
                     trackAudioIsrc: selectedPreviewAudio?.isrc_code || "",

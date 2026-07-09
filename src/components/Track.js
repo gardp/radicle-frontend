@@ -72,7 +72,7 @@ const Track = ({ track, isActive, onClick, libraryName }) => {
           <div className="track-info-line">
             <span className="track-title">
               {/* if libraryName is FEATURES or REMIX, use trackTitle (+ version subtitle), else use trackDescription */}
-              {(libraryName === "FEATURES" || libraryName === "REMIXES")
+              {(libraryName === "ORIGINALS" || libraryName === "REMIXES")
                 ? `${track.trackTitle || "N/A - Coming soon"}${track.trackVersionSubtitle ? ` (${track.trackVersionSubtitle})` : ""}`
                 : (track.trackDescription || "N/A - Coming soon")}
             </span>
