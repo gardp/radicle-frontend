@@ -46,7 +46,6 @@ const Checkout = () => {
     },
     musicProfessional:{
       sudoName: '',
-      refCode: '',
       proAffiliation: '',
       ipiNumber: '',
       snsLink1: '',
@@ -239,7 +238,6 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
       },
       musicProfessional: {
         sudoName: '',
-        refCode: '',
         proAffiliation: '',
         ipiNumber: '',
         snsLink1: '',
@@ -513,7 +511,6 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
         },
         musicProfessional: {
           sudo_name: formData.musicProfessional.sudoName,
-          ref_code: formData.musicProfessional.refCode,
           pro_affiliation: formData.musicProfessional.proAffiliation,
           ipi_number: formData.musicProfessional.ipiNumber,
         },
@@ -778,7 +775,6 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
       country: 'US',
     },
     musicProfessional:{
-      refCode: '123456',
       proAffiliation: 'ASCAP',
       ipiNumber: '123456789',
       snsLink1: 'https://www.facebook.com/test',

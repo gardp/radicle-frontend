@@ -168,13 +168,13 @@ const CheckoutForm = ({ formData, onChange, errors, onSubmit, isProcessing, isSu
             </div>
 
             <div className="form-group">
-              <label htmlFor="refCode">Reference Code (ex: ISNI)</label>
+              <label htmlFor="ipiNumber">Reference Code (ex: ipi number)</label>
               <input
                 type="text"
-                id="refCode"
-                name="musicProfessional.refCode"
+                id="ipiNumber"
+                name="musicProfessional.ipiNumber"
                 className="form-control"
-                value={formData.musicProfessional?.refCode}
+                value={formData.musicProfessional?.ipiNumber}
                 onChange={onChange}
                 placeholder="Enter reference code if you have one"
               />
