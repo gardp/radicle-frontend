@@ -30,7 +30,7 @@ const PaymentWrapper = ({
       },
     },
   };
-
+  console.log('PayPal mode', import.meta.env.MODE, import.meta.env.VITE_PAYPAL_CLIENT_ID);
   // PayPal options
   const paypalOptions = {
     'client-id': import.meta.env.VITE_PAYPAL_CLIENT_ID,
