@@ -101,10 +101,7 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
   const [checkoutPhase, setCheckoutPhase] = useState('info'); // for determining the phase of the checkout process to use for conditional rendering for payment process
   const [clientSecret, setClientSecret] = useState(null); // client secret received from stripe's payment intent to use for payment processing
   const [orderedItems, setOrderedItems] = useState(null); // for saving ordered each other items
-  // Once checkout hits the confirmation phase we flip this to true so the
-  // "empty cart" redirect guard doesn't bounce the user away after we clear
-  // Redux cart state.
-  const [checkoutCompleted, setCheckoutCompleted] = useState(false);
+  // const [checkoutCompleted, setCheckoutCompleted] = useState(false); // replaced by checkoutCompletionGuardRef
   const [licensesReqLoading, setLicensesReqLoading] = useState(false); // for loading spinner
   const [licensesReqError, setLicensesReqError] = useState(null); // for error message
   const [licenseFiles, setLicenseFiles] = useState(null); // for saving licenses to use outside of handleSubmit
@@ -114,6 +111,7 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
   // dummy licensee data (real email from localStorage), auto-acknowledge license
   // agreements, and show only the payment method picker + a "Complete Download" button.
   const personalUseFilledRef = useRef(false); // guard to prevent re-running auto-fill
+  const checkoutCompletionGuardRef = useRef(false); // synchronous guard to stop empty-cart redirects post-success
   const isPersonalUseOnly = useSelector(selectIsPersonalUseOnly);
 
   // Get reference number from Redux store
@@ -194,10 +192,10 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
     // (e.g., user manually emptied it). Once checkoutCompleted is true we allow-
     // I added checkoutCompleted as an additional flag to make sure the redirect doesn't happen...
     // when clearCart() runs as OrderComplete is still false and isProcessing turns in the "finally" clause of the handleSubmit
-    if (items.length === 0 && !orderComplete && !isProcessing && !checkoutCompleted) {
+    if (items.length === 0 && !orderComplete && !isProcessing && !checkoutCompletionGuardRef.current) {
       navigate('/');
     }
-  }, [items, navigate, orderComplete, isProcessing, checkoutCompleted]);
+  }, [items, navigate, orderComplete, isProcessing]);
 
   // --- Personal Use checkout: detect PERSONAL USE only cart and auto-fill dummy data ---
   useEffect(() => {
@@ -480,7 +478,7 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
     
     if (isProcessing) return; // extra safety Add a guard at the very top of handleSubmit to catch extra clicks or fast key submits
     // Start processing
-    setCheckoutCompleted(false);
+    checkoutCompletionGuardRef.current = false;
     setIsProcessing(true);
     setErrors({});
     console.log('Processing order...', isProcessing);
@@ -631,7 +629,7 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
         setPaymentProcessed(true);
         setOrderComplete(true);
         setCheckoutPhase('complete');
-        setCheckoutCompleted(true);
+        checkoutCompletionGuardRef.current = true;
         clearCart();
         return;
       }
@@ -691,7 +689,7 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
     setPaymentProcessed(true);
     setOrderComplete(true);
     setCheckoutPhase('complete');
-    setCheckoutCompleted(true);
+    checkoutCompletionGuardRef.current = true;
     clearCart();
     // dispatch(clearReferenceNumber()); // Clear reference number after successful payment
     console.log('Reference number cleared (handleStripePaymentSuccess):', referenceNumber);
@@ -731,7 +729,7 @@ const [recaptchaToken, setRecaptchaToken] = useState('');
       console.log('Payment processed:', paymentProcessed);
       setOrderComplete(true);
       setCheckoutPhase('complete');
-      setCheckoutCompleted(true);
+      checkoutCompletionGuardRef.current = true;
       clearCart();
      // dispatch(clearReferenceNumber()); // Clear reference number after successful payment
      console.log('Reference number cleared (handlePayPalApprove):', referenceNumber);
