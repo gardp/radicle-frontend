@@ -26,7 +26,15 @@ const FeaturedHighlight = () => {
     <div className="featured-highlight-container">
       <div className="featured-highlight-content">
         <div className="featured-text">
-          <h3>Follow for New Releases Every Month!</h3>
+          <h3>
+            Follow for New Releases Every Month!
+            <span className="follow-arrow" aria-hidden="true">
+              <svg viewBox="0 0 64 16" role="presentation" focusable="false">
+                <path d="M2 8h46" className="arrow-line" />
+                <path d="M46 2l16 6-16 6" className="arrow-head" />
+              </svg>
+            </span>
+          </h3>
         </div>
         <div className="social-icons">
           {socialIcons.map((social, index) => (

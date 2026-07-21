@@ -67,6 +67,31 @@
   transition: transform 0.3s ease;
 }
 
+.follow-arrow {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  width: 90px;
+}
+
+.follow-arrow svg {
+  width: 100%;
+  height: auto;
+}
+
+.follow-arrow .arrow-line,
+.follow-arrow .arrow-head {
+  stroke: var(--haiti-gold);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.follow-arrow .arrow-head {
+  fill: var(--haiti-gold);
+}
+
 /* Social icons container */
 .social-icons {
   display: flex;
